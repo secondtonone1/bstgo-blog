@@ -1,0 +1,129 @@
+h1 {
+    display: none;
+}
+
+h3 {
+    background-color: #222222;
+    color: #ffffff;
+    width: 25%;
+    padding: .1875rem .3125rem;
+    margin: 1.25rem auto
+}
+
+.navbar {
+    padding: 0 6.25rem
+}
+
+.content {
+    padding-top: 6.25rem;
+    padding-bottom: 1.25rem;
+}
+
+.contant-col {
+    border-right: #D0D1D6 solid 1px;
+    border-left: #D0D1D6 solid 1px;
+}
+
+
+/* 文章侧边栏索引圆角和背景颜色 */
+
+.sidebar {
+    background-color: #222222;
+    border-radius: 4px;
+}
+
+
+/* 文章侧边栏索引样式 */
+
+.sidebar>li>a {
+    color: #9D9D9D;
+    overflow: hidden;
+    /* 内容超出宽度时隐藏超出部分的内容 */
+    text-overflow: ellipsis;
+}
+
+.sidebar>li>a:hover {
+    color: #222222;
+}
+
+.article-index span {
+    display: block;
+    width: 22px;
+    height: 14px;
+    color: #ffffff;
+}
+
+
+/* 左侧文章列表 */
+
+#article-navbar-collapse {
+    padding: 0;
+    overflow: hidden;
+    /* 内容超出宽度时隐藏超出部分的内容 */
+    text-overflow: ellipsis;
+}
+
+
+/*子菜单列表*/
+
+.sub-sidebar li a {
+    padding-left: 30px;
+}
+
+
+/*footer区域*/
+
+
+/* 当我们进入 超小屏幕的时候 我们 nav 文字会变成14px  */
+
+@media screen and (max-width: 767px) {
+    /* header中a左右15px居中显示 */
+    .navbar-header {
+        padding: 0 1.25rem;
+    }
+    /*图标右侧显示*/
+    .navbar-toggle {
+        float: right;
+    }
+    .navbar {
+        padding: 0 0;
+    }
+    /* 文章索引目录 */
+    /* #article-navbar-collapse {
+        width: auto;
+    } */
+    .content {
+        padding-top: 50px;
+    }
+    .article-col {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+
+/* 进入小屏幕以上 */
+
+@media screen and (min-width: 991px) {}
+
+
+/*进入中屏幕以上*/
+
+@media screen and (min-width: 1199px) {}
+
+
+/*
+ * Footer
+ */
+
+.blog-footer {
+    padding: 40px 0;
+    color: #999;
+    text-align: center;
+    background-color: #f9f9f9;
+    border-top: 1px solid #e5e5e5;
+}
+
+.blog-footer p:last-child {
+    margin-bottom: 0;
+}
