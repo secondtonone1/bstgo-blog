@@ -22,214 +22,262 @@
 </head>
 
 <body>
-    <div class="container-fluid">
-        <!-- 上部导航栏 -->
-        <div class="row">
-            <h1>恋恋风辰的官方博客</h1>
-            <nav class="navbar navbar-inverse navbar-fixed-top " role="navigation">
-                <div class="container-fluid">
-                    <div class="navbar-header">
-                        <a class="navbar-brand" href="#">恋恋风辰的官方博客</a>
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#example-navbar-collapse">
-                          <span class="sr-only">切换导航</span>
-                          <span class="icon-bar"></span>
-                          <span class="icon-bar"></span>
-                          <span class="icon-bar"></span>
+    <div class="ancestor">
+        <div class="mask">
+
+        </div>
+        <!-- Sidebar -->
+        <div class="xs-article-index-wrapper visible-xs">
+            <ul class="nav sidebar-nav xs-article-index">
+                <li class="sidebar-brand">
+                    <a href="#">
+                        C++ 专题
+                    </a>
+                </li>
+                <li><a data-toggle="collapse" href="#xs-collapseTwo">C11特性<span class="glyphicon glyphicon-menu-right"></span></a>
+                    <div id="xs-collapseTwo" class="collapse">
+                        <ul class="nav nav-pills nav-stacked sub-sidebar">
+                            <li><a href="#">move操作</a></li>
+                            <li><a href="#">function类</a></li>
+                            <li><a href="#">mutex互斥锁</a></li>
+                            <li><a href="#">thread线程类</a></li>
+                            <li><a href="#">Lambda表达式</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li><a data-toggle="collapse" href="#xs-collapseThree">boost库<span class="glyphicon glyphicon-menu-right"></span></a>
+                    <div id="xs-collapseThree" class="collapse">
+                        <ul class="nav nav-pills nav-stacked sub-sidebar">
+                            <li><a href="#">asio网络库</a></li>
+                            <li><a href="#">multindex</a></li>
+                            <li><a href="#">文件库</a></li>
+                            <li><a href="#">容器</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="container-fluid container-root">
+            <!-- 上部导航栏 -->
+            <div class="row">
+                <h1>恋恋风辰的官方博客</h1>
+                <nav class="navbar navbar-inverse navbar-fixed-top " role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle article-index-btn">
+                                <span class="sr-only">切换导航</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <a class="navbar-brand" href="#">恋恋风辰的官方博客</a>
+                            <button type="button" class="navbar-toggle category-index" data-toggle="collapse" data-target="#example-navbar-collapse">
+                          <span class="glyphicon glyphicon-chevron-down"></span>
                         </button>
 
-                        <button type="button" class="navbar-toggle article-index" data-toggle="collapse" data-target="#article-navbar-collapse">
-                            <span class="glyphicon glyphicon-chevron-down"></span>
-                        </button>
+
+                        </div>
+                        <div class="collapse navbar-collapse" id="example-navbar-collapse">
+                            <ul class="nav navbar-nav category">
+                                <li class="active"><a href="#">Go</a></li>
+                                <li><a href="#">C++</a></li>
+                                <li><a href="#">Python</a></li>
+                                <li><a href="#">Javascript</a></li>
+                                <li><a href="#">Rust</a></li>
+                            </ul>
+
+                            <ul class="nav navbar-nav navbar-right login">
+                                <li><a href="#">登录</a></li>
+                            </ul>
+                        </div>
                     </div>
-                    <div class="collapse navbar-collapse" id="example-navbar-collapse">
-                        <ul class="nav navbar-nav category">
-                            <li class="active"><a href="#">iOS</a></li>
-                            <li><a href="#">SVN</a></li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            Java <b class="caret"></b>
-                        </a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">jmeter</a></li>
-                                    <li><a href="#">EJB</a></li>
-                                    <li><a href="#">Jasper Report</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#">分离的链接</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#">另一个分离的链接</a></li>
-                                </ul>
+                </nav>
+
+            </div>
+            <!-- 内容区 -->
+            <div class="row content">
+                <!-- 页面左侧区域 -->
+                <div class="col-md-2 col-sm-2  article-col left-side">
+                    <!-- 侧边栏文章索引 -->
+                    <div class="navbar-collapse collapse hidden-xs" id="article-navbar-collapse">
+                        <ul class="nav nav-pills nav-stacked sidebar ">
+                            <li class="active"><a href="#">Go基础<span class="glyphicon glyphicon-menu-right"></span></a></li>
+                            <li><a data-toggle="collapse" href="#collapseTwo">协程<span class="glyphicon glyphicon-menu-right"></span></a>
+                                <div id="collapseTwo" class="collapse">
+                                    <ul class="nav nav-pills nav-stacked sub-sidebar">
+                                        <li><a href="#">协程并发</a> </li>
+                                        <li><a href="#">协程管理</a></li>
+                                        <li><a href="#">协程通信</a></li>
+                                        <li><a href="#">协程关闭回收</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li><a data-toggle="collapse" href="#collapseThree">接口<span class="glyphicon glyphicon-menu-right"></span></a>
+                                <div id="collapseThree" class="collapse">
+                                    <ul class="nav nav-pills nav-stacked sub-sidebar">
+                                        <li class><a href="#">接口特性</a></li>
+                                        <li><a href="#">接口与反射</a></li>
+                                        <li><a href="#">接口结构</a></li>
+                                        <li><a href="#">接口转换</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li><a data-toggle="collapse" href="#">TCP网络<span class="glyphicon glyphicon-menu-right"></span></a></li>
+                            <li><a data-toggle="collapse" href="#">Http网络<span class="glyphicon glyphicon-menu-right"></span></a></li>
+                            <li><a data-toggle="collapse" href="#">WebSocket<span class="glyphicon glyphicon-menu-right"></span></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- 文章内容区域 -->
+                <div class="col-md-8 col-sm-8 col-xs-12 contant-col">
+                    <div class="article-data">
+                        <div class="blog-header">
+                            <h1 class="blog-title">The Bootstrap Blog</h1>
+                            <p class="lead blog-description">The official example template of creating a blog with Bootstrap.</p>
+                        </div>
+
+                        <div class="blog-post">
+                            <h2 class="blog-post-title">Sample blog post</h2>
+                            <p class="blog-post-meta">January 1, 2014 by <a href="#">Mark</a></p>
+
+                            <p>This blog post shows a few different types of content that's supported and styled with Bootstrap. Basic typography, images, and code are all supported.</p>
+                            <hr>
+                            <p>Cum sociis natoque penatibus et magnis <a href="#">dis parturient montes</a>, nascetur ridiculus mus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Cras
+                                mattis consectetur purus sit amet fermentum.</p>
+                            <blockquote>
+                                <p>Curabitur blandit tempus porttitor. <strong>Nullam quis risus eget urna mollis</strong> ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                            </blockquote>
+                            <p>Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
+                            <h2>Heading</h2>
+                            <p>Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Morbi leo risus, porta ac consectetur ac, vestibulum at
+                                eros.
+                            </p>
+                            <h3>Sub-heading</h3>
+                            <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+                            <pre><code>Example code block</code></pre>
+                            <p>Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna mollis euismod. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa.</p>
+                            <h3>Sub-heading</h3>
+                            <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna mollis euismod. Fusce dapibus, tellus ac cursus commodo, tortor
+                                mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+                            <ul>
+                                <li>Praesent commodo cursus magna, vel scelerisque nisl consectetur et.</li>
+                                <li>Donec id elit non mi porta gravida at eget metus.</li>
+                                <li>Nulla vitae elit libero, a pharetra augue.</li>
+                            </ul>
+                            <p>Donec ullamcorper nulla non metus auctor fringilla. Nulla vitae elit libero, a pharetra augue.</p>
+                            <ol>
+                                <li>Vestibulum id ligula porta felis euismod semper.</li>
+                                <li>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</li>
+                                <li>Maecenas sed diam eget risus varius blandit sit amet non magna.</li>
+                            </ol>
+                            <p>Cras mattis consectetur purus sit amet fermentum. Sed posuere consectetur est at lobortis.</p>
+                        </div>
+                        <!-- /.blog-post -->
+
+                        <div class="blog-post">
+                            <h2 class="blog-post-title">Another blog post</h2>
+                            <p class="blog-post-meta">December 23, 2013 by <a href="#">Jacob</a></p>
+
+                            <p>Cum sociis natoque penatibus et magnis <a href="#">dis parturient montes</a>, nascetur ridiculus mus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Cras
+                                mattis consectetur purus sit amet fermentum.</p>
+                            <blockquote>
+                                <p>Curabitur blandit tempus porttitor. <strong>Nullam quis risus eget urna mollis</strong> ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                            </blockquote>
+                            <p>Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
+                            <p>Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Morbi leo risus, porta ac consectetur ac, vestibulum at
+                                eros.
+                            </p>
+                        </div>
+                        <!-- /.blog-post -->
+
+                        <div class="blog-post">
+                            <h2 class="blog-post-title">New feature</h2>
+                            <p class="blog-post-meta">December 14, 2013 by <a href="#">Chris</a></p>
+
+                            <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna mollis euismod. Fusce dapibus, tellus ac cursus commodo, tortor
+                                mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+                            <ul>
+                                <li>Praesent commodo cursus magna, vel scelerisque nisl consectetur et.</li>
+                                <li>Donec id elit non mi porta gravida at eget metus.</li>
+                                <li>Nulla vitae elit libero, a pharetra augue.</li>
+                            </ul>
+                            <p>Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
+                            <p>Donec ullamcorper nulla non metus auctor fringilla. Nulla vitae elit libero, a pharetra augue.</p>
+                        </div>
+                        <!-- /.blog-post -->
+
+                        <nav>
+                            <ul class="pager">
+                                <li><a href="#">Previous</a></li>
+                                <li><a href="#">Next</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <!-- /.blog-main -->
+                    <div class="browselist">
+                        <ul class="list-inline">
+                            <li>
+                                <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-eye-open browse"></span><span> 浏览(4900000)</span></a>
+                            </li>
+                            <li>
+                                <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-comment comment"></span><span> 评论(4900000)</span></a>
+                            </li>
+                            <li>
+                                <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-time time"></span><span>2020-01-26 18:13:06</span></a>
                             </li>
                         </ul>
+                    </div>
 
-                        <ul class="nav navbar-nav navbar-right login">
-                            <li><a href="#">登录</a></li>
-                        </ul>
+                </div>
+
+                <!-- 页面右侧区域 -->
+                <div class="col-md-2 col-sm-2 col-xs-12 right-side">
+                    <div class="sidebar-module sidebar-module-inset">
+                        <h4>About</h4>
+                        <p>Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
+                    </div>
+                    <div class="sidebar-module">
+                        <h4>Archives</h4>
+                        <ol class="list-unstyled">
+                            <li><a href="#">March 2014</a></li>
+                            <li><a href="#">February 2014</a></li>
+                            <li><a href="#">January 2014</a></li>
+                            <li><a href="#">December 2013</a></li>
+                            <li><a href="#">November 2013</a></li>
+                            <li><a href="#">October 2013</a></li>
+                            <li><a href="#">September 2013</a></li>
+                            <li><a href="#">August 2013</a></li>
+                            <li><a href="#">July 2013</a></li>
+                            <li><a href="#">June 2013</a></li>
+                            <li><a href="#">May 2013</a></li>
+                            <li><a href="#">April 2013</a></li>
+                        </ol>
+                    </div>
+                    <div class="sidebar-module">
+                        <h4>Elsewhere</h4>
+                        <ol class="list-unstyled">
+                            <li><a href="#">GitHub</a></li>
+                            <li><a href="#">Twitter</a></li>
+                            <li><a href="#">Facebook</a></li>
+                        </ol>
                     </div>
                 </div>
-            </nav>
 
+
+            </div>
+            <footer class="blog-footer">
+                <p><span class="glyphicon glyphicon-user webbrowser"></span><span>本站累计访问量10240000次</span></p>
+                <p>Blog template built for <a href="https://getbootstrap.com/">Bootstrap</a> by <a href="https://www.limerence2017.com">@恋恋风辰个人博客</a>.</p>
+                <p>
+                    <a href="#">Back to top</a>
+                </p>
+            </footer>
         </div>
-        <!-- 内容区 -->
-        <div class="row content">
-            <!-- 页面左侧区域 -->
-            <div class="col-md-2 col-sm-2  article-col left-side">
-                <!-- 侧边栏文章索引 -->
-                <div class="navbar-collapse collapse " id="article-navbar-collapse">
-                    <ul class="nav nav-pills nav-stacked sidebar ">
-                        <li class="active"><a href="#">Home</a></li>
-                        <li><a data-toggle="collapse" href="#collapseTwo">SVN</a>
-                            <div id="collapseTwo" class="collapse">
-                                <ul class="nav nav-pills nav-stacked sub-sidebar">
-                                    <li class><a href="#">Home</a></li>
-                                    <li><a href="#">SVN</a></li>
-                                    <li><a href="#">iOS</a></li>
-                                    <li><a href="#">Java</a></li>
-                                    <li><a href="#">PHP</a></li>
-                                    <li class><a href="#">Home</a></li>
-                                    <li><a href="#">SVN</a></li>
-                                    <li><a href="#">iOS</a></li>
-                                    <li><a href="#">Java</a></li>
-                                    <li><a href="#">PHP</a></li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li><a data-toggle="collapse" href="#collapseThree">VB.Net11111</a>
-                            <div id="collapseThree" class="collapse">
-                                <ul class="nav nav-pills nav-stacked sub-sidebar">
-                                    <li class><a href="#">Home</a></li>
-                                    <li><a href="#">SVN</a></li>
-                                    <li><a href="#">iOS</a></li>
-                                    <li><a href="#">Java</a></li>
-                                    <li><a href="#">PHP</a></li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li><a data-toggle="collapse" href="#">iOS</a></li>
-                        <li><a data-toggle="collapse" href="#">Java</a></li>
-                        <li><a data-toggle="collapse" href="#">PHP</a></li>
-                    </ul>
-                </div>
-            </div>
-            <!-- 文章内容区域 -->
-            <div class="col-md-8 col-sm-8 col-xs-12 contant-col">
-
-                <div id="maincontent">
-                    中间区域
-                    <div id="intro">
-                        <p><strong>jQuery 拥有可操作 HTML 元素和属性的强大方法。</strong></p>
-                    </div>
+    </div>
 
 
-                    <div>
-                        <h2>jQuery DOM 操作</h2>
-
-                        <p>jQuery 中非常重要的部分，就是操作 DOM 的能力。</p>
-
-                        <p>jQuery 提供一系列与 DOM 相关的方法，这使访问和操作元素和属性变得很容易。</p>
-
-                        <p class="tip"><span>提示：</span>DOM = Document Object Model（文档对象模型）</p>
-
-                        <p>DOM 定义访问 HTML 和 XML 文档的标准：</p>
-
-                        <p>“W3C 文档对象模型独立于平台和语言的界面，允许程序和脚本动态访问和更新文档的内容、结构以及样式。”</p>
-                    </div>
-
-
-                    <div>
-                        <h2>获得内容 - text()、html() 以及 val()</h2>
-
-                        <p>三个简单实用的用于 DOM 操作的 jQuery 方法：</p>
-
-                        <ul>
-                            <li>text() - 设置或返回所选元素的文本内容</li>
-                            <li>html() - 设置或返回所选元素的内容（包括 HTML 标记）</li>
-                            <li>val() - 设置或返回表单字段的值</li>
-                        </ul>
-
-                        <p>下面的例子演示如何通过 jQuery text() 和 html() 方法来获得内容：</p>
-
-                        <h3>实例</h3>
-
-                        <pre>$("#btn1").click(function(){
-                          alert("Text: " + $("#test").text());
-                        });
-                        $("#btn2").click(function(){
-                          alert("HTML: " + $("#test").html());
-                        });
-                        </pre>
-
-                        <p class="tiy"><a target="_blank" href="/tiy/t.asp?f=jquery_dom_html_get">亲自试一试</a></p>
-
-                        <p>下面的例子演示如何通过 jQuery val() 方法获得输入字段的值：</p>
-
-                        <h3>实例</h3>
-
-                        <pre>$("#btn1").click(function(){
-                          alert("Value: " + $("#test").val());
-                        });
-                        </pre>
-
-                        <p class="tiy"><a target="_blank" href="/tiy/t.asp?f=jquery_dom_val_get">亲自试一试</a></p>
-                    </div>
-
-
-                    <div>
-                        <h2>获取属性 - attr()</h2>
-
-                        <p>jQuery attr() 方法用于获取属性值。</p>
-
-                        <p>下面的例子演示如何获得链接中 href 属性的值：</p>
-
-                        <h3>实例</h3>
-
-                        <pre>$("button").click(function(){
-                          alert($("#w3s").attr("href"));
-                        });
-                        </pre>
-
-                        <p class="tiy"><a target="_blank" href="/tiy/t.asp?f=jquery_dom_attr_get">亲自试一试</a></p>
-
-                        <p>下一章会讲解如何设置（改变）内容和属性值。</p>
-                    </div>
-
-
-                    <div>
-                        <h2>jQuery HTML 参考手册</h2>
-
-                        <p>如需有关 jQuery HTML 方法的完整内容，请访问以下参考手册：</p>
-
-                        <ul>
-                            <li><a href="/jquery/jquery_ref_manipulation.asp" title="jQuery 参考手册 - 文档操作">jQuery 文档操作</a></li>
-                            <li><a href="/jquery/jquery_ref_attributes.asp" title="jQuery 参考手册 - 属性操作">jQuery 属性操作</a></li>
-                            <li><a href="/jquery/jquery_ref_css.asp" title="jQuery 参考手册 - CSS 操作">jQuery CSS 操作</a></li>
-                        </ul>
-                    </div>
-                    <div>
-
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- 页面右侧区域 -->
-            <div class="col-md-2 col-sm-2 col-xs-12 right-side">
-                <div>
-                    右侧待写
-                </div>
-            </div>
-
-
-        </div>
-
-        <footer class="blog-footer">
-            <p class="glyphicon glyphicon-user">本站累计访问量<span>10240000</span>次</p>
-            <p>Blog template built for <a href="https://getbootstrap.com/">Bootstrap</a> by <a href="https://twitter.com/mdo">@mdo</a>.</p>
-            <p>
-                <a href="#">Back to top</a>
-            </p>
-        </footer>
-
-        <script type="text/javascript" src="../../public/home/index.js"></script>
+    <script type="text/javascript" src="../../public/home/index.js"></script>
 </body>
 
 </html>
