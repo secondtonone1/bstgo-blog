@@ -18,6 +18,7 @@
     <!-- bootstrap的核心js文件 -->
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/wangeditor@latest/dist/wangEditor.min.js"></script>
     <title>恋恋风辰官方博客</title>
 </head>
 
@@ -215,7 +216,8 @@
                         </nav>
                     </div>
                     <!-- /.blog-main -->
-                    <div class="browselist">
+                    <!-- 底部浏览量 评论量等信息 -->
+                    <div class="browselist clearfix">
                         <ul class="list-inline">
                             <li>
                                 <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-eye-open browse"></span><span> 浏览(4900000)</span></a>
@@ -229,6 +231,24 @@
                         </ul>
                     </div>
 
+                    <hr class="grey-hr">
+
+                    <!-- 评论展示区 -->
+                    <div class="label label-default comment-label">热门评论</div>
+                    <div class="comment-list">
+                        <ul class="comment-list-ul list-unstyled">
+                            <li class="comment-ul-li">
+                                <div class="comment-head-icon">
+                                    <img class="img-circle" src="https://profile.csdnimg.cn/6/9/0/3_nongweiyilady" alt="" class="img-circle">
+                                </div>
+
+                                <div class="comment-name text-primary">恋恋风辰</div>
+
+
+                                <div class="comment-content">第一条演示评论</div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
                 <!-- 页面右侧区域 -->
@@ -266,6 +286,7 @@
 
 
             </div>
+            <!-- 底部footer -->
             <footer class="blog-footer">
                 <p><span class="glyphicon glyphicon-user webbrowser"></span><span>本站累计访问量10240000次</span></p>
                 <p>Blog template built for <a href="https://getbootstrap.com/">Bootstrap</a> by <a href="https://www.limerence2017.com">@恋恋风辰个人博客</a>.</p>

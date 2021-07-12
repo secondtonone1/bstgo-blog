@@ -2,6 +2,10 @@ h1 {
     display: none;
 }
 
+hr.grey-hr {
+    border-top: 1px solid #c1c1c1;
+}
+
 
 /**************外层布局*****************/
 
@@ -261,8 +265,22 @@ h1 {
     margin-bottom: 0;
 }
 
+
+/* 浏览量 */
+
 .webbrowser {
     font-size: x-small;
+}
+
+
+/* 评论区 */
+
+.comment-label {
+    font-size: 100%;
+}
+
+.comment-list {
+    margin-top: 30px;
 }
 
 
