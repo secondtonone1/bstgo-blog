@@ -14,11 +14,19 @@
     <link rel="stylesheet" href="../../public/lib/bootstrap/css/bootstrap.min.css">
     <!-- 引入我们自己的首页样式文件 -->
     <link rel="stylesheet" href="../../public/home/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atelier-forest-dark.min.css">
     <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"> -->
     <!-- bootstrap的核心js文件 -->
-    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script> -->
+    <!-- <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+    <script src="../../public/lib/jquery/jquery-1.12.4.min.js"></script>
+    <script src="../../public/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="http://cdn.bootcss.com/highlight.js/8.0/highlight.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/wangeditor@latest/dist/wangEditor.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlightjs-line-numbers.js@2.6.0/dist/highlightjs-line-numbers.min.js"></script>
+    <script src="../../public/lib/template/template-web.js"></script>
+    <script type="text/javascript" src="../../public/lib/common/common.js"></script>
+
     <title>恋恋风辰官方博客</title>
 </head>
 
@@ -222,32 +230,88 @@
                             <li>
                                 <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-eye-open browse"></span><span> 浏览(4900000)</span></a>
                             </li>
-                            <li>
+                            <li id="comment-num">
                                 <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-comment comment"></span><span> 评论(4900000)</span></a>
                             </li>
                             <li>
-                                <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-time time"></span><span>2020-01-26 18:13:06</span></a>
+                                <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-heart-empty"></span><span>喜欢(3400)</span></a>
                             </li>
                         </ul>
                     </div>
 
-                    <hr class="grey-hr">
 
                     <!-- 评论展示区 -->
-                    <div class="label label-default comment-label">热门评论</div>
+                    <div class="label label-default comment-label" id="comment-label-id">热门评论</div>
+                    <div class="comment-wrapper clearfix">
+                        <div class="comment-editor">
+
+                        </div>
+                        <button type="button" class="btn btn-primary comment-commit-btn">评论</button>
+                    </div>
+
                     <div class="comment-list">
                         <ul class="comment-list-ul list-unstyled">
                             <li class="comment-ul-li">
-                                <div class="comment-head-icon">
-                                    <img class="img-circle" src="https://profile.csdnimg.cn/6/9/0/3_nongweiyilady" alt="" class="img-circle">
+                                <div class="clearfix comment-info">
+                                    <div class="comment-head-icon">
+                                        <img class="img-circle" src="https://profile.csdnimg.cn/6/9/0/3_nongweiyilady" alt="" class="img-circle">
+                                    </div>
+                                    <div class="comment-user">
+                                        <div class="comment-name text-primary">恋恋风辰</div>
+                                        <div class="comment-date text-muted"> <span class="glyphicon glyphicon-time"></span> 2020-12-22 15:52</div>
+                                    </div>
                                 </div>
 
-                                <div class="comment-name text-primary">恋恋风辰</div>
+                                <div class="comment-content">
+                                    <p>2010年正好参加工作 就开始在YY听了,在那个排麦的年代，特别希望排在你前面的人被抱下麦或者不唱了，那是一件很开心的事情，后来去QT 就找不到了，看斗鱼的这段时间就想过如果暗杠到斗鱼会不会火，现在来了依然没有火，应为好的东西肯定只有一部分比较有品位的人才能懂的，祝贺你们，你们都是有品位的</p>
+                                </div>
 
+                                <div class="comment-love clearfix">
+                                    <ul class="comment-love-ul list-inline">
+                                        <li>
+                                            <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-heart-empty"></span><span> 喜欢(4900000)</span></a>
+                                        </li>
+                                        <li class="reply-num">
+                                            <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-comment"></span><span> 回复(4900000)</span></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="clearfix reply-text">
+                                    <form role="form">
+                                        <div class="form-group">
+                                            <textarea class="form-control" rows="1"></textarea>
+                                        </div>
+                                        <button class="btn btn-primary reply-btn">回复</button>
+                                    </form>
+                                </div>
+                                <ul class="comment-replay list-unstyled">
+                                    <li class="reply-ul-li">
+                                        <div class="clearfix reply-info">
+                                            <div class="reply-head-icon">
+                                                <img class="img-circle" src="https://profile.csdnimg.cn/7/7/A/1_secondtonone1" alt="" class="img-circle">
+                                            </div>
+                                            <div class="reply-user">
+                                                <div class="reply-name text-primary">恋恋风辰</div>
+                                                <div class="reply-date text-muted"> <span class="glyphicon glyphicon-time"></span> 2020-12-22 15:52</div>
+                                            </div>
+                                        </div>
 
-                                <div class="comment-content">第一条演示评论</div>
+                                        <div class="reply-content">
+                                            <p>有女生问我520是什么意思，我笑了:5是5个落实，落实经济结构调整，落实精准扶赏，落实社会保障，落实环境治理，落实反腐倡廉，2是2个要，既要金山银山，又要绿水青山，0是对违法犯罪行为的零容忍</p>
+                                        </div>
+
+                                        <div class="reply-love clearfix">
+                                            <ul class="reply-love-ul list-inline">
+                                                <li>
+                                                    <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-heart-empty"></span><span> 喜欢(4900000)</span></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
                             </li>
                         </ul>
+
                     </div>
                 </div>
 
@@ -297,7 +361,43 @@
         </div>
     </div>
 
+    <!-- 评论列表模板 -->
+    <script type="text/html" id="comment-li-tpl">
+        <li class="comment-ul-li">
+            <div class="clearfix comment-info">
+                <div class="comment-head-icon">
+                    <img class="img-circle" src="{{comment_head}}" alt="" class="img-circle">
+                </div>
+                <div class="comment-user">
+                    <div class="comment-name text-primary">{{comment_name}}</div>
+                    <div class="comment-date text-muted"> <span class="glyphicon glyphicon-time"></span>{{comment_date}}</div>
+                </div>
+            </div>
 
+            <div class="comment-content">
+                {{@comment_content}}
+            </div>
+
+            <div class="comment-love clearfix">
+                <ul class="comment-love-ul list-inline">
+                    <li>
+                        <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-heart-empty"></span><span> 喜欢(0)</span></a>
+                    </li>
+                    <li class="reply-num">
+                        <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-comment"></span><span> 回复(0)</span></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="clearfix reply-text">
+                <form role="form">
+                    <div class="form-group">
+                        <textarea class="form-control" rows="1"></textarea>
+                    </div>
+                    <button class="btn btn-primary reply-btn">回复</button>
+                </form>
+            </div>
+        </li>
+    </script>
     <script type="text/javascript" src="../../public/home/index.js"></script>
 </body>
 

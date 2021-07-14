@@ -6,6 +6,34 @@ hr.grey-hr {
     border-top: 1px solid #c1c1c1;
 }
 
+a:focus {
+    text-decoration: none
+}
+
+
+/* 代码行号 */
+
+.hljs-ln-numbers {
+    text-align: center;
+    color: #ccc;
+    border-right: 1px solid #999;
+    vertical-align: top;
+    padding-right: 5px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+
+/* 对于代码块 */
+
+.hljs-ln-code {
+    padding-left: 10px;
+}
+
 
 /**************外层布局*****************/
 
@@ -27,7 +55,7 @@ hr.grey-hr {
 
 .mask {
     display: none;
-    z-index: 2000;
+    z-index: 20000;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.2);
@@ -47,6 +75,13 @@ hr.grey-hr {
 
 
 /**************小屏幕伸缩侧边栏*****************/
+
+
+/* 标题导航栏 */
+
+.navbar-fixed-top {
+    z-index: 10040;
+}
 
 
 /* 小屏幕下文章索引侧边栏 */
@@ -222,31 +257,11 @@ hr.grey-hr {
 
 .browselist {
     padding-top: 1.25rem;
+    padding-bottom: .625rem;
 }
 
 .browselist ul {
     float: right;
-    font-size: x-small;
-}
-
-
-/* 浏览图标 */
-
-.browse {
-    font-size: x-small;
-}
-
-
-/* 评论图标 */
-
-.comment {
-    font-size: x-small;
-}
-
-
-/* 时间图标 */
-
-.time {
     font-size: x-small;
 }
 
@@ -284,6 +299,182 @@ hr.grey-hr {
 }
 
 
+/* 评论区头像 */
+
+
+/* 用户头像 */
+
+.comment-head-icon img {
+    width: 50px;
+    height: 50px;
+}
+
+.comment-head-icon img:hover {
+    cursor: pointer;
+}
+
+
+/* 用户名 */
+
+.comment-name {
+    padding-bottom: 2px;
+}
+
+.comment-name:hover {
+    cursor: pointer;
+}
+
+
+/* 评论日期 */
+
+.comment-date {
+    font-size: x-small;
+}
+
+
+/* 用户信息浮动并排显示 */
+
+.comment-user,
+.comment-head-icon {
+    float: left;
+}
+
+
+/* 设置用户信息内边距 */
+
+.comment-user {
+    padding-left: 1.25rem;
+    padding-top: .3125rem
+}
+
+
+/* 评论区内容 */
+
+.comment-content {
+    padding-left: 65px;
+    color: #666666;
+}
+
+.comment-content.p {
+    word-wrap: break-word;
+    word-break: normal;
+}
+
+
+/* 评论区用户信息 */
+
+.comment-info {
+    border-top: #D0D1D6 solid 1px;
+    padding-top: 20px;
+}
+
+
+/* 评论区点赞与回复 */
+
+.comment-love-ul {
+    float: right;
+    font-size: x-small;
+}
+
+.comment-love {
+    padding: 5px 0;
+}
+
+
+/* 评论区回复 */
+
+.comment-replay {
+    padding: 20px 0 0 65px;
+}
+
+.reply-name {
+    padding-bottom: 2px;
+}
+
+.reply-name:hover {
+    cursor: pointer;
+}
+
+.reply-content {
+    color: #666666;
+}
+
+.reply-date {
+    font-size: x-small;
+}
+
+.reply-head-icon,
+.reply-user {
+    float: left;
+}
+
+.reply-user {
+    padding-left: 1.25rem;
+    padding-top: .3125rem
+}
+
+.reply-head-icon img {
+    width: 50px;
+    height: 50px;
+}
+
+.reply-content {
+    padding-left: 65px;
+    color: #666666;
+}
+
+.reply-info {
+    border-top: #D0D1D6 solid 1px;
+    padding-top: 20px;
+}
+
+
+/* 评论区点赞与回复 */
+
+.reply-love-ul {
+    float: right;
+    font-size: x-small;
+}
+
+.reply-love {
+    padding: 5px 0;
+}
+
+
+/* 回复编辑框 */
+
+.reply-text {
+    margin: 10px 0 10px 65px;
+    padding: 10px;
+    background-color: #F5F5F5;
+    display: none;
+}
+
+.reply-btn {
+    float: right;
+    font-size: x-small;
+}
+
+
+/* 评论编辑框 */
+
+.comment-wrapper {
+    padding-top: 20px;
+}
+
+.comment-editor {
+    padding-bottom: 20px;
+}
+
+
+/* 评论按钮 */
+
+.comment-commit-btn {
+    float: right;
+    font-size: x-small;
+}
+
+
 /************************************/
 
 
@@ -315,6 +506,13 @@ hr.grey-hr {
     .article-col {
         padding-left: 0;
         padding-right: 0;
+    }
+    .w-e-panel-container {
+        width: 18.75rem!important;
+        margin-left: -18.75rem!important;
+    }
+    .comment-editor {
+        top: 50px!important;
     }
 }
 

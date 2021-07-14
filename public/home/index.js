@@ -11,9 +11,10 @@ $('.sidebar>li>a').on('click', function() {
         //将点击的一级标题设置active类，其他一级标题移除active
     $(this).parent().addClass("active").siblings().removeClass("active")
         // 将其他一级目录图标切换为初始化右箭头
-    console.log($(this).parent().siblings().children('a').children('span'))
+        //console.log($(this).parent().siblings().children('a').children('span'))
     $(this).parent().siblings().children('a').children('span').removeClass('glyphicon glyphicon-menu-down').removeClass('glyphicon glyphicon-menu-right').addClass('glyphicon glyphicon-menu-right')
-        //将自己的一级目录图标切换
+
+    //将自己的一级目录图标切换
     if ($(this).children('span').attr('class').trim() == 'glyphicon glyphicon-menu-right') {
         $(this).children('span').removeClass('glyphicon glyphicon-menu-right')
         $(this).children('span').addClass('glyphicon glyphicon-menu-down')
@@ -21,7 +22,6 @@ $('.sidebar>li>a').on('click', function() {
         $(this).children('span').removeClass('glyphicon glyphicon-menu-down')
         $(this).children('span').addClass('glyphicon glyphicon-menu-right')
     }
-
 })
 
 //点击文章索引边栏的二级目录
@@ -62,4 +62,80 @@ $('.xs-article-index-wrapper>ul>li>div a').on('click', function() {
     $('.xs-article-index-wrapper>ul>li>div a').parent().removeClass('active')
         //设置点击的二级标题active
     $(this).parent().addClass('active')
+})
+
+//按钮点击事件
+$('.comment-commit-btn').on('click', function() {
+    if (window.editor.txt.html().trim() == "") {
+        return
+    }
+    var comment_data = {
+        "comment_name": "江边皓月",
+        "comment_head": "https://profile.csdnimg.cn/2/D/2/3_akiss33",
+        "comment_date": ' ' + formatDate(new Date().getTime()),
+        "comment_content": window.editor.txt.html(),
+    }
+    var html = template('comment-li-tpl', comment_data)
+    $(".comment-list-ul").prepend(html)
+    window.editor.txt.clear()
+    return
+})
+
+//点击评论数
+$('#comment-num').on('click', function() {
+    console.log("comment-num clicked")
+    $('html , body').animate({ scrollTop: $('#comment-label-id').offset().top - 200 }, 300);
+    window.editor.txt.html("")
+})
+
+//点击回复数开启回复功能
+$('.comment-list-ul').on('click', '.reply-num', function(e) {
+    $(this).parent().parent().siblings('.reply-text').stop().slideToggle()
+    $(this).parent().parent().siblings('.reply-text').find('textarea').focus()
+})
+
+// $('.comment-list-ul').on('blur', '.reply-text textarea', function(e) {
+//     $(this).parent().parent().parent(".reply-text").stop().slideUp();
+// })
+
+$(function() {
+    const E = window.wangEditor
+    const editor = new E('.comment-editor')
+        //    设置编辑区域高度为 500 px
+    editor.config.height = 100
+        //配置菜单
+    editor.config.menus = [
+        'head',
+        'bold',
+        // 'fontSize',
+        // 'fontName',
+        'italic',
+        //'underline',
+        //'strikeThrough',
+        // 'indent',
+        //'lineHeight',
+        //'foreColor',
+        //'backColor',
+        'link',
+        'list',
+        //'todo',
+        // 'justify',
+        'quote',
+        'emoticon',
+        //'image',
+        //'video',
+        //'table',
+        'code',
+        'splitLine',
+        'undo',
+        'redo',
+    ]
+    hljs.initHighlightingOnLoad(); // 初始化
+    hljs.initLineNumbersOnLoad();
+    editor.highlight = hljs
+    editor.config.languageTab = '    '
+    editor.config.pasteIgnoreImg = false
+    editor.config.uploadImgShowBase64 = true
+    editor.create()
+    window.editor = editor
 })
