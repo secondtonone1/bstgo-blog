@@ -89,14 +89,97 @@ $('#comment-num').on('click', function() {
 })
 
 //点击回复数开启回复功能
-$('.comment-list-ul').on('click', '.reply-num', function(e) {
-    $(this).parent().parent().siblings('.reply-text').stop().slideToggle()
-    $(this).parent().parent().siblings('.reply-text').find('textarea').focus()
+$('.comment-list-ul').on('click', '.reply-num a', function(e) {
+    $(this).parent().parent().parent().siblings('.reply-text').stop().slideToggle()
+    $(this).parent().parent().parent().siblings('.reply-text').find('textarea').focus()
+})
+
+//点击回复按钮
+$('.comment-list-ul').on('click', '.reply-btn', function(e) {
+    console.log("回复按钮点击")
+    let textarea_ = $(this).siblings('form').children('div').children('textarea')
+    let span_reply = $(this).parent().siblings('.comment-love').find('span.reply-span')
+    if (textarea_.val().trim() == "") {
+        return
+    }
+    console.log(textarea_)
+    var reply_data = {
+        "reply_name": "初见未来",
+        "reply_head": "https://profile.csdnimg.cn/C/C/9/3_weixin_46378962",
+        "reply_date": ' ' + formatDate(new Date().getTime()),
+        "reply_content": textarea_.val().trim(),
+    }
+    var html = template('reply-li-tpl', reply_data)
+    console.log(html)
+    $(this).parent().siblings('.comment-replay').prepend(html)
+    textarea_.val("")
+
+    let num = span_reply.text().match(/\d+/g)[0] - 0 + 1
+    console.log(num)
+    span_reply.text(' 回复(' + num + ')')
+    return
 })
 
 // $('.comment-list-ul').on('blur', '.reply-text textarea', function(e) {
 //     $(this).parent().parent().parent(".reply-text").stop().slideUp();
 // })
+
+//文章点击喜欢数
+$('#love-num').on('click', 'a', function() {
+    //console.log($(this))
+    $(this).siblings('div').stop().fadeIn(1000, function() {
+            $(this).fadeOut()
+        })
+        //已经点赞了
+    console.log($(this).children('span.glyphicon').attr('class'))
+    if ($(this).children('span.glyphicon').attr('class').indexOf('glyphicon-heart-empty') == -1) {
+        return
+    }
+    $(this).children('span.glyphicon').removeClass('glyphicon glyphicon-heart-empty').addClass('glyphicon glyphicon-heart')
+    let love_span = $(this).children('.love-span')
+    let love_num = love_span.text().match(/\d+/g)[0]
+    console.log(love_num)
+    love_span.text(' 喜欢(' + (love_num - 0 + 1) + ')')
+})
+
+
+//评论点击喜欢数
+$('.comment-list-ul').on('click', '.love-num-li a', function() {
+    //console.log($(this))
+    $(this).siblings('div').stop().fadeIn(1000, function() {
+            $(this).fadeOut(1000)
+        })
+        //已经点赞了
+    console.log($(this).children('span.glyphicon').attr('class'))
+    if ($(this).children('span.glyphicon').attr('class').indexOf('glyphicon-heart-empty') == -1) {
+        return
+    }
+
+    $(this).children('span.glyphicon').removeClass('glyphicon glyphicon-heart-empty').addClass('glyphicon glyphicon-heart')
+    let love_span = $(this).children('.love-span')
+    let love_num = love_span.text().match(/\d+/g)[0]
+    console.log(love_num)
+    love_span.text(' 喜欢(' + (love_num - 0 + 1) + ')')
+})
+
+// 回复区点赞喜欢数
+$('.comment-list-ul').on('click', '.love-num-li a', function() {
+    //console.log($(this))
+    $(this).siblings('div').stop().fadeIn(1000, function() {
+            $(this).fadeOut(1000)
+        })
+        //已经点赞了
+    console.log($(this).children('span.glyphicon').attr('class'))
+    if ($(this).children('span.glyphicon').attr('class').indexOf('glyphicon-heart-empty') == -1) {
+        return
+    }
+    $(this).children('span.glyphicon').removeClass('glyphicon glyphicon-heart-empty').addClass('glyphicon glyphicon-heart')
+    let love_span = $(this).children('.love-span')
+    let love_num = love_span.text().match(/\d+/g)[0]
+    console.log(love_num)
+    love_span.text(' 喜欢(' + (love_num - 0 + 1) + ')')
+})
+
 
 $(function() {
     const E = window.wangEditor

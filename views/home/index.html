@@ -233,8 +233,9 @@
                             <li id="comment-num">
                                 <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-comment comment"></span><span> 评论(4900000)</span></a>
                             </li>
-                            <li>
-                                <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-heart-empty"></span><span>喜欢(3400)</span></a>
+                            <li id="love-num">
+                                <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-heart-empty"></span><span class="love-span">喜欢(3400)</span></a>
+                                <div class="alert alert-info">已点赞!</div>
                             </li>
                         </ul>
                     </div>
@@ -268,11 +269,12 @@
 
                                 <div class="comment-love clearfix">
                                     <ul class="comment-love-ul list-inline">
-                                        <li>
-                                            <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-heart-empty"></span><span> 喜欢(4900000)</span></a>
+                                        <li class="love-num-li">
+                                            <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-heart-empty"></span><span class="love-span"> 喜欢(4900000)</span></a>
+                                            <div class="alert alert-info">已点赞!</div>
                                         </li>
                                         <li class="reply-num">
-                                            <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-comment"></span><span> 回复(4900000)</span></a>
+                                            <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-comment"></span><span class="reply-span"> 回复(4900000)</span></a>
                                         </li>
                                     </ul>
                                 </div>
@@ -281,8 +283,8 @@
                                         <div class="form-group">
                                             <textarea class="form-control" rows="1"></textarea>
                                         </div>
-                                        <button class="btn btn-primary reply-btn">回复</button>
                                     </form>
+                                    <button class="btn btn-primary reply-btn">回复</button>
                                 </div>
                                 <ul class="comment-replay list-unstyled">
                                     <li class="reply-ul-li">
@@ -302,8 +304,9 @@
 
                                         <div class="reply-love clearfix">
                                             <ul class="reply-love-ul list-inline">
-                                                <li>
-                                                    <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-heart-empty"></span><span> 喜欢(4900000)</span></a>
+                                                <li class="love-num-li">
+                                                    <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-heart-empty"></span><span class="love-span"> 喜欢(4900000)</span></a>
+                                                    <div class="alert alert-info">已点赞!</div>
                                                 </li>
                                             </ul>
                                         </div>
@@ -380,11 +383,12 @@
 
             <div class="comment-love clearfix">
                 <ul class="comment-love-ul list-inline">
-                    <li>
-                        <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-heart-empty"></span><span> 喜欢(0)</span></a>
+                    <li class="love-num-li">
+                        <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-heart-empty"></span><span class="love-span"> 喜欢(0)</span></a>
+                        <div class="alert alert-info">已点赞!</div>
                     </li>
                     <li class="reply-num">
-                        <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-comment"></span><span> 回复(0)</span></a>
+                        <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-comment"></span><span class="reply-span"> 回复(0)</span></a>
                     </li>
                 </ul>
             </div>
@@ -393,8 +397,39 @@
                     <div class="form-group">
                         <textarea class="form-control" rows="1"></textarea>
                     </div>
-                    <button class="btn btn-primary reply-btn">回复</button>
                 </form>
+                <button class="btn btn-primary reply-btn">回复</button>
+            </div>
+            <ul class="comment-replay list-unstyled">
+            </ul>
+        </li>
+
+    </script>
+
+    <!-- 回复区模板 -->
+    <script type="text/html" id="reply-li-tpl">
+        <li class="reply-ul-li">
+            <div class="clearfix reply-info">
+                <div class="reply-head-icon">
+                    <img class="img-circle" src="{{reply_head}}" alt="">
+                </div>
+                <div class="reply-user">
+                    <div class="reply-name text-primary">{{reply_name}}</div>
+                    <div class="reply-date text-muted"> <span class="glyphicon glyphicon-time"></span>{{reply_date}}</div>
+                </div>
+            </div>
+
+            <div class="reply-content">
+                <p>{{@reply_content}}</p>
+            </div>
+
+            <div class="reply-love clearfix">
+                <ul class="reply-love-ul list-inline">
+                    <li class="love-num-li">
+                        <a href="JavaScript:void(0);"><span class="glyphicon-heart-empty glyphicon"></span><span class="love-span"> 喜欢(0)</span></a>
+                        <div class="alert alert-info" style="display: none; opacity: 1;">已点赞!</div>
+                    </li>
+                </ul>
             </div>
         </li>
     </script>

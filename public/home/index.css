@@ -288,6 +288,33 @@ a:focus {
 }
 
 
+/* 点赞数 */
+
+#love-num {
+    position: relative;
+}
+
+#love-num div {
+    position: absolute;
+    top: -150%;
+    padding: 2px;
+    left: 15%;
+    display: none;
+}
+
+.love-num-li {
+    position: relative;
+}
+
+.love-num-li div {
+    position: absolute;
+    top: -150%;
+    padding: 2px;
+    left: 15%;
+    display: none;
+}
+
+
 /* 评论区 */
 
 .comment-label {
