@@ -15,7 +15,7 @@ $('.sidebar>li>a').on('click', function() {
     $(this).parent().siblings().children('a').children('span').removeClass('glyphicon glyphicon-menu-down').removeClass('glyphicon glyphicon-menu-right').addClass('glyphicon glyphicon-menu-right')
 
     //将自己的一级目录图标切换
-    if ($(this).children('span').attr('class').trim() == 'glyphicon glyphicon-menu-right') {
+    if ($(this).children('span').attr('class').trim().indexOf('glyphicon-menu-right') != -1) {
         $(this).children('span').removeClass('glyphicon glyphicon-menu-right')
         $(this).children('span').addClass('glyphicon glyphicon-menu-down')
     } else {
@@ -103,21 +103,23 @@ $('.comment-list-ul').on('click', '.reply-btn', function(e) {
         return
     }
     console.log(textarea_)
-    var reply_data = {
-        "reply_name": "初见未来",
-        "reply_head": "https://profile.csdnimg.cn/C/C/9/3_weixin_46378962",
-        "reply_date": ' ' + formatDate(new Date().getTime()),
-        "reply_content": textarea_.val().trim(),
-    }
-    var html = template('reply-li-tpl', reply_data)
-    console.log(html)
-    $(this).parent().siblings('.comment-replay').prepend(html)
-    textarea_.val("")
+        /*
+        var reply_data = {
+            "reply_name": "初见未来",
+            "reply_head": "https://profile.csdnimg.cn/C/C/9/3_weixin_46378962",
+            "reply_date": ' ' + formatDate(new Date().getTime()),
+            "reply_content": textarea_.val().trim(),
+        }
+        var html = template('reply-li-tpl', reply_data)
+        console.log(html)
+        $(this).parent().siblings('.comment-replay').prepend(html)
+        textarea_.val("")
 
-    let num = span_reply.text().match(/\d+/g)[0] - 0 + 1
-    console.log(num)
-    span_reply.text(' 回复(' + num + ')')
-    return
+        let num = span_reply.text().match(/\d+/g)[0] - 0 + 1
+        console.log(num)
+        span_reply.text(' 回复(' + num + ')')
+        return
+        */
 })
 
 // $('.comment-list-ul').on('blur', '.reply-text textarea', function(e) {
@@ -178,47 +180,4 @@ $('.comment-list-ul').on('click', '.love-num-li a', function() {
     let love_num = love_span.text().match(/\d+/g)[0]
     console.log(love_num)
     love_span.text(' 喜欢(' + (love_num - 0 + 1) + ')')
-})
-
-
-$(function() {
-    const E = window.wangEditor
-    const editor = new E('.comment-editor')
-        //    设置编辑区域高度为 500 px
-    editor.config.height = 100
-        //配置菜单
-    editor.config.menus = [
-        'head',
-        'bold',
-        // 'fontSize',
-        // 'fontName',
-        'italic',
-        //'underline',
-        //'strikeThrough',
-        // 'indent',
-        //'lineHeight',
-        //'foreColor',
-        //'backColor',
-        'link',
-        'list',
-        //'todo',
-        // 'justify',
-        'quote',
-        'emoticon',
-        //'image',
-        //'video',
-        //'table',
-        'code',
-        'splitLine',
-        'undo',
-        'redo',
-    ]
-    hljs.initHighlightingOnLoad(); // 初始化
-    hljs.initLineNumbersOnLoad();
-    editor.highlight = hljs
-    editor.config.languageTab = '    '
-    editor.config.pasteIgnoreImg = false
-    editor.config.uploadImgShowBase64 = true
-    editor.create()
-    window.editor = editor
 })

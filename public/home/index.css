@@ -505,6 +505,43 @@ a:focus {
 /************************************/
 
 
+/*********************************/
+
+
+/* 右侧边栏 */
+
+.about-div p:hover {
+    cursor: pointer;
+}
+
+.about-div {
+    padding-bottom: 10px;
+}
+
+.archive-div {
+    padding-bottom: 10px;
+}
+
+.elsewhere {
+    padding-bottom: 10px;
+}
+
+
+/* 热门文章列表 */
+
+.article-hot {
+    padding: 5px 0;
+}
+
+.love-hot-span {
+    font-size: 1px;
+    color: #666666;
+}
+
+
+/********************************/
+
+
 /* 当我们进入 超小屏幕的时候 我们 nav 文字会变成14px  */
 
 @media screen and (max-width: 767px) {

@@ -1,0 +1,122 @@
+{{ define "admin/index.html"}}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>恋恋风辰官方博客</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/static/admin/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/admin/drag.css">
+    <link rel="icon" href="/static/home/favicon.ico">
+
+</head>
+
+<body οndragstart="return false">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+                <a class="navbar-brand" href="#">恋恋风辰官方博客</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right head-ul">
+                    <li><a href="#">Dashboard</a></li>
+                    <li class="settings"><a href="#">Settings</a></li>
+                    <li>
+                        <img class="img-circle head-icon" src="static/img/head.jpg" alt="" width="50px">
+                    </li>
+                </ul>
+                <form class="navbar-form navbar-right">
+                    <input type="text" class="form-control" placeholder="Search...">
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3 col-md-2 sidebar">
+                <ul class="nav nav-sidebar">
+                    <li class="active" id="rt-index"><a href="#">回到首页</a></li>
+                    <li><a href="#">发布文章</a></li>
+                    <li class=""><a data-toggle="collapse" href="#collapseTwo">分类<span class="glyphicon glyphicon-menu-right"></span></a>
+                        <div id="collapseTwo" class="collapse">
+                            <ul class="nav nav-pills nav-stacked sub-sidebar">
+                                <li>
+                                    <a href="#myModalDialog" data-toggle="modal">创建分类 + </a>
+                                </li>
+                                <li><a data-toggle="collapse" href="#collapseNet">网络编程<span class="glyphicon glyphicon-menu-right"></span></a>
+                                    <div id="collapseNet" class="collapse">
+                                        <ul class="nav nav-pills nav-stacked mini-sidebar">
+                                            <li class="mini-li" draggable="true"><span>基础网络模型</span></li>
+                                            <li class="mini-li" draggable="true"><span>阻塞与非阻塞区别</span></li>
+                                            <li class="mini-li" draggable="true"><span>同步与异步</span></li>
+                                            <li class="mini-li" draggable="true"><span>IO多路复用</span></li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><a href="#">C++</a></li>
+                                <li><a href="#">Go</a></li>
+                                <li><a href="#">Docker</a></li>
+                                <li><a href="#">数据结构与算法</a></li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li><a data-toggle="collapse" href="#collapseThree">管理<span class="glyphicon glyphicon-menu-right"></span></a>
+                        <div id="collapseThree" class="collapse">
+                            <ul class="nav nav-pills nav-stacked sub-sidebar">
+                                <li><a href="#">最新留言</a> </li>
+                                <li><a href="#">最新点赞</a></li>
+                                <li>
+                                    <a href="#">阅读排行</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                <div id="article-content">
+                    {{ template "admin/modaldialog"}} {{ template "admin/articletotal"}}
+                </div>
+                {{ template "home/footer" . }}
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/static/lib/jquery/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
+    <script>
+        window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')
+    </script>
+    <script src="/static/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/admin/index.js"></script>
+    <script src="/static/admin/drag.js"></script>
+    <script src="/static/admin/catedrag.js"></script>
+</body>
+
+</html>
+{{ end }}

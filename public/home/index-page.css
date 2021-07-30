@@ -1,0 +1,139 @@
+/* 首页文章列表单元 */
+
+.index-article {
+    padding: 10px 0 35px 0;
+}
+
+.index-article-title {
+    width: auto;
+    display: inline-block;
+    color: #555;
+}
+
+.index-article-title h4 a {
+    color: #555;
+}
+
+.index-article-title h4 a:hover {
+    color: #070707;
+}
+
+.index-article-time a {
+    color: #555;
+}
+
+.index-article-time a:hover {
+    color: #070707;
+}
+
+.index-article-time .glyphicon {
+    color: #555;
+    font-size: x-small;
+}
+
+
+/*首页文章时间*/
+
+.index-article-time {
+    padding: 5px 0;
+    width: auto;
+    display: inline-block;
+}
+
+
+/* 文章时间分类等灰化 */
+
+.post-time,
+.post-line,
+.post-in {
+    color: #999;
+    font-size: x-small;
+}
+
+.post-catagery {
+    color: #555;
+    font-size: x-small;
+}
+
+
+/* 文章内容 */
+
+.index-article-content {
+    font-size: 14px;
+    padding: 25px 0;
+    line-height: 200%;
+    color: #555;
+}
+
+.index-article-content h4,
+.index-article-content h2 {
+    font-size: 18px;
+    font-weight: bolder;
+}
+
+
+/*首页文章readmore*/
+
+.read-more-span {
+    background-color: #222222;
+    color: #FFFFFF;
+    padding: 8px 15px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.read-more-span:hover {
+    background-color: #FFFFFF;
+    border: 2px solid #222222;
+    color: #222222;
+    cursor: pointer;
+}
+
+.index-read-more {
+    display: inline-block;
+}
+
+
+/*小屏幕*/
+
+@media screen and (max-width: 767px) {
+    .read-more-span {
+        background-color: #222222;
+        color: #FFFFFF;
+        padding: 8px 15px;
+        font-size: 12px;
+        transition: all 0.3s ease;
+    }
+    .index-article-content {
+        padding-bottom: 10px;
+    }
+}
+
+
+/* 进入小屏幕以上 */
+
+@media screen and (min-width: 991px) {
+    .index-article-title {
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    .index-article-time {
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    .index-article-content {
+        position: relative;
+    }
+    .index-read-more {
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+
+/*进入中屏幕以上*/
+
+@media screen and (min-width: 1199px) {}

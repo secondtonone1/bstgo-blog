@@ -1,0 +1,24 @@
+{{ define "admin/articlesort.html" }}
+<div class="sort-tips">
+    <button class="btn btn-primary sort-save-btn" type="button">
+        保存
+    </button>
+    <div class="sort-edit-desc">
+        拖动列表实现排序，点击保存按钮生效
+    </div>
+</div>
+
+<div class="sort-article-div">
+    <ul class="list-unstyled sort-article-ul">
+        <li class="sort-article-list" draggable="true">
+            <span>deployment介绍和使用1</span>
+        </li>
+        <li class="sort-article-list" draggable="true">
+            <span>deployment介绍和使用2</span>
+        </li>
+        <li class="sort-article-list" draggable="true">
+            <span>deployment介绍和使用3</span>
+        </li>
+    </ul>
+</div>
+{{end}}

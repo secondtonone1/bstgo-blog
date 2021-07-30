@@ -1,0 +1,37 @@
+{{ define "home/navbar"}}
+<!-- 上部导航栏 -->
+<div class="row">
+    <h1>恋恋风辰的官方博客</h1>
+    <nav class="navbar navbar-inverse navbar-fixed-top " role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle article-index-btn">
+                    <span class="sr-only">切换导航</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">恋恋风辰的官方博客</a>
+                <button type="button" class="navbar-toggle category-index" data-toggle="collapse" data-target="#example-navbar-collapse">
+              <span class="glyphicon glyphicon-chevron-down"></span>
+            </button>
+
+
+            </div>
+            <div class="collapse navbar-collapse" id="example-navbar-collapse">
+                <ul class="nav navbar-nav category">
+                    <li class="active"><a href="#">Go</a></li>
+                    <li><a href="#">C++</a></li>
+                    <li><a href="#">Python</a></li>
+                    <li><a href="#">Javascript</a></li>
+                    <li><a href="#">Rust</a></li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right login">
+                    <li><a href="#">登录</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+{{end}}
