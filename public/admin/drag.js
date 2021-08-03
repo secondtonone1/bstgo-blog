@@ -59,6 +59,7 @@ function reorderItems(e) {
 }
 
 function actions(elem) {
+    console.log("action elem is ", elem)
     elem.addEventListener('dragstart', dragStart, false);
     elem.addEventListener('dragover', dragOver, false);
     elem.addEventListener('dragleave', dragLeave, false);

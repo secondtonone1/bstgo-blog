@@ -21,7 +21,6 @@ function dragOver_article(e) {
 
 function dragLeave_article(e) {
     this.classList.remove('over');
-
 }
 
 function drop_article(e) {

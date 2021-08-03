@@ -131,11 +131,32 @@ div .collapse {
     padding-left: 40px;
     color: #494848;
     display: inline-block;
+    width: 100%;
     padding: 10px 0 10px 40px;
 }
 
 .mini-sidebar li {
     padding: 0;
+}
+
+.mini-sidebar li.active {
+    background-color: #428bca;
+}
+
+.mini-sidebar li.active span {
+    color: #fff;
+}
+
+.sub-ctg {
+    cursor: pointer;
+}
+
+.sub-ctg:hover {
+    background-color: #EEEEEE;
+}
+
+.sub-ctg:hover span {
+    color: #428bca;
 }
 
 
@@ -304,6 +325,11 @@ div .collapse {
     height: 35px;
 }
 
+.sort-edit-btn,
+.article-pub-btn {
+    margin-right: 30px;
+}
+
 .sort-save-btn {
     float: right;
 }
@@ -362,8 +388,24 @@ div .collapse {
     margin-bottom: 0;
 }
 
+
+/*模态框部分*/
+
 .modal-dialog {
     margin: 180px auto;
+    width: 300px;
+}
+
+.modal-header {
+    border-bottom: none;
+}
+
+.model-input {
+    padding: 0 5px;
+}
+
+.modal-footer {
+    border-top: none;
 }
 
 
