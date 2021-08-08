@@ -13,7 +13,16 @@ func Admin(c *gin.Context) {
 }
 
 func ArticleEdit(c *gin.Context) {
-	article_edit := model.ArticleEditReq{}
-	c.BindJSON(&article_edit)
-	log.Printf("article_edit data is %v", &article_edit)
+	subcat := c.Query("subcat")
+	cat := c.Query("cat")
+	log.Println("subcat is ", subcat)
+	log.Println("cat is ", cat)
+	c.HTML(http.StatusOK, "admin/articleedit.html", nil)
+}
+
+func ArticlePub(c *gin.Context) {
+	articlePub := model.ArticlePubReq{}
+	c.BindJSON(&articlePub)
+	log.Println("articlepub is ", articlePub)
+	c.JSON(http.StatusOK, articlePub)
 }

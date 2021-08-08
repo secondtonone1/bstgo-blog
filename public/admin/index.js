@@ -175,7 +175,7 @@ $('.month-div ul li').on('click', function() {
     $(this).parent().siblings('button').children('.month-text').text($(this).children('a').text())
 })
 
-//点击月份下拉菜单
+//点击分类下拉菜单
 $('.category-div button').on('click', function() {
     //console.log("year button clicked")
     //设置下拉列表选中状态
@@ -267,32 +267,9 @@ $('#article-content').on('click', '.article-pub-btn', function() {
     let cat = $('li.mini-li.active').parents('.sub-li').children('a').text()
     console.log('cat is ', cat)
     console.log('sub_cat is ', sub_cat)
-    $.ajax({
-        type: "POST",
-        url: "/admin/article-edit",
-        contentType: "application/json",
-        data: JSON.stringify({
-            'cat': cat,
-            'subcat': sub_cat
-        }), //参数列表
-        dataType: "html",
-        success: function(result) {
-            //请求正确之后的操作
-            console.log('post success , result is ', result)
-                // $('#article-content').html(result)
-                // $('#article-content').parent().fadeIn(1000)
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown) {
-            //请求失败之后的操作
-            console.log('post failed')
-                // 状态码
-            console.log(XMLHttpRequest.status);
-            // 状态
-            console.log(XMLHttpRequest.readyState);
-            // 错误信息   
-            console.log(textStatus);
-        }
-    });
+
+    window.location.href = '/admin/articledit?cat=' + cat + '&subcat=' + sub_cat
+
 })
 
 

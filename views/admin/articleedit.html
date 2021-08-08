@@ -9,7 +9,7 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
+
 
     <title>恋恋风辰官方博客</title>
 
@@ -17,10 +17,10 @@
     <link href="/static/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="/static/admin/index.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/admin/drag.css">
+    <link rel="stylesheet" href="/static/admin/edit.css">
     <link rel="icon" href="/static/home/favicon.ico">
-
+    <link rel="stylesheet" href="/static/lib/highlight/css/tomorrow.min.css">
 </head>
 
 <body οndragstart="return false">
@@ -41,7 +41,7 @@
                     <li><a href="#">Dashboard</a></li>
                     <li class="settings"><a href="#">Settings</a></li>
                     <li>
-                        <img class="img-circle head-icon" src="static/img/head.jpg" alt="" width="50px">
+                        <img class="img-circle head-icon" src="/static/img/head.jpg" alt="" width="50px">
                     </li>
                 </ul>
                 <form class="navbar-form navbar-right">
@@ -51,57 +51,72 @@
         </div>
     </nav>
 
-    <div class="container-fluid">
+    <div id="toolbar-container" class="toolbar"></div>
+
+    <div class="container edit-main">
         <div class="row">
-            <div class="col-sm-3 col-md-2 sidebar">
-                <ul class="nav nav-sidebar">
-                    <li class="active" id="rt-index"><a href="#">回到首页</a></li>
-                    <li><a href="#">发布文章</a></li>
-                    <li class=""><a data-toggle="collapse" href="#collapseTwo">分类<span class="glyphicon glyphicon-menu-right"></span></a>
-                        <div id="collapseTwo" class="collapse">
-                            <ul class="nav nav-pills nav-stacked sub-sidebar">
-                                <li class="sub-li">
-                                    <a href="#myModalDialog" data-toggle="modal">创建分类 + </a>
-                                </li>
-                                <li class="sub-li"><a data-toggle="collapse" href="#collapseNet">网络编程<span class="glyphicon glyphicon-menu-right"></span></a>
-                                    <div id="collapseNet" class="collapse">
-                                        <ul class="nav nav-pills nav-stacked mini-sidebar">
-                                            <li class="sub-ctg" data-target="#subCtgDialog" data-toggle="modal" draggable="true"><span>创建子分类</span></li>
-                                            <li class="mini-li" draggable="true"><span>基础网络模型</span></li>
-                                            <li class="mini-li" draggable="true"><span>阻塞与非阻塞区别</span></li>
-                                            <li class="mini-li" draggable="true"><span>同步与异步</span></li>
-                                            <li class="mini-li" draggable="true"><span>IO多路复用</span></li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="sub-li"><a href="#">C++</a></li>
-                                <li class="sub-li"><a href="#">Go</a></li>
-                                <li class="sub-li"><a href="#">Docker</a></li>
-                                <li class="sub-li"><a href="#">数据结构与算法</a></li>
-                            </ul>
-                        </div>
-                    </li>
-
-                    <li><a data-toggle="collapse" href="#collapseThree">管理<span class="glyphicon glyphicon-menu-right"></span></a>
-                        <div id="collapseThree" class="collapse">
-                            <ul class="nav nav-pills nav-stacked sub-sidebar">
-                                <li class="sub-li"><a href="#">最新留言</a> </li>
-                                <li class="sub-li"><a href="#">最新点赞</a></li>
-                                <li class="sub-li">
-                                    <a href="#">阅读排行</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-                {{ template "admin/modaldialog"}} {{ template "admin/subctgdialog"}}
-                <div id="article-content">
-                    {{ template "admin/articletotal"}}
+            <div class="col-sm-12  col-md-12  main">
+                <div class="title-wraper">
+                    <textarea id="title-edit" placeholder="请输入文章标题（5～100个字）" cols="50" rows="1"></textarea>
+                    <hr>
+                    <div id="text-container" placeholder="请输入内容" class="text">
+                    </div>
                 </div>
-                {{ template "home/footer" . }}
 
+                <div class="cat-wraper">
+                    <div class="catgroup">
+
+                        <div class="dropdown cat-div">
+                            <span class="cat-span">分类:</span>
+                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                  <span class="cat-text">不限</span>
+                                  <span class="caret"></span>
+                                </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                <li><a href="javascript:void(0)">不限</a></li>
+                                <li><a href="javascript:void(0)">2022</a></li>
+                                <li><a href="javascript:void(0)">2021</a></li>
+                                <li><a href="javascript:void(0)">2020</a></li>
+                                <li><a href="javascript:void(0)">2019</a></li>
+                                <li><a href="javascript:void(0)">2018</a></li>
+                                <li><a href="javascript:void(0)">2017</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="dropdown subcat-div">
+                            <span class="subcat-span">子分类:</span>
+                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                  <span class="subcat-text">不限</span>  
+                                  <span class="caret"></span>
+                                </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                <li><a href="javascript:void(0)">不限</a></li>
+                                <li><a href="javascript:void(0)">12月</a></li>
+                                <li><a href="javascript:void(0)">11月</a></li>
+                                <li><a href="javascript:void(0)">10月</a></li>
+                                <li><a href="javascript:void(0)">9月</a></li>
+                                <li><a href="javascript:void(0)">8月</a></li>
+                                <li><a href="javascript:void(0)">7月</a></li>
+                                <li><a href="javascript:void(0)">6月</a></li>
+                                <li><a href="javascript:void(0)">5月</a></li>
+                                <li><a href="javascript:void(0)">4月</a></li>
+                                <li><a href="javascript:void(0)">3月</a></li>
+                                <li><a href="javascript:void(0)">2月</a></li>
+                                <li><a href="javascript:void(0)">1月</a></li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="footer-publish">
+                    <button class="btn btn-default temp-save-btn" type="button">
+                        保存草稿
+                    </button>
+                    <button class="btn btn-primary publish-edit-btn" type="button">
+                        发布文章
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -118,6 +133,14 @@
     <script src="/static/admin/index.js"></script>
     <script src="/static/admin/drag.js"></script>
     <script src="/static/admin/catedrag.js"></script>
+    <script src="/static/admin/edit.js"></script>
+
+    <script src="/static/lib/highlight/js/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/wangeditor@latest/dist/wangEditor.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlightjs-line-numbers.js@2.6.0/dist/highlightjs-line-numbers.min.js"></script>
+
+    <script type="text/javascript">
+    </script>
 </body>
 
 </html>

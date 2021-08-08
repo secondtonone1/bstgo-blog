@@ -1,0 +1,119 @@
+#title-edit {
+    border: none;
+    font-size: 23px;
+    font-weight: bolder;
+    resize: none;
+    min-height: 32px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    color: #606266;
+    width: 100%;
+    padding: 15px 0 0 0;
+}
+
+hr {
+    margin-top: 15px;
+}
+
+.title-wraper {
+    margin-top: 30px;
+    background-color: #FFFFFF;
+    padding: 0 60px 0 60px;
+    min-height: 800px;
+}
+
+body {
+    background-color: #F5F6F7;
+}
+
+nav.navbar {
+    z-index: 12000;
+}
+
+#toolbar-container {
+    position: fixed;
+    top: 65px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    z-index: 20000;
+    width: 90%;
+}
+
+.edit-main {
+    padding-top: 100px;
+}
+
+.cat-wraper {
+    margin-top: 20px;
+    background-color: #FFFFFF;
+    padding: 0 60px 0 60px;
+    min-height: 200px;
+    margin-bottom: 150px;
+}
+
+#text-container {
+    color: #606266;
+}
+
+.cat-div {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.subcat-div {
+    padding-bottom: 20px;
+}
+
+.cat-span,
+.subcat-span {
+    display: inline-block;
+    width: 70px;
+    height: 20px;
+}
+
+.footer-publish {
+    position: fixed;
+    height: 100px;
+    width: 100%;
+    background-color: #fff;
+    bottom: 0px;
+    left: 0px;
+}
+
+.subcat-div ul,
+.cat-div ul {
+    overflow: auto;
+    max-height: 200px;
+}
+
+.temp-save-btn,
+.publish-edit-btn {
+    font-size: 16px;
+    border-radius: 20px;
+}
+
+.temp-save-btn:focus,
+.temp-save-btn:active:focus,
+.temp-save-btn.active:focus,
+.publish-edit-btn:focus,
+.publish-edit-btn:active:focus,
+.publish-edit-btn.active:focus {
+    outline: none;
+    border-color: transparent;
+    box-shadow: none;
+}
+
+.publish-edit-btn {
+    position: absolute;
+    right: 100px;
+    top: 50%;
+    transform: translate(0, -50%)
+}
+
+.temp-save-btn {
+    position: absolute;
+    right: 220px;
+    top: 50%;
+    transform: translate(0, -50%)
+}

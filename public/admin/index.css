@@ -253,12 +253,6 @@ div .collapse {
     max-height: 200px;
 }
 
-.year-div button li.active,
-.month-div button li.active,
-.category-div button li.active {
-    color: #428BCA;
-}
-
 
 /* 文章区域 */
 
