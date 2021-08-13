@@ -1,12 +1,11 @@
 {{ define "admin/ctgele.html"}}
-
+<span hidden>{{.msg}}</span>
 <li class="sub-li">
-    <a data-toggle="collapse" href="#{{ .cateid}}" class="" aria-expanded="false">{{ .catename}}<span class="glyphicon glyphicon-menu-right"></span></a>
+    <a data-toggle="collapse" href="#{{ .cateid}}" catid="{{ .cateid}}" aria-expanded="false">{{ .catename}}<span class="glyphicon glyphicon-menu-right"></span></a>
     <div id="{{ .cateid}}" class="collapse" aria-expanded="false">
         <ul class="nav nav-pills nav-stacked mini-sidebar">
             <li class="sub-ctg" data-target="#subCtgDialog" data-toggle="modal" draggable="true"><span>创建子分类</span></li>
         </ul>
     </div>
 </li>
-
 {{ end }}

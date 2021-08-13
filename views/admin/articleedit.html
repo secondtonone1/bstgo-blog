@@ -74,12 +74,9 @@
                                 </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                                 <li><a href="javascript:void(0)">不限</a></li>
-                                <li><a href="javascript:void(0)">2022</a></li>
-                                <li><a href="javascript:void(0)">2021</a></li>
-                                <li><a href="javascript:void(0)">2020</a></li>
-                                <li><a href="javascript:void(0)">2019</a></li>
-                                <li><a href="javascript:void(0)">2018</a></li>
-                                <li><a href="javascript:void(0)">2017</a></li>
+                                {{if eq .Res "res-success"}} {{ range .Menu_.CatMenus_}}
+                                <li><a href="javascript:void(0)" catid="{{.CatId}}">{{.Name}}</a></li>
+                                {{end}} {{end}}
                             </ul>
                         </div>
 

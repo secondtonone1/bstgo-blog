@@ -40,6 +40,45 @@ function drop(e) {
     }
     this.classList.remove('over');
     dragSrcEl = null
+        //发送保存目录排序请求
+    let id = $(this).parent().parent().attr('id')
+    console.log(id)
+    let subCat = {}
+    subCat.parentid = id
+    subCat.menu = []
+
+    $(this).parent().children('.mini-li').each(function(index, element) {
+        console.log(index)
+        console.log(element)
+        console.log($(element).attr('subcatid'))
+        console.log($(element).children('span').text())
+        let catele = { 'subcatid': $(element).attr('subcatid'), 'name': $(element).children('span').text() }
+        subCat.menu.push(catele)
+    })
+    console.log(subCat)
+
+    $.ajax({
+        type: "POST",
+        url: "/admin/sortmenu",
+        contentType: "application/json",
+        data: JSON.stringify(subCat), //参数列表
+        dataType: "json",
+        success: function(result) {
+            //请求正确之后的操作
+            console.log('post success , result is ', result)
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            //请求失败之后的操作
+            console.log('post failed')
+                // 状态码
+            console.log(XMLHttpRequest.status);
+            // 状态
+            console.log(XMLHttpRequest.readyState);
+            // 错误信息   
+            console.log(textStatus);
+        }
+    });
+
     return false;
 
 }

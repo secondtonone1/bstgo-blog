@@ -22,7 +22,7 @@
 </head>
 
 <body οndragstart="return false">
-
+    <span id="res-span" hidden>{{.Res}}</span>
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -53,29 +53,26 @@
         <div class="row">
             <div class="col-sm-3 col-md-2 sidebar">
                 <ul class="nav nav-sidebar">
-                    <li class="active" id="rt-index"><a href="#">回到首页</a></li>
-                    <li><a href="#">发布文章</a></li>
+                    <li class="" id="rt-index"><a href="/home">回到首页</a></li>
+                    <li><a href="/admin/articledit">发布文章</a></li>
                     <li class=""><a data-toggle="collapse" href="#collapseTwo">分类<span class="glyphicon glyphicon-menu-right"></span></a>
                         <div id="collapseTwo" class="collapse">
                             <ul class="nav nav-pills nav-stacked sub-sidebar">
                                 <li class="sub-li">
                                     <a href="#myModalDialog" data-toggle="modal">创建分类 + </a>
                                 </li>
-                                <li class="sub-li"><a data-toggle="collapse" href="#collapseNet">网络编程<span class="glyphicon glyphicon-menu-right"></span></a>
-                                    <div id="collapseNet" class="collapse">
+                                {{if eq .Res "res-success"}} {{ range .Menu_.CatMenus_}}
+                                <li class="sub-li"><a data-toggle="collapse" href="#{{.CatId}}" catid="{{.CatId}}">{{.Name}}<span class="glyphicon glyphicon-menu-right"></span></a>
+                                    <div id="{{.CatId}}" class="collapse">
                                         <ul class="nav nav-pills nav-stacked mini-sidebar">
                                             <li class="sub-ctg" data-target="#subCtgDialog" data-toggle="modal" draggable="true"><span>创建子分类</span></li>
-                                            <li class="mini-li" draggable="true"><span>基础网络模型</span></li>
-                                            <li class="mini-li" draggable="true"><span>阻塞与非阻塞区别</span></li>
-                                            <li class="mini-li" draggable="true"><span>同步与异步</span></li>
-                                            <li class="mini-li" draggable="true"><span>IO多路复用</span></li>
+                                            {{range .SubCatMenus_}}
+                                            <li class="mini-li" draggable="true" subcatid="{{.SubCatId}}"><span>{{.Name}}</span></li>
+                                            {{end}}
                                         </ul>
                                     </div>
                                 </li>
-                                <li class="sub-li"><a href="#">C++</a></li>
-                                <li class="sub-li"><a href="#">Go</a></li>
-                                <li class="sub-li"><a href="#">Docker</a></li>
-                                <li class="sub-li"><a href="#">数据结构与算法</a></li>
+                                {{ end}} {{end}}
                             </ul>
                         </div>
                     </li>

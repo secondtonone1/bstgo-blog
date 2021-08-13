@@ -1,0 +1,3 @@
+{{ define "admin/subcatselect"}} {{ if eq .Res "res-success"}} {{range .SubCatMenus_}}
+<li><a href="javascript:void(0)" subcatid={{.SubCatId}}>{{.Name}}</a></li>
+{{end}} {{end}}{{end}}

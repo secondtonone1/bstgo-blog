@@ -5,6 +5,7 @@ type CreateCtgReq struct {
 }
 
 type CreateSubCtgReq struct {
+	ParentId    string `json:"parentid"`
 	SubCategory string ` json: "subcategory"`
 }
 
@@ -18,4 +19,39 @@ type ArticlePubReq struct {
 	Title   string `json: "title"`
 	Content string `json: "content"`
 	Subcat  string `json: "subcat"`
+}
+
+type LoginSubReq struct {
+	Pwd   string `json: "pwd"`
+	Email string `json: "email"`
+	Salt  string `json: "salt"`
+}
+
+type BaseRsp struct {
+	Code int    `json:"code"`
+	Msg  string `json:"msg"`
+}
+
+type LoginSubRsp struct {
+	BaseRsp
+	Pwd   string `json: "pwd"`
+	Email string `json: "email"`
+}
+
+type SubMenu struct {
+	SubCatId string `json:"subcatid" bson:"subcatid"`
+	Name     string `json:"name" bson:"name"`
+}
+
+type SortMenuReq struct {
+	ParentId string    `json: "parentid"`
+	Menu     []SubMenu `json:"menu"`
+}
+
+type SortMenuRsp struct {
+	BaseRsp
+}
+
+type SubCatSelectReq struct {
+	CatId string `json:"catid" bson:"catid"`
 }

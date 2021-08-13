@@ -1,8 +1,12 @@
 [mongo]
-host = "81.68.86.146:27017"
-user = "admin"
-passwd = "123456"
-maxpoolsize = 10
-contimeout  = "5000"
-maxconidle = "5000"
-database = "blog"
+    host = "81.68.86.146:27017"
+    user = "admin"
+    passwd = "123456"
+    maxpoolsize = 10
+    contimeout  = "5000"
+    maxconidle = "5000"
+    database = "blog"
+
+[cookie]
+    host = "localhost"
+    alive = 86400

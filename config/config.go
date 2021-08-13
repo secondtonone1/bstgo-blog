@@ -16,8 +16,14 @@ type MongoCfg struct {
 	Database    string `toml: "database"`
 }
 
+type CookieCfg struct {
+	Host  string `toml: "host"`
+	Alive int    `toml: "alive"`
+}
+
 type TotalCfg struct {
-	Mongo MongoCfg `toml: "mongo"`
+	Mongo  MongoCfg  `toml: "mongo"`
+	Cookie CookieCfg `toml: "cookie"`
 }
 
 var TotalCfgData TotalCfg

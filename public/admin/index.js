@@ -44,6 +44,14 @@ $('#rt-index').on('click', function() {
             success: function(result) {
                 //请求正确之后的操作
                 //console.log('post success , result is ', result)
+
+                let index_find = result.indexOf('Sign in')
+                    //找到Sign in 说明是登录页面
+                if (index_find != -1) {
+                    window.location.href = "/admin/login"
+                    return
+                }
+
                 $('#article-content').html(result)
                 console.log($('#article-content').parent())
                 $('#article-content').parent().fadeIn(700)
@@ -111,6 +119,14 @@ $('.sub-sidebar').on('click', '.mini-li>span', function(event) {
             success: function(result) {
                 //请求正确之后的操作
                 // console.log('post success , result is ', result)
+
+                let index_find = result.indexOf('Sign in')
+                    //找到Sign in 说明是登录页面
+                if (index_find != -1) {
+                    window.location.href = "/admin/login"
+                    return
+                }
+
                 $('#article-content').html(result)
                 $('#article-content').parent().fadeIn(700)
             },
@@ -210,6 +226,12 @@ $('#article-content').on('click', '.sort-edit-btn', function() {
             success: function(result) {
                 //请求正确之后的操作
                 console.log('post success , result is ', result)
+                let index_find = result.indexOf('Sign in')
+                    //找到Sign in 说明是登录页面
+                if (index_find != -1) {
+                    window.location.href = "/admin/login"
+                    return
+                }
                 $('#article-content').html(result)
                 var article_items = document.getElementsByClassName('sort-article-list');
                 [].forEach.call(article_items, actions_article);
@@ -244,6 +266,13 @@ $('#article-content').on('click', '.sort-save-btn', function() {
             success: function(result) {
                 //请求正确之后的操作
                 console.log('post success , result is ', result)
+                let index_find = result.indexOf('Sign in')
+                    //找到Sign in 说明是登录页面
+                if (index_find != -1) {
+                    window.location.href = "/admin/login"
+                    return
+                }
+
                 $('#article-content').html(result)
                 $('#article-content').parent().fadeIn(1000)
             },
@@ -261,6 +290,7 @@ $('#article-content').on('click', '.sort-save-btn', function() {
     })
 })
 
+//发布文章
 $('#article-content').on('click', '.article-pub-btn', function() {
 
     let sub_cat = $('li.mini-li.active').children('span').text()
@@ -287,6 +317,19 @@ $('#myModalDialog .sure').on('click', function() {
         success: function(result) {
             //请求正确之后的操作
             console.log('post success , result is ', result)
+
+            let index_find = result.indexOf('Sign in')
+                //找到Sign in 说明是登录页面
+            if (index_find != -1) {
+                window.location.href = "/admin/login"
+                return
+            }
+
+            let res_find = result.indexOf('res-success')
+            if (res_find == -1) {
+                return
+            }
+
             $('.sub-sidebar').append(result)
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -304,19 +347,39 @@ $('#myModalDialog .sure').on('click', function() {
 
 //点击确定按钮，提交子分类
 $('#subCtgDialog  .sure').on('click', function() {
+
+    if (window.cur_subctg == undefined || window.cur_subctg == null) {
+        return
+    }
+
     let ctg_val = $(this).parent().siblings('.model-input').children('input').val()
     console.log(ctg_val);
+    console.log(window.cur_subctg.parent().parent().attr('id'))
     $('#subCtgDialog').modal('hide')
     $.ajax({
         type: "POST",
         url: "/admin/createsubctg",
         contentType: "application/json",
-        data: JSON.stringify({ "subcategory": ctg_val }), //参数列表
+        data: JSON.stringify({ "subcategory": ctg_val, "parentid": window.cur_subctg.parent().parent().attr('id') }), //参数列表
         dataType: "html",
         success: function(result) {
             //请求正确之后的操作
             console.log('post success , result is ', result)
             console.log(window.cur_subctg)
+
+            let index_find = result.indexOf('Sign in')
+                //找到Sign in 说明是登录页面
+            if (index_find != -1) {
+                window.location.href = "/admin/login"
+                return
+            }
+
+            //页面结果信息不成功则不添加
+            let res_find = result.indexOf('res-success')
+            if (res_find == -1) {
+                return
+            }
+
             window.cur_subctg.parent().append(result)
 
             var items = window.cur_subctg[0].parentNode.getElementsByClassName('mini-li');

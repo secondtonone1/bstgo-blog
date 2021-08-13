@@ -13,6 +13,7 @@ import (
 )
 
 var MongoClient *mongo.Client = nil
+var MongoDb *mongo.Database = nil
 
 func MongoInit() (e error) {
 
@@ -44,6 +45,10 @@ func MongoInit() (e error) {
 		log.Println("err is ", e)
 	}
 	log.Println("mongo init success!!!")
+
+	//连接数据库
+	MongoDb = MongoClient.Database(config.TotalCfgData.Mongo.Database)
+	//initAdmin()
 	return
 
 }

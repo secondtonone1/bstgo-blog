@@ -34,10 +34,46 @@ $('.cat-div button').on('click', function() {
 $('.cat-div ul li').on('click', function() {
     $(this).addClass('active').siblings().removeClass('active')
     $(this).parent().siblings('button').children('.cat-text').text($(this).children('a').text())
+    console.log('catid is ', $(this).children('a').attr('catid'))
+        //请求子分类
+    $.ajax({
+        type: "POST",
+        url: "/admin/subcatselect",
+        contentType: "application/json",
+        data: JSON.stringify({ 'catid': $(this).children('a').attr('catid') }), //参数列表
+        dataType: "html",
+        success: function(result) {
+            //请求正确之后的操作
+            console.log('post success , result is ', result)
+
+            // let index_find = result.indexOf('Sign in')
+            //     //找到Sign in 说明是登录页面
+            // if (index_find != -1) {
+            //     window.location.href = "/admin/login"
+            //     return
+            // }
+
+            // $('#article-content').html(result)
+            // console.log($('#article-content').parent())
+            // $('#article-content').parent().fadeIn(700)
+            $('.subcat-div>ul').html(result)
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            //请求失败之后的操作
+            console.log('post failed')
+                // 状态码
+            console.log(XMLHttpRequest.status);
+            // 状态
+            console.log(XMLHttpRequest.readyState);
+            // 错误信息   
+            console.log(textStatus);
+        }
+    });
 })
 
-//点击月份下拉菜单
+//点击子分类下拉菜单
 $('.subcat-div button').on('click', function() {
+
     //console.log("year button clicked")
     //设置下拉列表选中状态
     let text_data = $(this).children('.subcat-text').text()

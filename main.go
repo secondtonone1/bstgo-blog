@@ -1,20 +1,16 @@
 package main
 
 import (
-	"bstgo-blog/config"
 	"bstgo-blog/model"
 	"bstgo-blog/router/home"
-	"context"
 	"log"
 	"net/http"
-	"time"
 
 	"bstgo-blog/router/admin"
 
 	mongocli "bstgo-blog/mongo"
 
 	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 func Cors() gin.HandlerFunc {
@@ -37,28 +33,25 @@ func Cors() gin.HandlerFunc {
 }
 
 func GroupRouterAdminMiddle(c *gin.Context) {
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+
 	log.Println("=====================admin group router middle")
 	//判断cookie中是否有session_id
 	sessionId, err := c.Cookie(model.CookieSession)
 	if err != nil {
 		//没有sessionId则返回登录页面
 		log.Println("no cookie sessionId ,return login")
+		c.HTML(http.StatusOK, "admin/login.html", nil)
+		c.Abort()
 		return
 	}
-
-	//连接数据库
-	db := mongocli.MongoClient.Database(config.TotalCfgData.Mongo.Database)
-	//指定连接集合
-	col := db.Collection("session")
-	//根据sessionId去数据库查找对应session
-	session := model.Session{}
-	err = col.FindOne(ctx, bson.M{"sid": sessionId}).Decode(&session)
+	sessionData, err := mongocli.GetSessionById(sessionId)
 	if err != nil {
-		log.Println("session ", sessionId, "not found, return login")
+		log.Println("get sessionid ", sessionId, "failed, return login")
+		c.HTML(http.StatusOK, "admin/login.html", nil)
+		c.Abort()
 		return
 	}
-	log.Println("session data is : ", session)
+	log.Println("session data is : ", sessionData)
 	c.Next()
 }
 
@@ -74,6 +67,11 @@ func main() {
 	router.GET("/home", home.Home)
 	//用户浏览你分类
 	router.GET("/category", home.Category)
+
+	//admin登录页面
+	router.GET("/admin/login", admin.Login)
+	//admin 登录提交
+	router.POST("/admin/loginsub", admin.LoginSub)
 
 	// 创建管理路由组
 	adminGroup := router.Group("/admin")
@@ -93,10 +91,14 @@ func main() {
 		adminGroup.POST("/createctg", admin.CreateCtg)
 		// 创建子分类
 		adminGroup.POST("/createsubctg", admin.CreateSubCtg)
+		// 子标签排序
+		adminGroup.POST("/sortmenu", admin.SortMenu)
 		// 文章编辑界面
 		adminGroup.GET("/articledit", admin.ArticleEdit)
 		// 文章编辑发布
 		adminGroup.POST("/pubarticle", admin.ArticlePub)
+		//获取子分类下拉菜单
+		adminGroup.POST("/subcatselect", admin.SubCatSelect)
 	}
 
 	router.Run(":8080")
