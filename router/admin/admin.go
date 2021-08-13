@@ -16,20 +16,37 @@ import (
 )
 
 func Admin(c *gin.Context) {
-	var res string = ""
+	var res string = model.RENDER_MSG_SUCCESS
 	adminR := model.AdminIndexR{}
 	defer func() {
 		c.HTML(http.StatusOK, "admin/index.html", adminR)
+		//log.Println(adminR)
 	}()
-	menus, err := mongocli.GetMenuList()
-
+	menus, err := mongocli.GetMenuListByParent("")
+	//log.Println("menus lv1 are ", menus)
 	if err != nil {
 		res = "get menu list failed"
 		adminR.Res = res
+		log.Println("get menulv1 failed, err is ", err)
 		return
 	}
 
-	adminR.Menu_ = menus
+	for _, menu := range menus {
+		menulv1 := &model.MenuLv1{}
+		menulv1.SelfMenu = menu
+		adminR.Menus = append(adminR.Menus, menulv1)
+		childmenus, err := mongocli.GetMenuListByParent(menu.CatId)
+		if err != nil {
+			res = "get menu lv2 failed"
+			adminR.Res = res
+			log.Println("get menulv2 ", menu.CatId, " failed, err is ", err)
+			menulv1.ChildMenu = []*model.CatMenu{}
+			continue
+		}
+		menulv1.ChildMenu = childmenus
+		//log.Println("menus lv1 ChildMenu are ", childmenus)
+	}
+
 	adminR.Res = res
 }
 
@@ -38,50 +55,31 @@ func ArticleEdit(c *gin.Context) {
 	cat := c.Query("cat")
 	log.Println("subcat is ", subcat)
 	log.Println("cat is ", cat)
-	articleR := model.ArticleEditR{}
-	articleR.Res = model.RENDER_MSG_SUCCESS
-	defer func() {
-		c.HTML(http.StatusOK, "admin/articleedit.html", articleR)
-	}()
-	menu, err := mongocli.GetMenuList()
-	if err != nil {
-		log.Println("get menu failed")
-		articleR.Res = "get menu failed"
-		return
-	}
-
-	articleR.Menu_ = menu
 }
 
 func SubCatSelect(c *gin.Context) {
 	subCat := model.SubCatSelectReq{}
-	c.BindJSON(&subCat)
-	log.Println("subCat id is ", subCat.CatId)
-	selectR := model.SubCatSelectR{}
-	selectR.Res = model.RENDER_MSG_SUCCESS
-	defer func() {
-		c.HTML(http.StatusOK, "admin/subcatselect", selectR)
-	}()
-	menu, err := mongocli.GetSubCatSelect(subCat.CatId)
+	err := c.BindJSON(&subCat)
 	if err != nil {
-		log.Println("get subcat select failed, err is ", err)
+		log.Println(model.MSG_JSON_UNPACK)
 		return
 	}
+	log.Println("subCat id is ", subCat.CatId)
 
-	selectR.SubCatMenus_ = menu.CatMenus_[0].SubCatMenus_
-	// for _, val := range selectR.SubCatMenus_ {
-	// 	log.Println("subcat name is ", val.Name)
-	// }
-	for _, val := range menu.CatMenus_ {
-		log.Println(val.Name)
-	}
 }
 
 func ArticlePub(c *gin.Context) {
 	articlePub := model.ArticlePubReq{}
-	c.BindJSON(&articlePub)
+	err := c.BindJSON(&articlePub)
+	defer func() {
+		c.JSON(http.StatusOK, articlePub)
+	}()
+	if err != nil {
+		log.Println(model.MSG_JSON_UNPACK)
+		return
+	}
 	log.Println("articlepub is ", articlePub)
-	c.JSON(http.StatusOK, articlePub)
+
 }
 
 func Login(c *gin.Context) {
@@ -91,7 +89,15 @@ func Login(c *gin.Context) {
 
 func LoginSub(c *gin.Context) {
 	loginReq := model.LoginSubReq{}
-	c.BindJSON(&loginReq)
+	err := c.BindJSON(&loginReq)
+	if err != nil {
+		log.Println(model.MSG_JSON_UNPACK)
+		rsp := model.LoginSubRsp{}
+		rsp.Msg = model.MSG_JSON_UNPACK
+		rsp.Code = model.ERR_JSON_UNPACK
+		c.JSON(http.StatusOK, rsp)
+		return
+	}
 	log.Println("loginsub is ", loginReq)
 
 	//判断一分中内登录失败次数

@@ -58,16 +58,16 @@
                     <li class=""><a data-toggle="collapse" href="#collapseTwo">分类<span class="glyphicon glyphicon-menu-right"></span></a>
                         <div id="collapseTwo" class="collapse">
                             <ul class="nav nav-pills nav-stacked sub-sidebar">
-                                <li class="sub-li">
+                                <li class="sub-li cat-ctg">
                                     <a href="#myModalDialog" data-toggle="modal">创建分类 + </a>
                                 </li>
-                                {{if eq .Res "res-success"}} {{ range .Menu_.CatMenus_}}
-                                <li class="sub-li"><a data-toggle="collapse" href="#{{.CatId}}" catid="{{.CatId}}">{{.Name}}<span class="glyphicon glyphicon-menu-right"></span></a>
-                                    <div id="{{.CatId}}" class="collapse">
+                                {{if eq .Res "res-success"}} {{ range .Menus}}
+                                <li class="sub-li"><a data-toggle="collapse" href="#{{.SelfMenu.CatId}}" catid="{{.SelfMenu.CatId}}">{{.SelfMenu.Name}}<span class="glyphicon glyphicon-menu-right"></span></a>
+                                    <div id="{{.SelfMenu.CatId}}" class="collapse">
                                         <ul class="nav nav-pills nav-stacked mini-sidebar">
                                             <li class="sub-ctg" data-target="#subCtgDialog" data-toggle="modal" draggable="true"><span>创建子分类</span></li>
-                                            {{range .SubCatMenus_}}
-                                            <li class="mini-li" draggable="true" subcatid="{{.SubCatId}}"><span>{{.Name}}</span></li>
+                                            {{range .ChildMenu}}
+                                            <li class="mini-li" draggable="true" subcatid="{{.CatId}}"><span>{{.Name}}</span></li>
                                             {{end}}
                                         </ul>
                                     </div>

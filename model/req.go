@@ -2,11 +2,13 @@ package model
 
 type CreateCtgReq struct {
 	Category string `json: "category" `
+	Index    int    `json: "index"`
 }
 
 type CreateSubCtgReq struct {
 	ParentId    string `json:"parentid"`
-	SubCategory string ` json: "subcategory"`
+	SubCategory string `json:"subcategory"`
+	Index       int    `json:"index"`
 }
 
 type ArticleParamReq struct {
@@ -44,8 +46,7 @@ type SubMenu struct {
 }
 
 type SortMenuReq struct {
-	ParentId string    `json: "parentid"`
-	Menu     []SubMenu `json:"menu"`
+	Menulist []*CatMenu `json:"menu"`
 }
 
 type SortMenuRsp struct {

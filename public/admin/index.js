@@ -302,6 +302,12 @@ $('#article-content').on('click', '.article-pub-btn', function() {
 
 })
 
+//点击创建分类标签
+$('.cat-ctg').on('click', function() {
+    console.log('sibling sub-li length is ', $(this).siblings('.sub-li').length)
+    window.catnum = $(this).siblings('.sub-li').length
+    console.log(window.catnum)
+})
 
 // 创建分类
 $('#myModalDialog .sure').on('click', function() {
@@ -312,7 +318,7 @@ $('#myModalDialog .sure').on('click', function() {
         type: "POST",
         url: "/admin/createctg",
         contentType: "application/json",
-        data: JSON.stringify({ "category": ctg_val }), //参数列表
+        data: JSON.stringify({ "category": ctg_val, "index": window.catnum }), //参数列表
         dataType: "html",
         success: function(result) {
             //请求正确之后的操作
@@ -360,7 +366,7 @@ $('#subCtgDialog  .sure').on('click', function() {
         type: "POST",
         url: "/admin/createsubctg",
         contentType: "application/json",
-        data: JSON.stringify({ "subcategory": ctg_val, "parentid": window.cur_subctg.parent().parent().attr('id') }), //参数列表
+        data: JSON.stringify({ "subcategory": ctg_val, "parentid": window.cur_subctg.parent().parent().attr('id'), "index": window.subcatnum }), //参数列表
         dataType: "html",
         success: function(result) {
             //请求正确之后的操作
@@ -403,4 +409,6 @@ $('#subCtgDialog  .sure').on('click', function() {
 $('.sub-sidebar').on('click', '.sub-ctg', function() {
     window.cur_subctg = $(this)
     console.log(window.cur_subctg)
+    console.log('mini-li length is ', $(this).siblings('.mini-li').length)
+    window.subcatnum = $(this).siblings('.mini-li').length
 })

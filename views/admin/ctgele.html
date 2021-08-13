@@ -1,8 +1,8 @@
 {{ define "admin/ctgele.html"}}
-<span hidden>{{.msg}}</span>
+<span hidden>{{.Msg}}</span>
 <li class="sub-li">
-    <a data-toggle="collapse" href="#{{ .cateid}}" catid="{{ .cateid}}" aria-expanded="false">{{ .catename}}<span class="glyphicon glyphicon-menu-right"></span></a>
-    <div id="{{ .cateid}}" class="collapse" aria-expanded="false">
+    <a data-toggle="collapse" href="#{{ .CatId}}" catid="{{ .CatId}}" aria-expanded="false">{{ .CatName}}<span class="glyphicon glyphicon-menu-right"></span></a>
+    <div id="{{ .CatId}}" class="collapse" aria-expanded="false">
         <ul class="nav nav-pills nav-stacked mini-sidebar">
             <li class="sub-ctg" data-target="#subCtgDialog" data-toggle="modal" draggable="true"><span>创建子分类</span></li>
         </ul>

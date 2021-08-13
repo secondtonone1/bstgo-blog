@@ -22,18 +22,8 @@ type LoginFailed struct {
 
 //分类目录
 type CatMenu struct {
-	CatId        string        `bson:"catid"`
-	Name         string        `bson:"name"`
-	SubCatMenus_ []*SubCatMenu `bson:"subcatmenus"`
-}
-
-//子分类目录
-type SubCatMenu struct {
-	SubCatId string `bson:"subcatid"`
-	Name     string `bson:"name"`
-}
-
-//总目录
-type Menu struct {
-	CatMenus_ []*CatMenu `bson:"catmenus"`
+	CatId  string `bson:"catid" json:"catid"`
+	Name   string `bson:"name" json:"name"`
+	Parent string `bson:"parent" json:"parent"`
+	Index  int    `bson:"index" json:"index"`
 }

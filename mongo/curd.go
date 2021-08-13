@@ -8,6 +8,8 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func init() {
@@ -15,7 +17,8 @@ func init() {
 }
 
 func GetSessionById(sessionId string) (*model.Session, error) {
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 	//指定连接集合
 	col := MongoDb.Collection("sessions")
 	//根据sessionId去数据库查找对应session
@@ -28,7 +31,8 @@ func GetSessionById(sessionId string) (*model.Session, error) {
 }
 
 func GetAdminByEmail(email string) (*model.Admin, error) {
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 	//指定连接集合
 	col := MongoDb.Collection("administrator")
 	//根据email 查找
@@ -42,7 +46,8 @@ func GetAdminByEmail(email string) (*model.Admin, error) {
 }
 
 func InitAdmin(email string, pwd string) (primitive.ObjectID, error) {
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 	//指定连接集合
 	col := MongoDb.Collection("administrator")
 	//插入email
@@ -69,7 +74,8 @@ func initAdmin() {
 }
 
 func SaveSession(session *model.Session) (primitive.ObjectID, error) {
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 	//指定连接集合
 	col := MongoDb.Collection("sessions")
 	insertRes, err := col.InsertOne(ctx, session)
@@ -81,7 +87,8 @@ func SaveSession(session *model.Session) (primitive.ObjectID, error) {
 }
 
 func SaveLoginFailed(loginfailed *model.LoginFailed) error {
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 	//指定连接集合
 	col := MongoDb.Collection("loginfaileds")
 	_, err := col.InsertOne(ctx, loginfailed)
@@ -93,7 +100,8 @@ func SaveLoginFailed(loginfailed *model.LoginFailed) error {
 }
 
 func GetLoginFailed(email string) (*model.LoginFailed, error) {
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 	//指定连接集合
 	col := MongoDb.Collection("loginfaileds")
 	loginfailed := &model.LoginFailed{}
@@ -106,7 +114,8 @@ func GetLoginFailed(email string) (*model.LoginFailed, error) {
 }
 
 func UpdateLoginFailed(loginfailed *model.LoginFailed) error {
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 	//指定连接集合
 	col := MongoDb.Collection("loginfaileds")
 	//设置更新条件
@@ -121,87 +130,65 @@ func UpdateLoginFailed(loginfailed *model.LoginFailed) error {
 	return err
 }
 
-func GetMenuList() (*model.Menu, error) {
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+func GetMenuListByParent(parent string) ([]*model.CatMenu, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 	//指定连接集合
-	col := MongoDb.Collection("menu")
+	col := MongoDb.Collection("menus")
 	//设置查询条件
-	filter := bson.M{}
-	menu := &model.Menu{}
-	err := col.FindOne(ctx, filter).Decode(menu)
+	filter := bson.M{"parent": parent}
+
+	SORT := bson.D{{"index", 1}}
+	findOptions := options.Find().SetSort(SORT)
+
+	cursor, err := col.Find(ctx, filter, findOptions)
 	if err != nil {
 		return nil, err
 	}
+	menulist := []*model.CatMenu{}
+	defer cursor.Close(context.TODO())
+	for cursor.Next(context.TODO()) {
+		menu := &model.CatMenu{}
+		err = cursor.Decode(menu)
+		if err != nil {
+			return nil, err
+		}
+		menulist = append(menulist, menu)
+	}
 
-	return menu, nil
+	return menulist, nil
 }
 
-func SaveMenuList(menu *model.Menu) error {
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+func SaveMenu(menu *model.CatMenu) (primitive.ObjectID, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 	//指定连接集合
-	col := MongoDb.Collection("menu")
-	_, err := col.InsertOne(ctx, menu)
+	col := MongoDb.Collection("menus")
+	res, err := col.InsertOne(ctx, menu)
 	if err != nil {
-		return err
+		return primitive.ObjectID{}, err
 	}
 
-	return nil
+	return res.InsertedID.(primitive.ObjectID), nil
 }
 
-func UpdateMenuList(menu *model.Menu) error {
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
-	//指定连接集合
-	col := MongoDb.Collection("menu")
-	//设定更新filter
-	filter := bson.D{{}}
-	update := bson.D{{"$set",
-		bson.D{
-			{"catmenus", menu.CatMenus_},
-		}}}
+func SaveMenuList(menulist []*model.CatMenu) error {
+	if len(menulist) == 0 {
+		log.Println("menulist is empty")
+		return nil
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	models := []mongo.WriteModel{}
+	for _, catmenu := range menulist {
+		filter := bson.D{{"catid", catmenu.CatId}}
+		updatecmd := bson.D{{"$set", bson.D{{"index", catmenu.Index}}}}
+		model := mongo.NewUpdateOneModel().SetFilter(filter).SetUpdate(updatecmd).SetUpsert(false)
+		models = append(models, model)
+	}
 
-	_, err := col.UpdateOne(ctx, filter, update)
+	//log.Println("models are ", models)
+	opts := options.BulkWrite().SetOrdered(false)
+	_, err := MongoDb.Collection("menus").BulkWrite(ctx, models, opts)
 	return err
-}
-
-func UpdateSortMenu(submenu *model.SortMenuReq) error {
-
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
-	//指定连接集合
-	col := MongoDb.Collection("menu")
-	//设定更新filter
-	//filter := bson.D{{"catmenus.catid", submenu.ParentId}}
-	filter := bson.D{{"catmenus",
-		bson.D{{"$elemMatch",
-			bson.D{{"catid",
-				submenu.ParentId}},
-		}},
-	}}
-	update := bson.D{{"$set",
-		bson.D{
-			{"catmenus.$.subcatmenus", submenu.Menu},
-		}}}
-
-	_, err := col.UpdateOne(ctx, filter, update)
-	return err
-}
-
-func GetSubCatSelect(catId string) (*model.Menu, error) {
-	log.Println("cat id is ", catId)
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
-	//指定连接集合
-	col := MongoDb.Collection("menu")
-	//设定更新filter
-	filter := bson.D{{},
-		{"catmenus",
-			bson.D{{"$elemMatch",
-				bson.D{{"catid",
-					catId}}}},
-		},
-	}
-	menu := model.Menu{}
-	err := col.FindOne(ctx, filter).Decode(&menu)
-	if err != nil {
-		return nil, err
-	}
-	return &menu, nil
 }

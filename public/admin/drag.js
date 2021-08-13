@@ -42,9 +42,8 @@ function drop(e) {
     dragSrcEl = null
         //发送保存目录排序请求
     let id = $(this).parent().parent().attr('id')
-    console.log(id)
+    console.log('id is ', id)
     let subCat = {}
-    subCat.parentid = id
     subCat.menu = []
 
     $(this).parent().children('.mini-li').each(function(index, element) {
@@ -52,11 +51,16 @@ function drop(e) {
         console.log(element)
         console.log($(element).attr('subcatid'))
         console.log($(element).children('span').text())
-        let catele = { 'subcatid': $(element).attr('subcatid'), 'name': $(element).children('span').text() }
+        let catele = {
+            'catid': $(element).attr('subcatid'),
+            'name': $(element).children('span').text(),
+            'parent': id,
+            'index': index
+        }
         subCat.menu.push(catele)
     })
     console.log(subCat)
-
+    console.log('JSON.stringify(subCat) is ', JSON.stringify(subCat))
     $.ajax({
         type: "POST",
         url: "/admin/sortmenu",
