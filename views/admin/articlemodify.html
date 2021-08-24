@@ -1,4 +1,4 @@
-{{ define "admin/articleedit.html"}}
+{{ define "admin/articlemodify.html"}}
 <!doctype html>
 <html lang="en">
 
@@ -19,6 +19,7 @@
     <!-- Custom styles for this template -->
     <link rel="stylesheet" href="/static/admin/drag.css">
     <link rel="stylesheet" href="/static/admin/edit.css">
+    <link rel="stylesheet" href="/static/admin/modify.css">
     <link rel="icon" href="/static/home/favicon.ico">
     <link rel="stylesheet" href="/static/lib/highlight/css/tomorrow.min.css">
 </head>
@@ -106,15 +107,19 @@
                 </div>
 
                 <div class="footer-publish ">
-                    <button class="btn btn-primary publish-edit-btn " type="button ">
-                        发布文章
+                    <button class="btn btn-primary update-btn" type="button ">
+                        更新文章
                     </button>
                 </div>
             </div>
         </div>
 
     </div>
-
+    <div class="alert alert-danger msg-tip" role="alert"></div>
+    <span class="article-id" hidden>{{.Article.Id}}</span>
+    <span class="article-content" hidden>{{.Article.Content}}</span>
+    <span class="article-title" hidden>{{.Article.Title}}</span>
+    <span class="article-subtitle" hidden>{{.Article.Subtitle}}</span>
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -127,6 +132,7 @@
     <script src="/static/admin/drag.js "></script>
     <script src="/static/admin/catedrag.js "></script>
     <script src="/static/admin/edit.js "></script>
+    <script src="/static/admin/modify.js"></script>
 
     <script src="/static/lib/highlight/js/highlight.min.js "></script>
     <script src="https://cdn.jsdelivr.net/npm/wangeditor@latest/dist/wangEditor.min.js "></script>

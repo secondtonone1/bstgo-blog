@@ -249,6 +249,14 @@ a:focus {
     padding-left: 30px;
 }
 
+.nav-pills>li>a {
+    color: #c9c0c0;
+}
+
+.nav-pills>li>a:hover {
+    color: #222222;
+}
+
 
 /*文章区域*/
 
@@ -453,6 +461,13 @@ a:focus {
 .reply-info {
     border-top: #D0D1D6 solid 1px;
     padding-top: 20px;
+}
+
+
+/* 文章内容 */
+
+.article-data {
+    color: #606266;
 }
 
 

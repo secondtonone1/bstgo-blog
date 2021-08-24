@@ -27,3 +27,19 @@ type CatMenu struct {
 	Parent string `bson:"parent" json:"parent"`
 	Index  int    `bson:"index" json:"index"`
 }
+
+//文章结构
+type Article struct {
+	Id       string `bson:"id"`
+	Cat      string `bson: "cat"`
+	Title    string `bson: "title"`
+	Content  string `bson: "content"`
+	Subcat   string `bson: "subcat"`
+	Subtitle string `bson: "subtitle"`
+	ScanNum  int    `bson:"scannum"`
+	LoveNum  int    `bson:"lovenum`
+	CreateAt int64  `bson:"createdAt"`
+	LastEdit int64  `bson:"lastedit"`
+	Author   string `bson:"author"`
+	Index    int    `bson:"index"`
+}

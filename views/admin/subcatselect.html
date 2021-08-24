@@ -1,3 +1,5 @@
-{{ define "admin/subcatselect"}} {{ if eq .Res "res-success"}} {{range .SubCatMenus_}}
-<li><a href="javascript:void(0)" subcatid={{.SubCatId}}>{{.Name}}</a></li>
+{{ define "admin/subcatselect.html"}}
+<li class="active"><a href="javascript:void(0)">不限</a></li>
+{{ if eq .Res "res-success"}} {{range .SubCatMenus_}}
+<li><a href="javascript:void(0)" subcatid={{.CatId}}>{{.Name}}</a></li>
 {{end}} {{end}}{{end}}

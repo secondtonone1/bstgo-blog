@@ -55,6 +55,34 @@ func GroupRouterAdminMiddle(c *gin.Context) {
 	c.Next()
 }
 
+func CheckLogin(c *gin.Context) {
+	log.Println("check login midware")
+	//判断cookie中是否有session_id
+	sessionId, err := c.Cookie(model.CookieSession)
+	if err != nil {
+		//没有sessionId则返回登录页面
+		log.Println("no cookie sessionId ,return login")
+		baseRsp := model.BaseRsp{}
+		baseRsp.Code = model.ERR_NO_LOGIN
+		baseRsp.Msg = model.MSG_NO_LOGIN
+		c.JSON(http.StatusOK, baseRsp)
+		c.Abort()
+		return
+	}
+	sessionData, err := mongocli.GetSessionById(sessionId)
+	if err != nil {
+		log.Println("get sessionid ", sessionId, "failed, return login")
+		baseRsp := model.BaseRsp{}
+		baseRsp.Code = model.ERR_NO_LOGIN
+		baseRsp.Msg = model.MSG_NO_LOGIN
+		c.JSON(http.StatusOK, baseRsp)
+		c.Abort()
+		return
+	}
+	log.Println("session data is : ", sessionData)
+	c.Next()
+}
+
 func main() {
 	mongocli.MongoInit()
 	router := gin.Default()
@@ -67,6 +95,9 @@ func main() {
 	router.GET("/home", home.Home)
 	//用户浏览你分类
 	router.GET("/category", home.Category)
+
+	//用户浏览单个文章
+	router.GET("/articlepage", home.ArticlePage)
 
 	//admin登录页面
 	router.GET("/admin/login", admin.Login)
@@ -95,11 +126,20 @@ func main() {
 		adminGroup.POST("/sortmenu", admin.SortMenu)
 		// 文章编辑界面
 		adminGroup.GET("/articledit", admin.ArticleEdit)
-		// 文章编辑发布
-		adminGroup.POST("/pubarticle", admin.ArticlePub)
 		//获取子分类下拉菜单
 		adminGroup.POST("/subcatselect", admin.SubCatSelect)
+		//文章搜索返回列表
+		adminGroup.POST("/articlesearch", admin.ArticleSearch)
+		//文章删除
+		adminGroup.POST("/delarticle", admin.DelArticle)
+		//文章编辑
+		adminGroup.GET("/articlemodify", admin.ModifyArticle)
+		//文章更新
+		adminGroup.POST("/updatearticle", admin.UpdateArticle)
 	}
+
+	// 文章编辑发布
+	router.POST("admin/pubarticle", CheckLogin, admin.ArticlePub)
 
 	router.Run(":8080")
 	mongocli.MongoRelease()

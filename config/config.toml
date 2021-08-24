@@ -10,3 +10,6 @@
 [cookie]
     host = "localhost"
     alive = 86400
+
+[location]
+    timezone = "Asia/Shanghai"

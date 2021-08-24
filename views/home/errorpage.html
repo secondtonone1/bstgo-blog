@@ -1,0 +1,11 @@
+{{ define "home/errorpage.html"}} {{ template "home/header" . }}
+
+<body>
+    <div class="alert alert-danger err-tip" role="alert">{{.}}</div>
+</body>
+<link rel="stylesheet" href="/static/home/errorpage.css">
+<script src="/static/home/errorpage.js"></script>
+
+</html>
+
+{{ end }}

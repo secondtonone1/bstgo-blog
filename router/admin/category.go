@@ -4,26 +4,244 @@ import (
 	"bstgo-blog/model"
 	mongocli "bstgo-blog/mongo"
 	"log"
+	"math"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/segmentio/ksuid"
 )
 
 func Category(c *gin.Context) {
-	c.HTML(http.StatusOK, "admin/articlecateg.html", nil)
+	catReq := &model.AdminCatReq{}
+	adminCat := &model.AdminCatR{}
+	adminCat.Articles = []*model.ArticleR{}
+	adminCat.Res = model.MSG_SUCCESS
+	defer func() {
+		c.HTML(http.StatusOK, "admin/articlecateg.html", adminCat)
+	}()
+
+	err := c.BindJSON(catReq)
+	if err != nil {
+		log.Println("json parse failed, err is ", err)
+		adminCat.Res = "json parse failed"
+		return
+	}
+	log.Println("admin cat is ", catReq)
+
+	articles, err := mongocli.SearchArticleBySubCat(catReq.Category)
+	if err != nil {
+		log.Println("get articles failed")
+		adminCat.Res = "get articles failed"
+		return
+	}
+
+	log.Println("articles are ", articles)
+	for _, article := range articles {
+		//log.Println("article is ", article)
+		articleR := &model.ArticleR{}
+		articleR.Id = article.Id
+		articleR.Author = article.Author
+		articleR.Cat = article.Cat
+		articleR.Content = article.Content
+		createtm := time.Unix(article.CreateAt, 0)
+		articleR.CreateAt = createtm.Format("2006-01-02 15:04:05")
+		lasttm := time.Unix(article.LastEdit, 0)
+		articleR.LastEdit = lasttm.Format("2006-01-02 15:04:05")
+		articleR.LoveNum = article.LoveNum
+		articleR.ScanNum = article.ScanNum
+		articleR.Subcat = article.Subcat
+		articleR.Subtitle = article.Subtitle
+		articleR.Title = article.Title
+		adminCat.Articles = append(adminCat.Articles, articleR)
+	}
+
 }
 
 func Sort(c *gin.Context) {
-	c.HTML(http.StatusOK, "admin/articlesort.html", nil)
+	catReq := &model.AdminCatReq{}
+	adminCat := &model.AdminCatR{}
+	adminCat.Articles = []*model.ArticleR{}
+	adminCat.Res = model.MSG_SUCCESS
+	defer func() {
+		c.HTML(http.StatusOK, "admin/articlesort.html", adminCat)
+	}()
+
+	err := c.BindJSON(catReq)
+	if err != nil {
+		log.Println("json parse failed, err is ", err)
+		adminCat.Res = "json parse failed"
+		return
+	}
+
+	log.Println("admin cat is ", catReq)
+
+	articles, err := mongocli.SearchArticleBySubCat(catReq.Category)
+	if err != nil {
+		log.Println("get articles failed")
+		adminCat.Res = "get articles failed"
+		return
+	}
+
+	for _, article := range articles {
+		articleR := &model.ArticleR{}
+		articleR.Id = article.Id
+		articleR.Author = article.Author
+		articleR.Cat = article.Cat
+		articleR.Content = article.Content
+		createtm := time.Unix(article.CreateAt, 0)
+		articleR.CreateAt = createtm.Format("2006-01-02 15:04:05")
+		lasttm := time.Unix(article.LastEdit, 0)
+		articleR.LastEdit = lasttm.Format("2006-01-02 15:04:05")
+		articleR.LoveNum = article.LoveNum
+		articleR.ScanNum = article.ScanNum
+		articleR.Subcat = article.Subcat
+		articleR.Subtitle = article.Subtitle
+		articleR.Title = article.Title
+		adminCat.Articles = append(adminCat.Articles, articleR)
+	}
+
 }
 
 func SortSave(c *gin.Context) {
-	c.HTML(http.StatusOK, "admin/articlecateg.html", nil)
+	sortArtReq := &model.ArticleSortReq{}
+	adminCat := &model.AdminCatR{}
+	adminCat.Articles = []*model.ArticleR{}
+	adminCat.Res = model.MSG_SUCCESS
+	defer func() {
+		c.HTML(http.StatusOK, "admin/articlecateg.html", adminCat)
+	}()
+
+	err := c.BindJSON(sortArtReq)
+	if err != nil {
+		log.Println("json parse failed, err is ", err)
+		adminCat.Res = "json parse failed"
+		return
+	}
+
+	log.Println("sortArtReq cat is ", sortArtReq)
+
+	err = mongocli.UpdateArticleSort(sortArtReq)
+	if err != nil {
+		log.Println("update article sort failed, err is ", err)
+		adminCat.Res = "update article sort failed"
+		return
+	}
+
+	articles, err := mongocli.SearchArticleBySubCat(sortArtReq.SubCat)
+
+	if err != nil {
+		log.Println("get articles failed")
+		adminCat.Res = "get articles failed"
+		return
+	}
+
+	for _, article := range articles {
+		articleR := &model.ArticleR{}
+		articleR.Id = article.Id
+		articleR.Author = article.Author
+		articleR.Cat = article.Cat
+		articleR.Content = article.Content
+		createtm := time.Unix(article.CreateAt, 0)
+		articleR.CreateAt = createtm.Format("2006-01-02 15:04:05")
+		lasttm := time.Unix(article.LastEdit, 0)
+		articleR.LastEdit = lasttm.Format("2006-01-02 15:04:05")
+		articleR.LoveNum = article.LoveNum
+		articleR.ScanNum = article.ScanNum
+		articleR.Subcat = article.Subcat
+		articleR.Subtitle = article.Subtitle
+		articleR.Title = article.Title
+		adminCat.Articles = append(adminCat.Articles, articleR)
+	}
 }
 
 func IndexList(c *gin.Context) {
-	c.HTML(http.StatusOK, "admin/indexlist.html", nil)
+
+	var res string = model.RENDER_MSG_SUCCESS
+	adminR := model.AdminIndexR{}
+	adminR.Cur = 1
+	adminR.Total = 1
+	adminR.Res = res
+	defer func() {
+		c.HTML(http.StatusOK, "admin/indexlist.html", adminR)
+		//log.Println(adminR)
+	}()
+
+	req := &model.SearchArticleReq{}
+	err := c.BindJSON(req)
+	if err != nil {
+		res = "json parse failed "
+		adminR.Res = res
+		log.Println("get menulv1 failed, err is ", err)
+		return
+	}
+
+	if req.Page <= 0 {
+		res = "page less than 0"
+		adminR.Res = res
+		log.Println(res)
+		return
+	}
+
+	menus, err := mongocli.GetMenuListByParent("")
+	//log.Println("menus lv1 are ", menus)
+	if err != nil {
+		res = "get menu list failed"
+		adminR.Res = res
+		log.Println("get menulv1 failed, err is ", err)
+		return
+	}
+
+	//获取菜单信息
+	for _, menu := range menus {
+		menulv1 := &model.MenuLv1{}
+		menulv1.SelfMenu = menu
+		adminR.Menus = append(adminR.Menus, menulv1)
+		childmenus, err := mongocli.GetMenuListByParent(menu.CatId)
+		if err != nil {
+			res = "get menu list failed"
+			adminR.Res = res
+			log.Println("get menulv2 ", menu.CatId, " failed, err is ", err)
+			menulv1.ChildMenu = []*model.CatMenu{}
+			continue
+		}
+		menulv1.ChildMenu = childmenus
+		//log.Println("menus lv1 ChildMenu are ", childmenus)
+	}
+
+	//获取文章列表
+	articles, total, err := mongocli.SearchArticle(req)
+	if err != nil {
+		res = "get article list failed"
+		adminR.Res = res
+		log.Println("get menulv1 failed, err is ", err)
+		return
+	}
+
+	adminR.Articles = []*model.ArticleR{}
+	for _, article := range articles {
+		articleR := &model.ArticleR{}
+		articleR.Id = article.Id
+		articleR.Author = article.Author
+		articleR.Cat = article.Cat
+		articleR.Content = article.Content
+		createtm := time.Unix(article.CreateAt, 0)
+		articleR.CreateAt = createtm.Format("2006-01-02 15:04:05")
+		lasttm := time.Unix(article.LastEdit, 0)
+		articleR.LastEdit = lasttm.Format("2006-01-02 15:04:05")
+		articleR.LoveNum = article.LoveNum
+		articleR.ScanNum = article.ScanNum
+		articleR.Subcat = article.Subcat
+		articleR.Subtitle = article.Subtitle
+		articleR.Title = article.Title
+
+		adminR.Articles = append(adminR.Articles, articleR)
+	}
+	adminR.Res = res
+
+	var page_f float64 = float64(total) / 5
+	adminR.Total = int(math.Ceil(page_f))
+	adminR.Cur = req.Page
 }
 
 //创建分类

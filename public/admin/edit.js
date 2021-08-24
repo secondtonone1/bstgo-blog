@@ -35,7 +35,11 @@ $('.cat-div ul li').on('click', function() {
     $(this).addClass('active').siblings().removeClass('active')
     $(this).parent().siblings('button').children('.cat-text').text($(this).children('a').text())
     console.log('catid is ', $(this).children('a').attr('catid'))
-        //请求子分类
+    $('.subcat-div>button>.subcat-text').text('不限')
+    if ($(this).children('a').attr('catid') == undefined) {
+        return
+    }
+    //请求子分类
     $.ajax({
         type: "POST",
         url: "/admin/subcatselect",
@@ -46,16 +50,13 @@ $('.cat-div ul li').on('click', function() {
             //请求正确之后的操作
             console.log('post success , result is ', result)
 
-            // let index_find = result.indexOf('Sign in')
-            //     //找到Sign in 说明是登录页面
-            // if (index_find != -1) {
-            //     window.location.href = "/admin/login"
-            //     return
-            // }
+            let index_find = result.indexOf('Sign in')
+                //找到Sign in 说明是登录页面
+            if (index_find != -1) {
+                window.location.href = "/admin/login"
+                return
+            }
 
-            // $('#article-content').html(result)
-            // console.log($('#article-content').parent())
-            // $('#article-content').parent().fadeIn(700)
             $('.subcat-div>ul').html(result)
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -89,7 +90,7 @@ $('.subcat-div button').on('click', function() {
 })
 
 //点击月份列表更新按钮信息
-$('.subcat-div ul li').on('click', function() {
+$('.subcat-div ul').on('click', 'li', function() {
     $(this).addClass('active').siblings().removeClass('active')
     $(this).parent().siblings('button').children('.subcat-text').text($(this).children('a').text())
 })
@@ -101,7 +102,16 @@ $('.publish-edit-btn').on('click', function() {
     let content = window.maineditor.txt.html()
     let cat = $('.cat-text').text()
     let subcat = $('.subcat-text').text()
-
+    let subtitle = $('.sub-tittle>input').val()
+    let author = $('.author>input').val()
+    console.log('json stringfy is ', JSON.stringify({
+        'title': title,
+        'content': content,
+        'cat': cat,
+        'subcat': subcat,
+        'subtitle': subtitle,
+        'author': author
+    }))
     $.ajax({
         type: "POST",
         url: "/admin/pubarticle",
@@ -110,12 +120,22 @@ $('.publish-edit-btn').on('click', function() {
             'title': title,
             'content': content,
             'cat': cat,
-            'subcat': subcat
+            'subcat': subcat,
+            'subtitle': subtitle,
+            'author': author
         }), //参数列表
         dataType: "json",
         success: function(result) {
             //请求正确之后的操作
             console.log('post success , result is ', result)
+            if (result.code == 1005) {
+                window.location.href = "/admin/login"
+                return
+            }
+            if (result.code == 0) {
+                window.location.href = "/admin"
+                return
+            }
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
             //请求失败之后的操作

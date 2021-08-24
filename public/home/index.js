@@ -5,14 +5,14 @@ $('.category>li>a').on('click', function() {
     // 点击文章索引边栏的一级目录
 $('.sidebar>li>a').on('click', function() {
     //隐藏所有二级折叠框
-    $('.sidebar>li>div.collapse').collapse('hide')
-        // 移除其他二级标题active属性
+    //$('.sidebar>li>div.collapse').collapse('hide')
+    // 移除其他二级标题active属性
     $(".sub-sidebar > li").removeClass("active")
         //将点击的一级标题设置active类，其他一级标题移除active
     $(this).parent().addClass("active").siblings().removeClass("active")
         // 将其他一级目录图标切换为初始化右箭头
         //console.log($(this).parent().siblings().children('a').children('span'))
-    $(this).parent().siblings().children('a').children('span').removeClass('glyphicon glyphicon-menu-down').removeClass('glyphicon glyphicon-menu-right').addClass('glyphicon glyphicon-menu-right')
+        //$(this).parent().siblings().children('a').children('span').removeClass('glyphicon glyphicon-menu-down').removeClass('glyphicon glyphicon-menu-right').addClass('glyphicon glyphicon-menu-right')
 
     //将自己的一级目录图标切换
     if ($(this).children('span').attr('class').trim().indexOf('glyphicon-menu-right') != -1) {

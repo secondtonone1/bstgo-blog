@@ -1,0 +1,39 @@
+.hljs {
+    background-color: #f7f7f7;
+}
+
+.hljs-ln-code {
+    padding-left: 10px!important;
+}
+
+.hljs-ln-numbers {
+    border-right: none;
+    background-color: #eff2f3;
+    color: #869194;
+    padding-left: 10px!important;
+    padding-right: 10px!important;
+}
+
+pre {
+    padding: 0;
+}
+
+pre code.hljs {
+    padding: 10px 0 10px 0
+}
+
+
+/* webkit, opera, IE9 */
+
+::selection {
+    background: black;
+    color: white;
+}
+
+
+/* mozilla firefox */
+
+::-moz-selection {
+    background: black;
+    color: white;
+}

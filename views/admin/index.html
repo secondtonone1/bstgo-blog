@@ -32,7 +32,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-                <a class="navbar-brand" href="#">恋恋风辰官方博客</a>
+                <a class="navbar-brand" href="/home">恋恋风辰官方博客</a>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right head-ul">
@@ -53,7 +53,7 @@
         <div class="row">
             <div class="col-sm-3 col-md-2 sidebar">
                 <ul class="nav nav-sidebar">
-                    <li class="" id="rt-index"><a href="/home">回到首页</a></li>
+                    <li class="active" id="rt-index"><a href="JavaScript:void(0);">回到首页</a></li>
                     <li><a href="/admin/articledit">发布文章</a></li>
                     <li class=""><a data-toggle="collapse" href="#collapseTwo">分类<span class="glyphicon glyphicon-menu-right"></span></a>
                         <div id="collapseTwo" class="collapse">
@@ -61,7 +61,7 @@
                                 <li class="sub-li cat-ctg">
                                     <a href="#myModalDialog" data-toggle="modal">创建分类 + </a>
                                 </li>
-                                {{if eq .Res "res-success"}} {{ range .Menus}}
+                                {{if ne .Res "get menu list failed"}} {{ range .Menus}}
                                 <li class="sub-li"><a data-toggle="collapse" href="#{{.SelfMenu.CatId}}" catid="{{.SelfMenu.CatId}}">{{.SelfMenu.Name}}<span class="glyphicon glyphicon-menu-right"></span></a>
                                     <div id="{{.SelfMenu.CatId}}" class="collapse">
                                         <ul class="nav nav-pills nav-stacked mini-sidebar">
@@ -80,20 +80,16 @@
                     <li><a data-toggle="collapse" href="#collapseThree">管理<span class="glyphicon glyphicon-menu-right"></span></a>
                         <div id="collapseThree" class="collapse">
                             <ul class="nav nav-pills nav-stacked sub-sidebar">
-                                <li class="sub-li"><a href="#">最新留言</a> </li>
-                                <li class="sub-li"><a href="#">最新点赞</a></li>
-                                <li class="sub-li">
-                                    <a href="#">阅读排行</a>
-                                </li>
+                                <li class="sub-li" id="draftbox"><a href="#">回收站</a> </li>
                             </ul>
                         </div>
                     </li>
                 </ul>
             </div>
             <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-                {{ template "admin/modaldialog"}} {{ template "admin/subctgdialog"}}
+                {{ template "admin/modaldialog"}} {{ template "admin/subctgdialog"}} {{ template "admin/deletedialog"}}
                 <div id="article-content">
-                    {{ template "admin/articletotal"}}
+                    {{ template "admin/articletotal" .}}
                 </div>
                 {{ template "home/footer" . }}
 

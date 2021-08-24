@@ -66,7 +66,9 @@ nav.navbar {
 }
 
 .cat-span,
-.subcat-span {
+.subcat-span,
+.sub-tittle-span,
+.author-span {
     display: inline-block;
     width: 70px;
     height: 20px;
@@ -88,23 +90,31 @@ nav.navbar {
 }
 
 .temp-save-btn,
-.publish-edit-btn {
+.publish-edit-btn,
+.update-btn {
     font-size: 16px;
     border-radius: 20px;
 }
+
+
+/* 点击按钮不显示边框 */
 
 .temp-save-btn:focus,
 .temp-save-btn:active:focus,
 .temp-save-btn.active:focus,
 .publish-edit-btn:focus,
 .publish-edit-btn:active:focus,
-.publish-edit-btn.active:focus {
+.publish-edit-btn.active:focus,
+.update-btn:focus,
+.update-btn:active:focus,
+.update-btn.active:focus {
     outline: none;
     border-color: transparent;
     box-shadow: none;
 }
 
-.publish-edit-btn {
+.publish-edit-btn,
+.update-btn {
     position: absolute;
     right: 100px;
     top: 50%;
@@ -116,4 +126,45 @@ nav.navbar {
     right: 220px;
     top: 50%;
     transform: translate(0, -50%)
+}
+
+.cat-div button,
+.subcat-div button {
+    width: 160px;
+}
+
+.cat-div .dropdown-menu,
+.subcat-div .dropdown-menu {
+    left: 73px;
+    top: 70%;
+}
+
+.sub-tittle {
+    position: relative;
+    padding-bottom: 20px;
+}
+
+.sub-tittle>span {
+    padding-top: 5px;
+}
+
+.sub-tittle>.form-control {
+    position: absolute;
+    display: inline-block;
+    width: 300px;
+}
+
+.author {
+    position: relative;
+    padding-bottom: 20px;
+}
+
+.author>span {
+    padding-top: 5px;
+}
+
+.author>.form-control {
+    position: absolute;
+    display: inline-block;
+    width: 300px;
 }

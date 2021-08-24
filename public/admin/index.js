@@ -33,13 +33,27 @@ $(".sidebar > ul > li > a").on('click', function() {
 
 })
 
-$('#rt-index').on('click', function() {
+$('#rt-index').on('click', function(e) {
+    e.preventDefault()
+    let year = $('.year-text').text()
+    let month = $('.month-text').text()
+    let cat = $('.category-text').text()
+    let keywords = $('.keysearch-div>input').val()
+    let condition = {}
+    condition.year = year
+    condition.month = month
+    condition.cat = cat
+    condition.keywords = keywords
+    condition.page = 1
+    let condJson = JSON.stringify(condition)
+    console.log("condJson is ", condJson)
+
     $('#article-content').parent().fadeOut(100, function() {
         $.ajax({
             type: "POST",
             url: "/admin/index",
             contentType: "application/json",
-            data: JSON.stringify({ category: $(this).text() }), //参数列表
+            data: condJson, //参数列表
             dataType: "html",
             success: function(result) {
                 //请求正确之后的操作
@@ -54,6 +68,9 @@ $('#rt-index').on('click', function() {
 
                 $('#article-content').html(result)
                 console.log($('#article-content').parent())
+                let total = $('#page-total').text()
+                let cur = $('#page-cur').text()
+                resetPage(cur, total)
                 $('#article-content').parent().fadeIn(700)
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -107,18 +124,19 @@ $('.sub-sidebar').on('click', '.mini-li>span', function(event) {
         //设置自己三级选中效果，清除其他三级选中效果
     $('.mini-li').removeClass('active')
     $(this).parent().addClass("active")
-
+    let catedata = $(this).text()
+    console.log('post data is ', JSON.stringify({ 'category': catedata }))
     event.preventDefault(); //使a自带的方法失效，即无法调整到href中的URL()
     $('#article-content').parent().fadeOut(100, function() {
         $.ajax({
             type: "POST",
             url: "/admin/category",
             contentType: "application/json",
-            data: JSON.stringify({ category: $(this).text() }), //参数列表
+            data: JSON.stringify({ 'category': catedata }), //参数列表
             dataType: "html",
             success: function(result) {
                 //请求正确之后的操作
-                // console.log('post success , result is ', result)
+                console.log('post success , result is ', result)
 
                 let index_find = result.indexOf('Sign in')
                     //找到Sign in 说明是登录页面
@@ -145,8 +163,6 @@ $('.sub-sidebar').on('click', '.mini-li>span', function(event) {
 
 })
 
-
-
 //点击年份下拉菜单
 $('.year-div button').on('click', function() {
     //console.log("year button clicked")
@@ -167,6 +183,13 @@ $('.year-div button').on('click', function() {
 $('.year-div ul li').on('click', function() {
     $(this).addClass('active').siblings().removeClass('active')
     $(this).parent().siblings('button').children('.year-text').text($(this).children('a').text())
+
+    console.log("text_data is ", $(this).children('a').text())
+    if ($(this).children('a').text() != "不限") {
+        $('.month-div>button').attr('disabled', false)
+    } else {
+        $('.month-div>button').attr('disabled', true)
+    }
 })
 
 //点击月份下拉菜单
@@ -213,15 +236,75 @@ $('.category-div ul li').on('click', function() {
     $(this).parent().siblings('button').children('.category-text').text($(this).children('a').text())
 })
 
+//搜索文章
+$('#article-content').on('click', '.searchbtn-div>button', function() {
+    console.log('clicked article totoal search btn')
+    let year = $('.year-text').text()
+    let month = $('.month-text').text()
+    let cat = $('.category-text').text()
+    let keywords = $('.keysearch-div>input').val()
+    let condition = {}
+    condition.year = year
+    condition.month = month
+    condition.cat = cat
+    condition.keywords = keywords
+    condition.page = 1
+    let condJson = JSON.stringify(condition)
+    console.log("condJson is ", condJson)
+
+    $('.blog-footer').fadeOut(700)
+    $('.article-page').fadeOut(700)
+
+    $('.article-div').fadeOut(700, function() {
+        $.ajax({
+            type: "POST",
+            url: "/admin/articlesearch",
+            contentType: "application/json",
+            data: condJson, //参数列表
+            dataType: "html",
+            success: function(result) {
+                //请求正确之后的操作
+                console.log('post success , result is ', result)
+                let index_find = result.indexOf('Sign in')
+                    //找到Sign in 说明是登录页面
+                if (index_find != -1) {
+                    window.location.href = "/admin/login"
+                    return
+                }
+                $('.article-div').html(result)
+                let total = $('#page-total').text()
+                let cur = $('#page-cur').text()
+                console.log('cur is ', cur)
+                console.log('total is ', total)
+                resetPage(cur, total)
+                $('.article-div').fadeIn(700)
+                $('.blog-footer').fadeIn(700)
+                $('.article-page').fadeIn(700)
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                //请求失败之后的操作
+                console.log('post failed')
+                    // 状态码
+                console.log(XMLHttpRequest.status);
+                // 状态
+                console.log(XMLHttpRequest.readyState);
+                // 错误信息   
+                console.log(textStatus);
+            }
+        })
+
+    })
+})
+
 //点击排序
 $('#article-content').on('click', '.sort-edit-btn', function() {
-
+    let categorytxt = $('.mini-li.active>span').text()
     $(this).parent().parent().parent().fadeOut(100, function() {
         $.ajax({
             type: "POST",
             url: "/admin/sort",
             contentType: "application/json",
-            data: JSON.stringify({ category: $(this).text() }), //参数列表
+            data: JSON.stringify({ 'category': categorytxt }), //参数列表
             dataType: "html",
             success: function(result) {
                 //请求正确之后的操作
@@ -256,12 +339,31 @@ $('#article-content').on('click', '.sort-edit-btn', function() {
 
 //点击保存
 $('#article-content').on('click', '.sort-save-btn', function() {
+    let categorytxt = $('.mini-li.active>span').text()
+    let subCat = {}
+    subCat.sortlist = []
+    subCat.subcat = categorytxt
+    $('.sort-article-list').each(function(index, element) {
+        console.log(index)
+        console.log(element)
+        console.log($(element).attr('articleid'))
+        console.log($(element).children('span').text())
+        let article = {
+            'articleid': $(element).attr('articleid'),
+            'title': $(element).children('span').text(),
+            'index': index
+        }
+        subCat.sortlist.push(article)
+    })
+
+    let jsonData = JSON.stringify(subCat)
+    console.log('jsondata is ', jsonData)
     $('#article-content').parent().fadeOut(100, function() {
         $.ajax({
             type: "POST",
             url: "/admin/sortsave",
             contentType: "application/json",
-            data: JSON.stringify({ category: $(this).text() }), //参数列表
+            data: jsonData, //参数列表
             dataType: "html",
             success: function(result) {
                 //请求正确之后的操作
@@ -293,8 +395,8 @@ $('#article-content').on('click', '.sort-save-btn', function() {
 //发布文章
 $('#article-content').on('click', '.article-pub-btn', function() {
 
-    let sub_cat = $('li.mini-li.active').children('span').text()
-    let cat = $('li.mini-li.active').parents('.sub-li').children('a').text()
+    let sub_cat = $('li.mini-li.active').attr('subcatid')
+    let cat = $('li.mini-li.active').parents('.sub-li').children('div').attr('id')
     console.log('cat is ', cat)
     console.log('sub_cat is ', sub_cat)
 
@@ -411,4 +513,409 @@ $('.sub-sidebar').on('click', '.sub-ctg', function() {
     console.log(window.cur_subctg)
     console.log('mini-li length is ', $(this).siblings('.mini-li').length)
     window.subcatnum = $(this).siblings('.mini-li').length
+})
+
+$(function() {
+    $('.month-div>button').attr('disabled', true)
+    let total = $('#page-total').text()
+    let cur = $('#page-cur').text()
+    resetPage(cur, total)
+})
+
+//点击文章删除span
+$('#article-content').on('click', '.del-span', function() {
+    let tips = $(this).parent().siblings('.article-title').text()
+    $('#deldialog .del-article-span').text(tips)
+    $('#deldialog').modal('show')
+
+})
+
+//点击删除模态框提交
+$('#deldialog  .sure').on('click', function() {
+    let tips = $('#deldialog .del-article-span').text()
+    let delSuccess = 0;
+    //发送删除给后端
+    $.ajax({
+        type: "POST",
+        url: "/admin/delarticle",
+        contentType: "application/json",
+        data: JSON.stringify({ "title": tips }), //参数列表
+        dataType: "json",
+        success: function(result) {
+            //请求正确之后的操作
+            console.log('post success , result is ', result)
+            delSuccess = 1
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            //请求失败之后的操作
+            console.log('post failed')
+                // 状态码
+            console.log(XMLHttpRequest.status);
+            // 状态
+            console.log(XMLHttpRequest.readyState);
+            // 错误信息   
+            console.log(textStatus);
+        }
+    })
+
+    $('#deldialog').modal('hide')
+
+    if ($('#rt-index').hasClass('active')) {
+        $('#article-content').parent().fadeOut(50, function() {
+            $.ajax({
+                type: "POST",
+                url: "/admin/index",
+                contentType: "application/json",
+                data: JSON.stringify({ category: $(this).text() }), //参数列表
+                dataType: "html",
+                success: function(result) {
+                    //请求正确之后的操作
+                    console.log('post success , result is ', result)
+
+                    let index_find = result.indexOf('Sign in')
+                        //找到Sign in 说明是登录页面
+                    if (index_find != -1) {
+                        window.location.href = "/admin/login"
+                        return
+                    }
+
+                    $('#article-content').html(result)
+                    console.log($('#article-content').parent())
+                    let total = $('#page-total').text()
+                    let cur = $('#page-cur').text()
+                    resetPage(cur, total)
+                    $('#article-content').parent().fadeIn(700)
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    //请求失败之后的操作
+                    console.log('post failed')
+                        // 状态码
+                    console.log(XMLHttpRequest.status);
+                    // 状态
+                    console.log(XMLHttpRequest.readyState);
+                    // 错误信息   
+                    console.log(textStatus);
+                }
+            });
+        })
+    } else if ($('.mini-li.active').length > 0) {
+        let catedata = $('.mini-li.active>span').text()
+        console.log('post data is ', JSON.stringify({ 'category': catedata }))
+
+        $('#article-content').parent().fadeOut(50, function() {
+            $.ajax({
+                type: "POST",
+                url: "/admin/category",
+                contentType: "application/json",
+                data: JSON.stringify({ 'category': catedata }), //参数列表
+                dataType: "html",
+                success: function(result) {
+                    //请求正确之后的操作
+                    console.log('post success , result is ', result)
+
+                    let index_find = result.indexOf('Sign in')
+                        //找到Sign in 说明是登录页面
+                    if (index_find != -1) {
+                        window.location.href = "/admin/login"
+                        return
+                    }
+
+                    $('#article-content').html(result)
+                    $('#article-content').parent().fadeIn(700)
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    //请求失败之后的操作
+                    console.log('post failed')
+                        // 状态码
+                    console.log(XMLHttpRequest.status);
+                    // 状态
+                    console.log(XMLHttpRequest.readyState);
+                    // 错误信息   
+                    console.log(textStatus);
+                }
+            });
+        })
+    }
+
+})
+
+function pageli(num) {
+    return '<li class="page-li" id=\"page-' + num + '\"><a href="#">' + num + '</a></li>'
+}
+
+function pageliActive(num) {
+    return '<li class="active page-li" id=\"page-' + num + '\"><a href="#">' + num + '</a></li>'
+}
+
+//翻页插件设置页码
+function resetPage(cur, total) {
+    $('.article-page .pagination').html('')
+    console.log('cur page is ', cur)
+    console.log('total page is ', total)
+    if (cur <= 0 || total <= 0) {
+        return
+    }
+    if ($('.article-list').length <= 0) {
+        return
+    }
+    window.curpage = cur - 0
+    window.totalpage = total - 0
+    let prev = '<li class="page-prev"> <a href="#" aria-label="Previous">'
+    prev += '<span aria-hidden="true">&laquo;</span></a></li>'
+
+    let next = '<li class="page-next"><a href="#" aria-label="Next">'
+    next += '<span aria-hidden="true">&raquo;</span></a></li>'
+
+    let ellipsis_prev = '<li id="ellipsis-prev"><span >...</span></li>'
+    let ellipsis_next = '<li id="ellipsis-next"><span >...</span></li>'
+
+    $('.article-page .pagination').append(pageliActive(cur))
+
+    //当前页为第一页
+    if (cur <= 1) {}
+
+    //当前页为第二页
+
+    if (cur == 2) {
+        $(pageli(cur - 1)).insertBefore("#page-" + cur)
+        $(prev).insertBefore("#page-" + (cur - 1))
+    }
+
+    //当前页为第三页
+    if (cur == 3) {
+        $(pageli(cur - 1)).insertBefore("#page-" + cur)
+        $(pageli(cur - 2)).insertBefore("#page-" + (cur - 1))
+        $(prev).insertBefore("#page-" + (cur - 2))
+    }
+
+    //当前页码大于3
+    if (cur > 3) {
+        $(pageli(cur - 1)).insertBefore("#page-" + cur)
+        $(ellipsis_prev).insertBefore("#page-" + (cur - 1))
+        $(pageli(1)).insertBefore("#ellipsis-prev")
+        $(prev).insertBefore("#page-1")
+    }
+
+    if (cur >= total) {
+
+    }
+
+    if (cur == total - 1) {
+        $(pageli(cur - 0 + 1)).insertAfter("#page-" + cur); //在id为test的元素后插入<p>测试</p>
+        $(next).insertAfter("#page-" + (cur - 0 + 1))
+    }
+
+    if (cur == total - 2) {
+        $(pageli(cur - 0 + 1)).insertAfter("#page-" + cur); //在id为test的元素后插入<p>测试</p>
+        $(pageli(cur - 0 + 2)).insertAfter("#page-" + (cur - 0 + 1))
+        $(next).insertAfter("#page-" + (cur - 0 + 2))
+    }
+
+    if (cur < total - 2) {
+        $(pageli(cur - 0 + 1)).insertAfter("#page-" + cur); //在id为test的元素后插入<p>测试</p>
+        $(ellipsis_next).insertAfter("#page-" + (cur - 0 + 1))
+        $(pageli(total)).insertAfter("#ellipsis-next")
+        $(next).insertAfter("#page-" + total)
+    }
+
+}
+
+//点击页码
+$('#article-content').on('click', '.page-li', function(e) {
+    e.preventDefault()
+    page = $(this).children('a').text()
+    console.log("click page is ", page)
+    let year = $('.year-text').text()
+    let month = $('.month-text').text()
+    let cat = $('.category-text').text()
+    let keywords = $('.keysearch-div>input').val()
+    let condition = {}
+    condition.year = year
+    condition.month = month
+    condition.cat = cat
+    condition.keywords = keywords
+    condition.page = page - 0
+    let condJson = JSON.stringify(condition)
+    console.log("condJson is ", condJson)
+
+    //请求page页数据给后端发送ajax请求
+    $('#article-content').parent().fadeOut(100, function() {
+        $.ajax({
+            type: "POST",
+            url: $('.urlinfo').text(),
+            contentType: "application/json",
+            data: condJson, //参数列表
+            dataType: "html",
+            success: function(result) {
+                //请求正确之后的操作
+                //console.log('post success , result is ', result)
+
+                let index_find = result.indexOf('Sign in')
+                    //找到Sign in 说明是登录页面
+                if (index_find != -1) {
+                    window.location.href = "/admin/login"
+                    return
+                }
+
+                $('#article-content').html(result)
+                console.log($('#article-content').parent())
+                let total = $('#page-total').text()
+                let cur = $('#page-cur').text()
+                resetPage(cur, total)
+                $('#article-content').parent().fadeIn(500)
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                //请求失败之后的操作
+                console.log('post failed')
+                    // 状态码
+                console.log(XMLHttpRequest.status);
+                // 状态
+                console.log(XMLHttpRequest.readyState);
+                // 错误信息   
+                console.log(textStatus);
+            }
+        });
+    })
+})
+
+//点击next翻页操作
+$('#article-content').on('click', '.page-next', function(e) {
+    e.preventDefault()
+    let next_page = window.curpage - 0 + 1
+        //请求page页数据给后端发送ajax请求
+    let total_page = window.totalpage - 0
+    console.log("next page is ", next_page)
+    console.log("total_page page is ", total_page)
+    if (next_page > total_page) {
+        return
+    }
+
+    let year = $('.year-text').text()
+    let month = $('.month-text').text()
+    let cat = $('.category-text').text()
+    let keywords = $('.keysearch-div>input').val()
+    let condition = {}
+    condition.year = year
+    condition.month = month
+    condition.cat = cat
+    condition.keywords = keywords
+    condition.page = next_page - 0
+    let condJson = JSON.stringify(condition)
+    console.log("condJson is ", condJson)
+
+    //发送请求next_page页数据
+    //请求page页数据给后端发送ajax请求
+    $('#article-content').parent().fadeOut(100, function() {
+        $.ajax({
+            type: "POST",
+            url: $('.urlinfo').text(),
+            contentType: "application/json",
+            data: condJson, //参数列表
+            dataType: "html",
+            success: function(result) {
+                //请求正确之后的操作
+                //console.log('post success , result is ', result)
+
+                let index_find = result.indexOf('Sign in')
+                    //找到Sign in 说明是登录页面
+                if (index_find != -1) {
+                    window.location.href = "/admin/login"
+                    return
+                }
+
+                $('#article-content').html(result)
+                console.log($('#article-content').parent())
+                let total = $('#page-total').text()
+                let cur = $('#page-cur').text()
+                resetPage(cur, total)
+                $('#article-content').parent().fadeIn(500)
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                //请求失败之后的操作
+                console.log('post failed')
+                    // 状态码
+                console.log(XMLHttpRequest.status);
+                // 状态
+                console.log(XMLHttpRequest.readyState);
+                // 错误信息   
+                console.log(textStatus);
+            }
+        });
+    })
+})
+
+//点击prev翻页操作
+$('#article-content').on('click', '.page-prev', function(e) {
+    e.preventDefault()
+    let prev_page = window.curpage - 1
+        //请求page页数据给后端发送ajax请求
+    console.log("prev_page is ", prev_page)
+    if (prev_page < 1) {
+        return
+    }
+
+    let year = $('.year-text').text()
+    let month = $('.month-text').text()
+    let cat = $('.category-text').text()
+    let keywords = $('.keysearch-div>input').val()
+    let condition = {}
+    condition.year = year
+    condition.month = month
+    condition.cat = cat
+    condition.keywords = keywords
+    condition.page = prev_page - 0
+    let condJson = JSON.stringify(condition)
+    console.log("condJson is ", condJson)
+
+
+    //发送请求prev_page页数据
+    //请求page页数据给后端发送ajax请求
+    $('#article-content').parent().fadeOut(100, function() {
+        $.ajax({
+            type: "POST",
+            url: $('.urlinfo').text(),
+            contentType: "application/json",
+            data: condJson, //参数列表
+            dataType: "html",
+            success: function(result) {
+                //请求正确之后的操作
+                //console.log('post success , result is ', result)
+
+                let index_find = result.indexOf('Sign in')
+                    //找到Sign in 说明是登录页面
+                if (index_find != -1) {
+                    window.location.href = "/admin/login"
+                    return
+                }
+
+                $('#article-content').html(result)
+                console.log($('#article-content').parent())
+                let total = $('#page-total').text()
+                let cur = $('#page-cur').text()
+                resetPage(cur, total)
+                $('#article-content').parent().fadeIn(500)
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                //请求失败之后的操作
+                console.log('post failed')
+                    // 状态码
+                console.log(XMLHttpRequest.status);
+                // 状态
+                console.log(XMLHttpRequest.readyState);
+                // 错误信息   
+                console.log(textStatus);
+            }
+        });
+    })
+})
+
+//编辑文章
+$('#article-content').on('click', '.edit-span', function() {
+    let id = $(this).parents(".article-ele").attr("id")
+    window.location.href = "/admin/articlemodify?id=" + id
+})
+
+//点击回收站
+$('#draftbox').on('click', function() {
+
 })

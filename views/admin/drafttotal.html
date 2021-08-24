@@ -1,19 +1,10 @@
-{{ define "admin/articlecateg.html"}}
+{{ define "admin/drafttotal.html"}}
 
-<div class="sort-edit">
-    <button class="btn btn-primary sort-edit-btn" type="button">
-        排版
-    </button>
-    <button class="btn btn-primary article-pub-btn" type="button">
-        发布文章
-    </button>
-</div>
-
-<div class="articlecateg-div">
+<div class="article-div">
     <ul class="list-unstyled article-ul">
-        {{ if eq .Res "res-success" }} {{range .Articles}}
+        {{range .Articles}}
         <li class="article-list">
-            <div class="article-ele">
+            <div class="article-ele" id="{{.Id}}">
                 <a class="article-title">{{.Title}}</a>
                 <span class="article-date">{{.LastEdit}}</span>
                 <div class="article-subtitle-cat">
@@ -22,8 +13,9 @@
                     <span class="article-cat">{{.Cat}}</span>
                     <span class="article-subcat">{{.Subcat}}</span>
                 </div>
+
                 <div class="article-love">
-                    <span class="glyphicon glyphicon-eye-open browse"></span><span> 浏览({{.ScanNum}})</span>
+                    <span class="glyphicon glyphicon-eye-open browse"></span><span class="scan-span"> 浏览({{.ScanNum}})</span>
                     <span class="glyphicon glyphicon-comment comment"></span><span class="comment-span"> 评论(4900000)</span>
                     <span class="glyphicon glyphicon-heart"></span><span class="love-span"> 喜欢({{.LoveNum}})</span>
                 </div>
@@ -34,8 +26,15 @@
                 </div>
             </div>
         </li>
-        {{end}} {{end}}
+        {{end}}
     </ul>
 </div>
-
-{{end}}
+<div class="article-page">
+    <span hidden id="page-total">{{.Total}}</span>
+    <span hidden id="page-cur">{{.Cur}}</span>
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+        </ul>
+    </nav>
+</div>
+<span class="urlinfo" hidden>/admin/draftbox</span> {{end}}

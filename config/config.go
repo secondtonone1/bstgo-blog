@@ -22,8 +22,13 @@ type CookieCfg struct {
 }
 
 type TotalCfg struct {
-	Mongo  MongoCfg  `toml: "mongo"`
-	Cookie CookieCfg `toml: "cookie"`
+	Mongo     MongoCfg  `toml: "mongo"`
+	Cookie    CookieCfg `toml: "cookie"`
+	Location_ Location  `toml:"location"`
+}
+
+type Location struct {
+	TimeZone string `toml:"timezone"`
 }
 
 var TotalCfgData TotalCfg

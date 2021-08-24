@@ -10,15 +10,11 @@
 
 <div class="sort-article-div">
     <ul class="list-unstyled sort-article-ul">
-        <li class="sort-article-list" draggable="true">
-            <span>deployment介绍和使用1</span>
+        {{range .Articles}}
+        <li class="sort-article-list" articleid="{{.Id}}" draggable="true">
+            <span>{{.Title}}</span>
         </li>
-        <li class="sort-article-list" draggable="true">
-            <span>deployment介绍和使用2</span>
-        </li>
-        <li class="sort-article-list" draggable="true">
-            <span>deployment介绍和使用3</span>
-        </li>
+        {{end}}
     </ul>
 </div>
 {{end}}
