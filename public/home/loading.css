@@ -1,0 +1,40 @@
+#loading {
+    width: 314px;
+    height: 130px;
+    position: fixed;
+    background: transparent url('/static/img/loading_box.png') no-repeat top left;
+    text-align: center;
+    z-index: 1001;
+    top: 40%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#loading .loadingImg {
+    margin-top: 41px;
+    margin-left: 10px;
+}
+
+#whiteOverlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    top: 0px;
+    left: 0px;
+    opacity: .5;
+    z-index: 1000;
+    filter: alpha(opacity=50)
+}
+
+#darkOverlay {
+    position: fixed;
+    _position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 1003;
+    background: transparent url('/public/img/bg_overlay.png') repeat top left;
+    display: none;
+    height: 100%;
+    width: 100%;
+}

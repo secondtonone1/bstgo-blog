@@ -1,0 +1,30 @@
+{{define "home/reply.html"}}
+<li class="reply-ul-li" reply-id="{{.Id}}">
+    <div class="res" hidden>{{.Res}}</div>
+    <div class="clearfix reply-info">
+        <div class="reply-head-icon">
+            {{if eq .HeadIcon ""}}
+            <img class="img-circle " src="/static/img/head.jpg " alt=" "> {{else}}
+            <img class="img-circle " src="{{.HeadIcon}}" alt=" "> {{end}}
+        </div>
+        <div class="reply-user">
+            <div class="reply-name text-primary">{{.UserName}}</div>
+            <div class="reply-date text-muted"> <span class="glyphicon glyphicon-time"></span> {{.Time}}</div>
+        </div>
+    </div>
+
+    <div class="reply-content">
+        {{.Content}}
+    </div>
+
+    <div class="reply-love clearfix">
+        <ul class="reply-love-ul list-inline">
+            <li class="love-num-li">
+                <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-heart-empty"></span><span class="love-span"> 喜欢({{.LoveNum}})</span></a>
+                <div class="alert alert-info">已点赞!</div>
+            </li>
+        </ul>
+    </div>
+</li>
+
+{{end}}

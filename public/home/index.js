@@ -1,9 +1,10 @@
 /*点击标题栏 */
 $('.category>li>a').on('click', function() {
-        $(this).parent().addClass("active").siblings().removeClass("active")
-    })
-    // 点击文章索引边栏的一级目录
-$('.sidebar>li>a').on('click', function() {
+    $(this).parent().addClass("active").siblings().removeClass("active")
+})
+
+// 点击文章索引边栏的一级目录
+$('.sidebar>li>a').on('click', function(event) {
     //隐藏所有二级折叠框
     //$('.sidebar>li>div.collapse').collapse('hide')
     // 移除其他二级标题active属性
@@ -22,15 +23,58 @@ $('.sidebar>li>a').on('click', function() {
         $(this).children('span').removeClass('glyphicon glyphicon-menu-down')
         $(this).children('span').addClass('glyphicon glyphicon-menu-right')
     }
+
+    if ($(this).parent().hasClass('requested')) {
+        return
+    }
+    demo.loading()
+
+    let data = {}
+    data.cat = $('#category-name').text()
+    data.subcat = $(this).attr('subname')
+    let jsdata = JSON.stringify(data)
+    console.log('jsdata is ', jsdata)
+    let lireq = $(this).parent()
+    $.ajax({
+        type: "POST",
+        url: "/home/artinfos",
+        contentType: "application/json",
+        data: jsdata, //参数列表
+        dataType: "html",
+        success: function(result) {
+            //请求正确之后的操作
+            console.log('post success , result is ', result)
+            if (result.indexOf('res-success') == -1) {
+                return
+            }
+            lireq.children('div').children('ul').html(result)
+            lireq.addClass('requested')
+            lireq.children('div').collapse('show')
+            demo.hiding()
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            //请求失败之后的操作
+            console.log('post failed')
+                // 状态码
+            console.log(XMLHttpRequest.status);
+            // 状态
+            console.log(XMLHttpRequest.readyState);
+            // 错误信息   
+            console.log(textStatus);
+        }
+    })
 })
 
 //点击文章索引边栏的二级目录
-$('.sub-sidebar>li>a').on('click', function() {
+$('.sidebar').on('click', '.subcatli>div>.sub-sidebar>.subtitleli>a', function() {
     // 移除一级标题active类
     $(".sidebar > li").removeClass("active").siblings().removeClass("active")
+        //移除二级标题active类
+    $('.subtitleli').removeClass('active')
         //设置二级标题active选中效果
-    $(this).parent().addClass("active").siblings().removeClass("active")
+    $(this).parent().addClass("active")
 })
+
 
 //小屏幕下点击列表按钮
 $('.article-index-btn').on('click', function() {
@@ -47,11 +91,21 @@ $('.mask').on('click', function() {
 //小屏幕侧边栏点击一级标题
 $('.xs-article-index-wrapper>ul>li>a').on('click', function() {
     //折叠其他一级标题
-    $(this).parent().siblings().children().collapse('hide')
-        //将点击的一级标题设置active类，其他一级标题移除active
+    //$(this).parent().siblings().children().collapse('hide')
+    //将点击的一级标题设置active类，其他一级标题移除active
     $(this).parent().addClass("active").siblings().removeClass("active")
         //设置二级标题取消active
     $('.xs-article-index-wrapper>ul>li>div a').parent().removeClass('active')
+
+    let glyphicon = $(this).children('span.glyphicon').attr('class')
+    if (!glyphicon) {
+        return
+    }
+    if (glyphicon.indexOf('glyphicon-menu-right') == -1) {
+        $(this).children('span.glyphicon').removeClass('glyphicon-menu-down glyphicon').addClass('glyphicon glyphicon-menu-right')
+    } else {
+        $(this).children('span.glyphicon').removeClass('glyphicon glyphicon-menu-right').addClass('glyphicon glyphicon-menu-down')
+    }
 })
 
 //小屏幕侧边栏点击二级标题
@@ -62,22 +116,75 @@ $('.xs-article-index-wrapper>ul>li>div a').on('click', function() {
     $('.xs-article-index-wrapper>ul>li>div a').parent().removeClass('active')
         //设置点击的二级标题active
     $(this).parent().addClass('active')
+
 })
 
-//按钮点击事件
+//评论按钮点击事件
 $('.comment-commit-btn').on('click', function() {
     if (window.editor.txt.html().trim() == "") {
         return
     }
+
     var comment_data = {
-        "comment_name": "江边皓月",
-        "comment_head": "https://profile.csdnimg.cn/2/D/2/3_akiss33",
-        "comment_date": ' ' + formatDate(new Date().getTime()),
-        "comment_content": window.editor.txt.html(),
+        "username": "恋恋风辰",
+        "headicon": "",
+        "content": window.editor.txt.html(),
+        "parent": $('.article-id').text(),
+        "artid": $('.article-id').text()
     }
-    var html = template('comment-li-tpl', comment_data)
-    $(".comment-list-ul").prepend(html)
+
+    let commentjs = JSON.stringify(comment_data)
+    console.log('comment json data is ', commentjs)
     window.editor.txt.clear()
+
+    //发送点赞数
+    $.ajax({
+        type: "POST",
+        url: "/home/comment",
+        contentType: "application/json",
+        data: commentjs, //参数列表
+        dataType: "html",
+        success: function(result) {
+            //请求正确之后的操作
+            console.log('post success , result is ', result)
+            let matchreg = /<div class="res" hidden>(.+?)<\/div>/gi
+            let matchres = matchreg.exec(result)
+            if (!matchres) {
+                $('.error-tips').text('res not fond').fadeIn(700, function() {
+                    $('.error-tips').fadeOut(1000)
+                })
+                return
+            }
+
+            if (matchres[1] != 'res-success') {
+                $('.error-tips').text(matchres[1]).fadeIn(700, function() {
+                    $('.error-tips').fadeOut(1000)
+                })
+                return
+            }
+
+            $('.error-tips').text(matchres[1]).fadeIn(700, function() {
+                $('.error-tips').fadeOut(1000)
+            })
+
+            $('.comment-list-ul').prepend(result)
+
+
+            let comment_num = $('.comment-span').text().match(/\d+/g)[0]
+
+            $('.comment-span').text(' 评论(' + (comment_num - 0 + 1) + ')')
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            //请求失败之后的操作
+            console.log('post failed')
+                // 状态码
+            console.log(XMLHttpRequest.status);
+            // 状态
+            console.log(XMLHttpRequest.readyState);
+            // 错误信息   
+            console.log(textStatus);
+        }
+    });
     return
 })
 
@@ -103,23 +210,73 @@ $('.comment-list-ul').on('click', '.reply-btn', function(e) {
         return
     }
     console.log(textarea_)
-        /*
-        var reply_data = {
-            "reply_name": "初见未来",
-            "reply_head": "https://profile.csdnimg.cn/C/C/9/3_weixin_46378962",
-            "reply_date": ' ' + formatDate(new Date().getTime()),
-            "reply_content": textarea_.val().trim(),
-        }
-        var html = template('reply-li-tpl', reply_data)
-        console.log(html)
-        $(this).parent().siblings('.comment-replay').prepend(html)
-        textarea_.val("")
+    let replyspan = $(this).parents('.reply-text').siblings('.comment-love').find('span.reply-span')
+    let replynum = replyspan.text().match(/\d+/g)[0]
+    console.log('replynum is ', replynum)
 
-        let num = span_reply.text().match(/\d+/g)[0] - 0 + 1
-        console.log(num)
-        span_reply.text(' 回复(' + num + ')')
-        return
-        */
+    let comid = $(this).parents('.comment-ul-li').attr('comment-id')
+
+    console.log('回复父级id为 ', comid)
+    console.log('文章id为 ', $('.article-id').text())
+
+    let replyul = $(this).parents('.comment-ul-li').children('.comment-replay')
+
+    let datasend = {
+        'parent': comid,
+        "username": "恋恋风辰",
+        "headicon": "",
+        "content": textarea_.val(),
+        "artid": $('.article-id').text()
+    }
+
+    $(this).parents('.reply-text').stop().slideToggle(500, function() {
+        $.ajax({
+            type: "POST",
+            url: "/home/comreply",
+            contentType: "application/json",
+            data: JSON.stringify(datasend), //参数列表
+            dataType: "html",
+            success: function(result) {
+                //请求正确之后的操作
+                console.log('post success , result is ', result)
+
+                let matchreg = /<div class="res" hidden>(.+?)<\/div>/gi
+                let matchres = matchreg.exec(result)
+                if (!matchres) {
+                    $('.error-tips').text('res not fond').fadeIn(700, function() {
+                        $('.error-tips').fadeOut(1000)
+                    })
+                    return
+                }
+
+                if (matchres[1] != 'res-success') {
+                    $('.error-tips').text(matchres[1]).fadeIn(700, function() {
+                        $('.error-tips').fadeOut(1000)
+                    })
+                    return
+                }
+
+                $('.error-tips').text(matchres[1]).fadeIn(700, function() {
+                    $('.error-tips').fadeOut(1000)
+                })
+
+                replyul.prepend(result)
+
+                replyspan.text(' 回复(' + (replynum - 0 + 1) + ')')
+
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                //请求失败之后的操作
+                console.log('post failed')
+                    // 状态码
+                console.log(XMLHttpRequest.status);
+                // 状态
+                console.log(XMLHttpRequest.readyState);
+                // 错误信息   
+                console.log(textStatus);
+            }
+        })
+    })
 })
 
 // $('.comment-list-ul').on('blur', '.reply-text textarea', function(e) {
@@ -142,6 +299,36 @@ $('#love-num').on('click', 'a', function() {
     let love_num = love_span.text().match(/\d+/g)[0]
     console.log(love_num)
     love_span.text(' 喜欢(' + (love_num - 0 + 1) + ')')
+
+    let articleid = $('.article-data .article-id').text()
+
+    let condition = {}
+    condition.id = articleid
+    let condJson = JSON.stringify(condition)
+    console.log("condJson is ", condJson)
+
+    //发送点赞数
+    $.ajax({
+        type: "POST",
+        url: "/home/addlovenum",
+        contentType: "application/json",
+        data: condJson, //参数列表
+        dataType: "json",
+        success: function(result) {
+            //请求正确之后的操作
+            console.log('post success , result is ', result)
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            //请求失败之后的操作
+            console.log('post failed')
+                // 状态码
+            console.log(XMLHttpRequest.status);
+            // 状态
+            console.log(XMLHttpRequest.readyState);
+            // 错误信息   
+            console.log(textStatus);
+        }
+    });
 })
 
 
@@ -162,10 +349,36 @@ $('.comment-list-ul').on('click', '.love-num-li a', function() {
     let love_num = love_span.text().match(/\d+/g)[0]
     console.log(love_num)
     love_span.text(' 喜欢(' + (love_num - 0 + 1) + ')')
+
+    let comid = $(this).parents('.comment-ul-li').attr('comment-id')
+    console.log('评论所属文章id为 ', comid)
+    let datasend = { 'id': comid }
+
+    $.ajax({
+        type: "POST",
+        url: "/home/addcomlove",
+        contentType: "application/json",
+        data: JSON.stringify(datasend), //参数列表
+        dataType: "json",
+        success: function(result) {
+            //请求正确之后的操作
+            console.log('post success , result is ', result)
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            //请求失败之后的操作
+            console.log('post failed')
+                // 状态码
+            console.log(XMLHttpRequest.status);
+            // 状态
+            console.log(XMLHttpRequest.readyState);
+            // 错误信息   
+            console.log(textStatus);
+        }
+    })
 })
 
 // 回复区点赞喜欢数
-$('.comment-list-ul').on('click', '.love-num-li a', function() {
+$('.reply-ul-li').on('click', '.love-num-li a', function() {
     //console.log($(this))
     $(this).siblings('div').stop().fadeIn(1000, function() {
             $(this).fadeOut(1000)
@@ -180,4 +393,48 @@ $('.comment-list-ul').on('click', '.love-num-li a', function() {
     let love_num = love_span.text().match(/\d+/g)[0]
     console.log(love_num)
     love_span.text(' 喜欢(' + (love_num - 0 + 1) + ')')
+
+    let replyid = $(this).parents('.reply-ul-li').attr('reply-id')
+    let datasend = { 'id': replyid }
+    $.ajax({
+        type: "POST",
+        url: "/home/addrpllove",
+        contentType: "application/json",
+        data: JSON.stringify(datasend), //参数列表
+        dataType: "json",
+        success: function(result) {
+            //请求正确之后的操作
+            console.log('post success , result is ', result)
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            //请求失败之后的操作
+            console.log('post failed')
+                // 状态码
+            console.log(XMLHttpRequest.status);
+            // 状态
+            console.log(XMLHttpRequest.readyState);
+            // 错误信息   
+            console.log(textStatus);
+        }
+    })
+})
+
+//点击最新评论
+$('.new-comments .com-title').on('click', function(e) {
+    let article_id = $(this).attr('article-id')
+    console.log("article_id is ", article_id)
+    if (article_id && article_id != "") {
+        window.location.href = "/articlepage?id=" + article_id
+    }
+    demo.loading()
+})
+
+//点击热门文章
+$('.article-hot>a').on('click', function(e) {
+    let article_id = $(this).attr('article-id')
+    console.log("article_id is ", article_id)
+    if (article_id && article_id != "") {
+        window.location.href = "/articlepage?id=" + article_id
+    }
+    demo.loading()
 })

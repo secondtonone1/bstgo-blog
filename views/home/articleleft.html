@@ -7,61 +7,19 @@
 <div class="relative-div">
     <h4>相关推荐</h4>
     <ol class="list-unstyled">
+        {{range .RecommendList}}
         <li>
-            <div class="article-hot">
-                <a href="#">
-                    <p>The official example template of creating a blog with Bootstrap</p>
+            <div class="article-recommend">
+                <a href="#" article-id="{{.Id}}">
+                    <p>{{.Title}}</p>
                 </a>
-                <div class="love-hot-span">
-                    <span class="glyphicon glyphicon-heart-empty"></span><span> 喜欢(3400)</span>
-                    <span class="glyphicon glyphicon-eye-open browse"></span><span> 浏览(4900000)</span>
+                <div class="love-recommend-span">
+                    <span class="glyphicon glyphicon-heart-empty"></span><span class="recomlove"> 喜欢({{.LoveNum}})</span>
+                    <span class="glyphicon glyphicon-eye-open browse"></span><span class="recomscan"> 浏览({{.ScanNum}})</span>
                 </div>
             </div>
         </li>
-        <li>
-            <div class="article-hot">
-                <a href="#">
-                    <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus</p>
-                </a>
-                <div class="love-hot-span">
-                    <span class="glyphicon glyphicon-heart-empty"></span><span> 喜欢(3400)</span>
-                    <span class="glyphicon glyphicon-eye-open browse"></span><span> 浏览(4900000)</span>
-                </div>
-            </div>
-        </li>
-        <li>
-            <div class="article-hot">
-                <a href="#">
-                    <p>Etiam porta sem malesuada magna mollis euismod</p>
-                </a>
-                <div class="love-hot-span">
-                    <span class="glyphicon glyphicon-heart-empty"></span><span> 喜欢(3400)</span>
-                    <span class="glyphicon glyphicon-eye-open browse"></span><span> 浏览(4900000)</span>
-                </div>
-            </div>
-        </li>
-        <li>
-            <div class="article-hot">
-                <a href="#">
-                    <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. </p>
-                </a>
-                <div class="love-hot-span">
-                    <span class="glyphicon glyphicon-heart-empty"></span><span> 喜欢(3400)</span>
-                    <span class="glyphicon glyphicon-eye-open browse"></span><span> 浏览(4900000)</span>
-                </div>
-            </div>
-        </li>
-        <li>
-            <div class="article-hot">
-                <a href="#">
-                    <p>Donec ullamcorper nulla non metus auctor fringilla. Nulla vitae elit libero, a pharetra augue.</p>
-                </a>
-                <div class="love-hot-span">
-                    <span class="glyphicon glyphicon-heart-empty"></span><span> 喜欢(3400)</span>
-                    <span class="glyphicon glyphicon-eye-open browse"></span><span> 浏览(4900000)</span>
-                </div>
-            </div>
-        </li>
+        {{end}}
     </ol>
 </div>
 

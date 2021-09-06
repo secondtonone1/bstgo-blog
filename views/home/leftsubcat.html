@@ -1,0 +1,4 @@
+{{define "home/leftsubcat.html"}}
+<span class="res-msg" hidden>{{.Msg}}</span> {{if eq .Msg "res-success"}} {{range .SubCatArtInfos}}
+<li class="subtitleli"><a href="JavaScript:void(0);" art-id="{{.ArtId}}">{{.ArtSubTitle}}</a></li>
+{{end}} {{end}} {{end}}

@@ -2,8 +2,17 @@
 
 <!-- 侧边栏文章索引 -->
 <div class="navbar-collapse collapse hidden-xs" id="article-navbar-collapse">
+    <div id="category-name" hidden>{{.CategoryName}}</div>
     <ul class="nav nav-pills nav-stacked sidebar ">
-        <li class="active"><a href="#">Go基础<span class="glyphicon glyphicon-menu-right"></span></a></li>
+        {{range .LeftCatList}}
+        <li class="subcatli"><a data-toggle="collapse" href="#{{.CatId}}" subcat-id="{{.CatId}}" subname="{{.Name}}">{{.Name}}<span class="glyphicon glyphicon-menu-right"></span></a>
+            <div id="{{.CatId}}" class="collapse">
+                <ul class="nav nav-pills nav-stacked sub-sidebar">
+                </ul>
+            </div>
+        </li>
+        {{end}}
+
         <li><a data-toggle="collapse" href="#collapseTwo">协程<span class="glyphicon glyphicon-menu-right"></span></a>
             <div id="collapseTwo" class="collapse">
                 <ul class="nav nav-pills nav-stacked sub-sidebar">

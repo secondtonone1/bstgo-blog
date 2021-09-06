@@ -48,45 +48,44 @@ $('#rt-index').on('click', function(e) {
     let condJson = JSON.stringify(condition)
     console.log("condJson is ", condJson)
 
-    $('#article-content').parent().fadeOut(100, function() {
-        $.ajax({
-            type: "POST",
-            url: "/admin/index",
-            contentType: "application/json",
-            data: condJson, //参数列表
-            dataType: "html",
-            success: function(result) {
-                //请求正确之后的操作
-                //console.log('post success , result is ', result)
+    $('#article-content').parent().fadeOut(100)
+    $.ajax({
+        type: "POST",
+        url: "/admin/index",
+        contentType: "application/json",
+        data: condJson, //参数列表
+        dataType: "html",
+        success: function(result) {
+            //请求正确之后的操作
+            //console.log('post success , result is ', result)
 
-                let index_find = result.indexOf('Sign in')
-                    //找到Sign in 说明是登录页面
-                if (index_find != -1) {
-                    window.location.href = "/admin/login"
-                    return
-                }
-
-                $('#article-content').html(result)
-                console.log($('#article-content').parent())
-                let total = $('#page-total').text()
-                let cur = $('#page-cur').text()
-                resetPage(cur, total)
-                $('#article-content').parent().fadeIn(700)
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-                //请求失败之后的操作
-                console.log('post failed')
-                    // 状态码
-                console.log(XMLHttpRequest.status);
-                // 状态
-                console.log(XMLHttpRequest.readyState);
-                // 错误信息   
-                console.log(textStatus);
+            let index_find = result.indexOf('Sign in')
+                //找到Sign in 说明是登录页面
+            if (index_find != -1) {
+                window.location.href = "/admin/login"
+                return
             }
-        });
-    })
-})
 
+            $('#article-content').html(result)
+            console.log($('#article-content').parent())
+            let total = $('#page-total').text()
+            let cur = $('#page-cur').text()
+            resetPage(cur, total)
+            $('#article-content').parent().fadeIn(700)
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            //请求失败之后的操作
+            console.log('post failed')
+                // 状态码
+            console.log(XMLHttpRequest.status);
+            // 状态
+            console.log(XMLHttpRequest.readyState);
+            // 错误信息   
+            console.log(textStatus);
+        }
+    });
+
+})
 
 //点击文章索引边栏的二级目录
 $('.sub-sidebar').on('click', '.sub-li>a', function() {
@@ -351,7 +350,7 @@ $('#article-content').on('click', '.sort-save-btn', function() {
         let article = {
             'articleid': $(element).attr('articleid'),
             'title': $(element).children('span').text(),
-            'index': index
+            'index': index - 0 + 1
         }
         subCat.sortlist.push(article)
     })
@@ -534,6 +533,18 @@ $('#article-content').on('click', '.del-span', function() {
 $('#deldialog  .sure').on('click', function() {
     let tips = $('#deldialog .del-article-span').text()
     let delSuccess = 0;
+    let inputdata = $("#deldialog input").val()
+    if (inputdata != tips) {
+        console.log('input data is ', inputdata)
+        console.log('tips is ', tips)
+        console.log('del data failed, input error!')
+        $('#deldialog').modal('hide')
+        $('.error-tips').text('del data failed, input error!')
+        $('.error-tips').fadeIn(1000, function() {
+            $('.error-tips').fadeOut(2000)
+        })
+        return
+    }
     //发送删除给后端
     $.ajax({
         type: "POST",
@@ -561,12 +572,26 @@ $('#deldialog  .sure').on('click', function() {
     $('#deldialog').modal('hide')
 
     if ($('#rt-index').hasClass('active')) {
+
+        let year = $('.year-text').text()
+        let month = $('.month-text').text()
+        let cat = $('.category-text').text()
+        let keywords = $('.keysearch-div>input').val()
+        let condition = {}
+        condition.year = year
+        condition.month = month
+        condition.cat = cat
+        condition.keywords = keywords
+        condition.page = 1
+        let condJson = JSON.stringify(condition)
+        console.log("condJson is ", condJson)
+
         $('#article-content').parent().fadeOut(50, function() {
             $.ajax({
                 type: "POST",
                 url: "/admin/index",
                 contentType: "application/json",
-                data: JSON.stringify({ category: $(this).text() }), //参数列表
+                data: condJson, //参数列表
                 dataType: "html",
                 success: function(result) {
                     //请求正确之后的操作
@@ -635,6 +660,8 @@ $('#deldialog  .sure').on('click', function() {
                 }
             });
         })
+    } else {
+        window.location.href = "/admin"
     }
 
 })

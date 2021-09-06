@@ -28,6 +28,14 @@ func Admin(c *gin.Context) {
 		//log.Println(adminR)
 	}()
 
+	val, b := c.Get("visitnum")
+	if !b {
+		log.Println("get visit num from midware failed")
+		adminR.VisitNum = val.(int64)
+	} else {
+		adminR.VisitNum = val.(int64)
+	}
+
 	menus, err := mongocli.GetMenuListByParent("")
 	//log.Println("menus lv1 are ", menus)
 	if err != nil {
@@ -81,7 +89,6 @@ func Admin(c *gin.Context) {
 		articleR.Id = article.Id
 		articleR.Author = article.Author
 		articleR.Cat = article.Cat
-		articleR.Content = article.Content
 		createtm := time.Unix(article.CreateAt, 0)
 		articleR.CreateAt = createtm.Format("2006-01-02 15:04:05")
 		lasttm := time.Unix(article.LastEdit, 0)
@@ -189,7 +196,7 @@ func ArticlePub(c *gin.Context) {
 		return
 	}
 
-	log.Println("articlePub cat is ")
+	log.Println("articlePub subcat is ", articlePub.Subcat)
 	maxindex, err := mongocli.GetSubCatMaxIndex(articlePub.Subcat)
 	if err != nil {
 		log.Println("get max index failed err is ", err)
@@ -198,11 +205,11 @@ func ArticlePub(c *gin.Context) {
 	log.Println("max index is ", maxindex)
 
 	log.Println("articlepub is ", articlePub)
-	articledb := &model.Article{}
+	articledb := &model.ArticleInfo{}
 	articledb.Id = ksuid.New().String()
 	articledb.Author = articlePub.Author
 	articledb.Cat = articlePub.Cat
-	articledb.Content = articlePub.Content
+
 	articledb.CreateAt = time.Now().Local().Unix()
 	articledb.LastEdit = time.Now().Local().Unix()
 	// log.Println("createat is ", articledb.CreateAt)
@@ -214,8 +221,20 @@ func ArticlePub(c *gin.Context) {
 	articledb.LoveNum = 500 + rand.Intn(100)
 	articledb.ScanNum = 1000 + rand.Intn(100)
 	articledb.Index = maxindex + 1
-	//存储文章
-	err = mongocli.SaveArticle(articledb)
+	//存储文章信息
+	err = mongocli.SaveArtInfo(articledb)
+	if err != nil {
+		log.Println(model.MSG_JSON_UNPACK)
+		rsp.Msg = model.MSG_SAVE_ARTICLE
+		rsp.Code = model.ERR_SAVE_ARTICLE
+		return
+	}
+
+	contentdb := &model.ArticleContent{}
+	contentdb.Id = articledb.Id
+	contentdb.Content = articlePub.Content
+
+	err = mongocli.SaveArtContent(contentdb)
 	if err != nil {
 		log.Println(model.MSG_JSON_UNPACK)
 		rsp.Msg = model.MSG_SAVE_ARTICLE
@@ -356,7 +375,6 @@ func ArticleSearch(c *gin.Context) {
 		articleR.Id = article.Id
 		articleR.Author = article.Author
 		articleR.Cat = article.Cat
-		articleR.Content = article.Content
 		createtm := time.Unix(article.CreateAt, 0)
 		articleR.CreateAt = createtm.Format("2006-01-02 15:04:05")
 		lasttm := time.Unix(article.LastEdit, 0)
@@ -458,7 +476,7 @@ func ModifyArticle(c *gin.Context) {
 	modify.CatName = CatEle.Name
 
 	articleR := &model.ArticleR{}
-	articleR.Id = article.Id
+	articleR.Id = article.ArticleInfo.Id
 	articleR.Author = article.Author
 	articleR.Cat = article.Cat
 	articleR.Content = article.Content

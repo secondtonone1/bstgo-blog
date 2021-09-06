@@ -111,3 +111,48 @@ type UpdateArticleRsp struct {
 type DraftBoxReq struct {
 	CurPage int `json:"curpage"`
 }
+
+type AddLoveNumReq struct {
+	Id string `json:"id"`
+}
+
+type AddLoveNumRsp struct {
+	BaseRsp
+}
+
+type CommentReq struct {
+	UserName string `json:"username"`
+	HeadIcon string `json:"headicon"`
+	Content  string `json:"content"`
+	Parent   string `json:"parent"`
+	ArtId    string `json:"artid"`
+}
+
+type ComLoveReq struct {
+	Id string `json:"id"`
+}
+
+type ComLoveRsp struct {
+	BaseRsp
+}
+
+type ComReplyReq struct {
+	Parent   string `json:"parent"`
+	UserName string `json:"username"`
+	HeadIcon string `json:"headicon"`
+	Content  string `json:"content"`
+	ArtId    string `json:"artid"`
+}
+
+type RplLoveReq struct {
+	Id string `json:"id"`
+}
+
+type RplLoveRsp struct {
+	BaseRsp
+}
+
+type SubCatArtInfoReq struct {
+	Cat    string `json:"cat"`
+	SubCat string `json:"subcat"`
+}

@@ -1,5 +1,7 @@
 {{ define "home/categary.html"}} {{ template "home/header" . }}
 
+<link rel="stylesheet" href="/static/home/category.css">
+
 <body>
     <div class="ancestor">
         {{ template "home/mask" .}}
@@ -13,7 +15,7 @@
                 </div>
                 <!-- 文章内容区域 -->
                 <div class="col-md-8 col-sm-8 col-xs-12 contant-col">
-                    {{ template "home/article" . }}
+                    {{ template "home/article" .}}
                 </div>
 
                 <!-- 页面右侧区域 -->
@@ -26,6 +28,7 @@
     </div>
 
     <script type="text/javascript" src="/static/home/index.js"></script>
+    <script type="text/javascript" src="/static/home/category.js"></script>
     <script type="text/javascript">
         $(function() {
             const E = window.wangEditor

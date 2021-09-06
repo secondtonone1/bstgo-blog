@@ -29,11 +29,17 @@ type CatMenu struct {
 }
 
 //文章结构
-type Article struct {
-	Id       string `bson:"id"`
-	Cat      string `bson: "cat"`
-	Title    string `bson: "title"`
-	Content  string `bson: "content"`
+type Article_ struct {
+	ArticleInfo
+	ArticleContent
+}
+
+//文章信息
+type ArticleInfo struct {
+	Id    string `bson:"id"`
+	Cat   string `bson: "cat"`
+	Title string `bson: "title"`
+
 	Subcat   string `bson: "subcat"`
 	Subtitle string `bson: "subtitle"`
 	ScanNum  int    `bson:"scannum"`
@@ -42,4 +48,34 @@ type Article struct {
 	LastEdit int64  `bson:"lastedit"`
 	Author   string `bson:"author"`
 	Index    int    `bson:"index"`
+}
+
+//文章内容
+type ArticleContent struct {
+	Id      string `bson:"id"`
+	Content string `bson: "content"`
+}
+
+//评论信息
+type Comment struct {
+	Id       string `bson:"id"`
+	UserName string `bson:"username"`
+	Time     int    `bson:"comtime"`
+	Content  string `bson:"content"`
+	LoveNum  int    `bson:"lovenum"`
+	Parent   string `bson:"parent"`
+	HeadIcon string `bson:"headicon"`
+	ArtId    string `bson:"artid"`
+}
+
+//基础信息
+type BaseInfo struct {
+	Id   string `json:"id"  bson:"id"`
+	Type string `json:"type" bson:"type"`
+	Info string `json:"info" bson:"info"`
+}
+
+//访问信息
+type VisitInfo struct {
+	VisitNum int64 `json:"visitnum"`
 }

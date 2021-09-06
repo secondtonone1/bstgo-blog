@@ -1,19 +1,33 @@
 {{ define "home/article"}}
 <div class="article-data">
-    {{.Content}}
+    <div class="article-title">{{.Title}}</div>
+    <div class="article-id" hidden>{{.Id}}</div>
+    <div class="article-info">
+        <span class="glyphicon glyphicon-gift"></span>
+        <span class="article-date">Posted on {{.CreateAt}} by </span>
+        <span class="article-author">{{.Author}}  </span>
+        <span class="seperate">|</span>
+        <span class="glyphicon glyphicon-folder-open"></span>
+        <span class="incat">In</span>
+        <span class="article-cat">{{.Cat}}</span>
+    </div>
+    <div class="article-content">
+        {{.Content}}
+    </div>
+
 </div>
 <!-- /.blog-main -->
 <!-- 底部浏览量 评论量等信息 -->
 <div class="browselist clearfix">
     <ul class="list-inline">
         <li>
-            <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-eye-open browse"></span><span> 浏览(4900000)</span></a>
+            <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-eye-open browse"></span><span> 浏览({{.ScanNum}})</span></a>
         </li>
         <li id="comment-num">
-            <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-comment comment"></span><span> 评论(4900000)</span></a>
+            <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-comment comment"></span><span class="comment-span"> 评论({{.CommentNum}})</span></a>
         </li>
         <li id="love-num">
-            <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-heart-empty"></span><span class="love-span">喜欢(3400)</span></a>
+            <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-heart-empty"></span><span class="love-span">喜欢({{.LoveNum}})</span></a>
             <div class="alert alert-info">已点赞!</div>
         </li>
     </ul>
@@ -31,67 +45,75 @@
 
 <div class="comment-list">
     <ul class="comment-list-ul list-unstyled">
-        <li class="comment-ul-li">
-            <div class="clearfix comment-info">
-                <div class="comment-head-icon">
-                    <img class="img-circle" src="https://profile.csdnimg.cn/6/9/0/3_nongweiyilady" alt="">
+        {{range .Comments}}
+        <li class="comment-ul-li" comment-id="{{.Id}}">
+            <div class=" clearfix comment-info ">
+                <div class="comment-head-icon ">
+                    {{if eq .HeadIcon ""}}
+                    <img class="img-circle " src="/static/img/head.jpg " alt=" "> {{else}}
+                    <img class="img-circle " src="{{.HeadIcon}}" alt=" "> {{end}}
                 </div>
-                <div class="comment-user">
-                    <div class="comment-name text-primary">恋恋风辰</div>
-                    <div class="comment-date text-muted"> <span class="glyphicon glyphicon-time"></span> 2020-12-22 15:52</div>
+                <div class="comment-user ">
+                    <div class="comment-name text-primary ">{{.UserName}}</div>
+                    <div class="comment-date text-muted "> <span class="glyphicon glyphicon-time "></span> {{.Time}}</div>
                 </div>
             </div>
 
-            <div class="comment-content">
-                <p>2010年正好参加工作 就开始在YY听了,在那个排麦的年代，特别希望排在你前面的人被抱下麦或者不唱了，那是一件很开心的事情，后来去QT 就找不到了，看斗鱼的这段时间就想过如果暗杠到斗鱼会不会火，现在来了依然没有火，应为好的东西肯定只有一部分比较有品位的人才能懂的，祝贺你们，你们都是有品位的</p>
+            <div class="comment-content ">
+                {{.Content}}
             </div>
 
-            <div class="comment-love clearfix">
-                <ul class="comment-love-ul list-inline">
-                    <li class="love-num-li">
-                        <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-heart-empty"></span><span class="love-span"> 喜欢(4900000)</span></a>
-                        <div class="alert alert-info">已点赞!</div>
+            <div class="comment-love clearfix ">
+                <ul class="comment-love-ul list-inline ">
+                    <li class="love-num-li ">
+                        <a href="JavaScript:void(0); "><span class="glyphicon glyphicon-heart-empty "></span><span class="love-span "> 喜欢({{.LoveNum}})</span></a>
+                        <div class="alert alert-info ">已点赞!</div>
                     </li>
-                    <li class="reply-num">
-                        <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-comment"></span><span class="reply-span"> 回复(4900000)</span></a>
+                    <li class="reply-num ">
+                        <a href="JavaScript:void(0); "><span class="glyphicon glyphicon-comment "></span><span class="reply-span "> 回复({{.ReplyNum}})</span></a>
                     </li>
                 </ul>
             </div>
-            <div class="clearfix reply-text">
-                <form role="form">
-                    <div class="form-group">
-                        <textarea class="form-control" rows="1"></textarea>
+            <div class="clearfix reply-text ">
+                <form role="form ">
+                    <div class="form-group ">
+                        <textarea class="form-control " rows="1 "></textarea>
                     </div>
                 </form>
-                <button class="btn btn-primary reply-btn">回复</button>
+                <button class="btn btn-primary reply-btn ">回复</button>
             </div>
-            <ul class="comment-replay list-unstyled">
-                <li class="reply-ul-li">
-                    <div class="clearfix reply-info">
-                        <div class="reply-head-icon">
-                            <img class="img-circle" src="https://profile.csdnimg.cn/7/7/A/1_secondtonone1" alt="">
+            <ul class="comment-replay list-unstyled ">
+
+                {{ range .Replys}}
+                <li class="reply-ul-li" reply-id="{{.Id}}">
+                    <div class="clearfix reply-info ">
+                        <div class="reply-head-icon ">
+                            {{if eq .HeadIcon ""}}
+                            <img class="img-circle " src="/static/img/head.jpg " alt=" "> {{else}}
+                            <img class="img-circle " src="{{.HeadIcon}}" alt=" "> {{end}}
                         </div>
-                        <div class="reply-user">
-                            <div class="reply-name text-primary">恋恋风辰</div>
-                            <div class="reply-date text-muted"> <span class="glyphicon glyphicon-time"></span> 2020-12-22 15:52</div>
+                        <div class="reply-user ">
+                            <div class="reply-name text-primary ">{{.UserName}}</div>
+                            <div class="reply-date text-muted "> <span class="glyphicon glyphicon-time "></span> {{.Time}}</div>
                         </div>
                     </div>
 
-                    <div class="reply-content">
-                        <p>有女生问我520是什么意思，我笑了:5是5个落实，落实经济结构调整，落实精准扶赏，落实社会保障，落实环境治理，落实反腐倡廉，2是2个要，既要金山银山，又要绿水青山，0是对违法犯罪行为的零容忍</p>
+                    <div class="reply-content ">
+                        {{.Content}}
                     </div>
 
-                    <div class="reply-love clearfix">
-                        <ul class="reply-love-ul list-inline">
-                            <li class="love-num-li">
-                                <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-heart-empty"></span><span class="love-span"> 喜欢(4900000)</span></a>
-                                <div class="alert alert-info">已点赞!</div>
+                    <div class="reply-love clearfix ">
+                        <ul class="reply-love-ul list-inline ">
+                            <li class="love-num-li ">
+                                <a href="JavaScript:void(0); "><span class="glyphicon glyphicon-heart-empty "></span><span class="love-span "> 喜欢({{.LoveNum}})</span></a>
+                                <div class="alert alert-info ">已点赞!</div>
                             </li>
                         </ul>
                     </div>
-                </li>
+                </li>{{end}}
             </ul>
         </li>
+        {{end}}
     </ul>
 </div>
 {{ end }}

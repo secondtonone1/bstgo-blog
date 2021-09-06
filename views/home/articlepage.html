@@ -1,9 +1,11 @@
 {{ define "home/articlepage.html"}} {{ template "home/header" . }}
 <link rel="stylesheet" href="/static/home/articlepage.css">
+<link rel="stylesheet" href="/static/home/loading.css">
 
-<script src="/static/home/articlepage.js"></script>
 
 <body>
+    <div id="loading"><img class="loadingImg" alt="loading" src="/static/img/ajax-loader.gif"></div>
+    <div id="whiteOverlay"> </div>
     <div class="ancestor">
         {{ template "home/mask" .}}
         <div class="container-fluid container-root">
@@ -11,12 +13,13 @@
             <!-- 内容区 -->
             <div class="row content">
                 <!-- 页面左侧区域 -->
-                <div class="col-md-2 col-sm-2  article-col left-side">
+                <div class="col-md-2 col-sm-2 hidden-xs article-col left-side">
                     {{ template "home/articleleft" .}}
                 </div>
                 <!-- 文章内容区域 -->
                 <div class="col-md-8 col-sm-8 col-xs-12 contant-col">
                     {{ template "home/article" . }}
+                    <div class="alert alert-danger error-tips" role="alert"></div>
                 </div>
 
                 <!-- 页面右侧区域 -->
@@ -29,6 +32,7 @@
     </div>
 
     <script type="text/javascript" src="/static/home/index.js"></script>
+    <script type="text/javascript" src="/static/home/articlepage.js"></script>
     <script type="text/javascript">
         $(function() {
             const E = window.wangEditor

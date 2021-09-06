@@ -127,6 +127,13 @@ a:focus {
 }
 
 
+/* 设置小屏幕下侧边栏一级标题样式 */
+
+.xs-article-index-wrapper>ul>li>a {
+    color: #c9c0c0;
+}
+
+
 /* 小屏幕下侧边栏一级标题右箭头 */
 
 .xs-article-index>li>a>span {
@@ -383,6 +390,13 @@ a:focus {
 }
 
 
+/* 评论列表下边框和下边距 */
+
+.comment-list-ul {
+    border-bottom: #D0D1D6 solid 1px;
+}
+
+
 /* 评论区内容 */
 
 .comment-content {
@@ -419,7 +433,7 @@ a:focus {
 /* 评论区回复 */
 
 .comment-replay {
-    padding: 20px 0 0 65px;
+    padding: 0px 0 0 65px;
 }
 
 .reply-name {
@@ -545,11 +559,41 @@ a:focus {
 /* 热门文章列表 */
 
 .article-hot {
-    padding: 5px 0;
+    padding: 15px 0 5px 0;
 }
 
 .love-hot-span {
     font-size: 1px;
+    color: #666666;
+}
+
+.hot-love {
+    display: inline-block;
+    padding-right: 10px;
+    font-size: 8px;
+}
+
+
+/* 最新评论 */
+
+.new-comments {
+    padding: 15px 0 5px 0;
+}
+
+.com-title {
+    display: inline-block;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.com-content {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
     color: #666666;
 }
 

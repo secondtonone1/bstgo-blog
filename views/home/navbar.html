@@ -16,15 +16,14 @@
               <span class="glyphicon glyphicon-chevron-down"></span>
             </button>
 
-
             </div>
             <div class="collapse navbar-collapse" id="example-navbar-collapse">
                 <ul class="nav navbar-nav category">
-                    <li class="active"><a href="#">Go</a></li>
-                    <li><a href="#">C++</a></li>
-                    <li><a href="#">Python</a></li>
-                    <li><a href="#">Javascript</a></li>
-                    <li><a href="#">Rust</a></li>
+                    {{range $index, $menu := .NavCatList}} {{if eq $menu.CatId $.ActiveId}}
+                    <li class="active"><a href="/category?catid={{$menu.CatId}}">{{$menu.Name}}</a></li>
+                    {{ else }}
+                    <li><a href="/category?catid={{$menu.CatId}}">{{$menu.Name}}</a></li>
+                    {{end}} {{end}}
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right login">

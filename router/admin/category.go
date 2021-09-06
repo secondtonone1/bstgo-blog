@@ -43,7 +43,7 @@ func Category(c *gin.Context) {
 		articleR.Id = article.Id
 		articleR.Author = article.Author
 		articleR.Cat = article.Cat
-		articleR.Content = article.Content
+		articleR.Content = ""
 		createtm := time.Unix(article.CreateAt, 0)
 		articleR.CreateAt = createtm.Format("2006-01-02 15:04:05")
 		lasttm := time.Unix(article.LastEdit, 0)
@@ -88,7 +88,7 @@ func Sort(c *gin.Context) {
 		articleR.Id = article.Id
 		articleR.Author = article.Author
 		articleR.Cat = article.Cat
-		articleR.Content = article.Content
+		articleR.Content = ""
 		createtm := time.Unix(article.CreateAt, 0)
 		articleR.CreateAt = createtm.Format("2006-01-02 15:04:05")
 		lasttm := time.Unix(article.LastEdit, 0)
@@ -141,7 +141,7 @@ func SortSave(c *gin.Context) {
 		articleR.Id = article.Id
 		articleR.Author = article.Author
 		articleR.Cat = article.Cat
-		articleR.Content = article.Content
+		articleR.Content = ""
 		createtm := time.Unix(article.CreateAt, 0)
 		articleR.CreateAt = createtm.Format("2006-01-02 15:04:05")
 		lasttm := time.Unix(article.LastEdit, 0)
@@ -224,7 +224,7 @@ func IndexList(c *gin.Context) {
 		articleR.Id = article.Id
 		articleR.Author = article.Author
 		articleR.Cat = article.Cat
-		articleR.Content = article.Content
+		articleR.Content = ""
 		createtm := time.Unix(article.CreateAt, 0)
 		articleR.CreateAt = createtm.Format("2006-01-02 15:04:05")
 		lasttm := time.Unix(article.LastEdit, 0)

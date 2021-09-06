@@ -83,6 +83,30 @@ func CheckLogin(c *gin.Context) {
 	c.Next()
 }
 
+func CalCulateVisit() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		num, err := mongocli.AddVisitNum()
+		if err != nil {
+			log.Println("add visit num failed, err is ", err)
+			return
+		}
+
+		c.Set("visitnum", num)
+	}
+}
+
+func GetVisitMid() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		num, err := mongocli.GetVisitNum()
+		if err != nil {
+			log.Println("add visit num failed, err is ", err)
+			return
+		}
+
+		c.Set("visitnum", num)
+	}
+}
+
 func main() {
 	mongocli.MongoInit()
 	router := gin.Default()
@@ -91,13 +115,36 @@ func main() {
 	router.LoadHTMLGlob("views/**/*")
 	//设置资源共享目录
 	router.StaticFS("/static", http.Dir("./public"))
-	//用户浏览首页
-	router.GET("/home", home.Home)
-	//用户浏览你分类
-	router.GET("/category", home.Category)
 
-	//用户浏览单个文章
-	router.GET("/articlepage", home.ArticlePage)
+	pageGroup := router.Group("/")
+	pageGroup.Use(CalCulateVisit())
+	{
+		//用户浏览首页
+		pageGroup.GET("/home", CalCulateVisit(), home.Home)
+		//用户浏览你分类
+		pageGroup.GET("/category", CalCulateVisit(), home.Category)
+
+		//用户浏览单个文章
+		pageGroup.GET("/articlepage", CalCulateVisit(), home.ArticlePage)
+	}
+
+	homeGroup := router.Group("/home")
+
+	//新增用户点赞数
+	homeGroup.POST("/addlovenum", home.AddLoveNum)
+
+	//点击用户评论
+	homeGroup.POST("/comment", home.Comment)
+
+	//点击评论喜欢
+	homeGroup.POST("/addcomlove", home.ComLove)
+	//评论回复
+	homeGroup.POST("/comreply", home.ComReply)
+	//回复区点赞
+	homeGroup.POST("/addrpllove", home.ReplyLove)
+
+	//请求子分类下文章信息列表
+	homeGroup.POST("/artinfos", home.SubCatArtInfos)
 
 	//admin登录页面
 	router.GET("/admin/login", admin.Login)
@@ -106,7 +153,7 @@ func main() {
 
 	// 创建管理路由组
 	adminGroup := router.Group("/admin")
-	adminGroup.Use(GroupRouterAdminMiddle)
+	adminGroup.Use(GroupRouterAdminMiddle, GetVisitMid())
 	{
 		//管理首页
 		adminGroup.GET("/", admin.Admin)
@@ -140,7 +187,7 @@ func main() {
 
 	// 文章编辑发布
 	router.POST("admin/pubarticle", CheckLogin, admin.ArticlePub)
-
+	//	mongocli.SetVisitNum()
 	router.Run(":8080")
 	mongocli.MongoRelease()
 }
