@@ -93,11 +93,34 @@ func Category(c *gin.Context) {
 		return
 	}
 
+	//用map管理二级菜单
+	menulv2map := make(map[string]*model.LeftCatR)
 	for _, menulv2 := range menulv2s {
 		leftCatR := &model.LeftCatR{}
 		leftCatR.CatId = menulv2.CatId
 		leftCatR.Name = menulv2.Name
 		cateIndex.LeftCatList = append(cateIndex.LeftCatList, leftCatR)
+		menulv2map[menulv2.Name] = leftCatR
+	}
+
+	catartinfos, err := mongocli.CatArtInfos(menulv1.Name)
+	if err != nil {
+		log.Println("get art info failed by cat , err is ", err)
+		//渲染Category分类主页
+		c.HTML(http.StatusOK, "home/errorpage.html", "get art info failed by cat, after 2 seconds return to home")
+		return
+	}
+
+	for _, catartinfo := range catartinfos {
+		leftCatR, ok := menulv2map[catartinfo.Subcat]
+		if !ok {
+			log.Println("key ", catartinfo.Subcat, " is not in menulv2 map")
+			continue
+		}
+		infoR := &model.ArtInfoR{}
+		infoR.ArtId = catartinfo.Id
+		infoR.ArtSubTitle = catartinfo.Subtitle
+		leftCatR.SubArticle = append(leftCatR.SubArticle, infoR)
 	}
 
 	//中间文章详情
@@ -517,6 +540,112 @@ func SubCatArtInfos(c *gin.Context) {
 		artinfo.ArtId = info.Id
 		artinfo.ArtSubTitle = info.Subtitle
 		infoR.SubCatArtInfos = append(infoR.SubCatArtInfos, artinfo)
+	}
+}
+
+//ArtDetail
+func ArtDetail(c *gin.Context) {
+	log.Println("分类页面获取文章详情")
+	detailR := model.ArticleDetailR{}
+	detailR.Msg = model.MSG_SUCCESS
+
+	infoReq := &model.ArtdetailReq{}
+	defer func() {
+		c.HTML(http.StatusOK, "home/articledetail.html", detailR)
+	}()
+
+	err := c.BindJSON(infoReq)
+	if err != nil {
+		detailR.Msg = model.MSG_JSON_UNPACK
+		log.Println("json unparse failed, err is ", err)
+		return
+	}
+
+	article, err := mongocli.GetArticleId(infoReq.Id)
+	if err != nil {
+		detailR.Msg = model.MSG_ARTICLE_ID
+		log.Println("get article by id failed , err is ", err)
+		return
+	}
+
+	//获取评论信息
+	comments, err := mongocli.GetCommentByParent(article.ArticleInfo.Id)
+	if err != nil {
+		detailR.Msg = model.MSG_COMMENT_BYPARENT
+		log.Println("get article by id failed , err is ", err)
+		return
+	}
+
+	num, bres := c.Get("visitnum")
+	if bres == false {
+		log.Println("get visitnum failed !")
+		detailR.Msg = model.MSG_VISITNUM_FAILED
+		return
+	}
+
+	//内容区文章信息和内容
+	err = mongocli.AddArticleScan(infoReq.Id)
+	if err != nil {
+		log.Println("add article scan num failed , error is ", err)
+		detailR.Msg = model.MSG_ADD_VISITNUM
+		return
+	}
+
+	detailR.Author = article.Author
+	detailR.Cat = article.Cat
+	detailR.CommentNum = len(comments)
+	detailR.Content = template.HTML(article.Content)
+	createtm := time.Unix(article.CreateAt, 0)
+	detailR.CreateAt = createtm.Format("2006-01-02 15:04:05")
+
+	lasttm := time.Unix(article.LastEdit, 0)
+	detailR.LastEdit = lasttm.Format("2006-01-02 15:04:05")
+	detailR.Id = article.ArticleInfo.Id
+	detailR.Index = article.Index
+	detailR.LoveNum = article.LoveNum
+	detailR.ScanNum = article.ScanNum
+	detailR.Subcat = article.Subcat
+	detailR.Subtitle = article.Subtitle
+	detailR.Title = article.Title
+	detailR.VisitNum = num.(int64)
+
+	for _, comment := range comments {
+		tm := time.Unix(int64(comment.Time), 0)
+		timestr := tm.Format("2006-01-02 15:04:05")
+
+		commentR := &model.CommentR{}
+		commentR.Time = timestr
+		commentR.Content = template.HTML(comment.Content)
+		commentR.Id = comment.Id
+		commentR.LoveNum = comment.LoveNum
+		commentR.Parent = comment.Parent
+		commentR.Replys = []*model.ReplyR{}
+		commentR.UserName = comment.UserName
+		commentR.HeadIcon = comment.HeadIcon
+
+		replys, err := mongocli.GetCommentByParent(comment.Id)
+		if err != nil {
+			log.Println("get reply by comment id ", comment.Id, "failed, error is ", err)
+			continue
+		}
+
+		commentR.ReplyNum = len(replys)
+
+		for _, reply := range replys {
+			replyR := &model.ReplyR{}
+			replyR.Content = template.HTML(reply.Content)
+			replyR.Id = reply.Id
+			replyR.LoveNum = reply.LoveNum
+			replyR.Parent = reply.Parent
+			rtm := time.Unix(int64(reply.Time), 0)
+			timestr := rtm.Format("2006-01-02 15:04:05")
+			replyR.Time = timestr
+			replyR.UserName = reply.UserName
+			replyR.HeadIcon = reply.HeadIcon
+			commentR.Replys = append(commentR.Replys, replyR)
+		}
+
+		detailR.Comments = append(detailR.Comments, commentR)
 	}
 }
 

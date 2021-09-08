@@ -42,6 +42,10 @@ const (
 	MSG_INVALID_PARAM           = "invalid param"
 	MSG_UPDATE_ARTICLE_LOVENUME = "update article love num failed"
 	MSG_COM_LOVE                = "add com love failed"
+	MSG_ARTICLE_ID              = "get article id failed"
+	MSG_COMMENT_BYPARENT        = "get comment failed by parent id "
+	MSG_VISITNUM_FAILED         = "get visitnum failed !"
+	MSG_ADD_VISITNUM            = "add article scan num failed"
 )
 
 //模板渲染状态

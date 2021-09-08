@@ -204,8 +204,9 @@ type LeftCatMenusR struct {
 }
 
 type LeftCatR struct {
-	CatId string
-	Name  string
+	CatId      string
+	Name       string
+	SubArticle []*ArtInfoR
 }
 
 type CommentRsp struct {
@@ -226,4 +227,9 @@ type ArtInfoR struct {
 type SubCatArtInfoR struct {
 	SubCatArtInfos []*ArtInfoR
 	Msg            string
+}
+
+type ArticleDetailR struct {
+	HomeArticleR
+	Msg string
 }

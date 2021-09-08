@@ -146,6 +146,9 @@ func main() {
 	//请求子分类下文章信息列表
 	homeGroup.POST("/artinfos", home.SubCatArtInfos)
 
+	//获取category页面文章详情
+	homeGroup.POST("/artdetail", CalCulateVisit(), home.ArtDetail)
+
 	//admin登录页面
 	router.GET("/admin/login", admin.Login)
 	//admin 登录提交

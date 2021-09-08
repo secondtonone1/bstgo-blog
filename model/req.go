@@ -156,3 +156,7 @@ type SubCatArtInfoReq struct {
 	Cat    string `json:"cat"`
 	SubCat string `json:"subcat"`
 }
+
+type ArtdetailReq struct {
+	Id string `json:"id"`
+}

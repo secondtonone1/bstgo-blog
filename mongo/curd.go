@@ -937,3 +937,34 @@ func SubCatArtInfos(cat string, subcat string) ([]*model.ArticleInfo, error) {
 
 	return articles, nil
 }
+
+//获取一级分类下文章列表
+func CatArtInfos(cat string) ([]*model.ArticleInfo, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	sort := bson.D{{"index", 1}}
+	findOptions := options.Find().SetSort(sort)
+	articles := []*model.ArticleInfo{}
+
+	filter := bson.M{"cat": cat}
+	log.Println("filter is ", filter)
+	cursor, err := MongoDb.Collection("articles").Find(ctx, filter, findOptions)
+
+	if err != nil {
+		return articles, err
+	}
+
+	defer cursor.Close(context.TODO())
+
+	for cursor.Next(context.TODO()) {
+		article := &model.ArticleInfo{}
+		if err := cursor.Decode(article); err != nil {
+			continue
+		}
+
+		articles = append(articles, article)
+	}
+
+	return articles, nil
+}

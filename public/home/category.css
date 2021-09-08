@@ -83,3 +83,18 @@
     font-size: 10px !important;
     color: #666;
 }
+
+
+/* 错误提示框 */
+
+.error-tips {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+}
+
+.catearticlepading {
+    padding: 0 15px 0 15px;
+}

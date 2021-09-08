@@ -8,34 +8,13 @@
         <li class="subcatli"><a data-toggle="collapse" href="#{{.CatId}}" subcat-id="{{.CatId}}" subname="{{.Name}}">{{.Name}}<span class="glyphicon glyphicon-menu-right"></span></a>
             <div id="{{.CatId}}" class="collapse">
                 <ul class="nav nav-pills nav-stacked sub-sidebar">
+                    {{range .SubArticle}}
+                    <li class="subtitleli"><a href="JavaScript:void(0);" art-id="{{.ArtId}}">{{.ArtSubTitle}}</a></li>
+                    {{end}}
                 </ul>
             </div>
         </li>
         {{end}}
-
-        <li><a data-toggle="collapse" href="#collapseTwo">协程<span class="glyphicon glyphicon-menu-right"></span></a>
-            <div id="collapseTwo" class="collapse">
-                <ul class="nav nav-pills nav-stacked sub-sidebar">
-                    <li><a href="#">协程并发</a> </li>
-                    <li><a href="#">协程管理</a></li>
-                    <li><a href="#">协程通信</a></li>
-                    <li><a href="#">协程关闭回收</a></li>
-                </ul>
-            </div>
-        </li>
-        <li><a data-toggle="collapse" href="#collapseThree">接口<span class="glyphicon glyphicon-menu-right"></span></a>
-            <div id="collapseThree" class="collapse">
-                <ul class="nav nav-pills nav-stacked sub-sidebar">
-                    <li class><a href="#">接口特性</a></li>
-                    <li><a href="#">接口与反射</a></li>
-                    <li><a href="#">接口结构</a></li>
-                    <li><a href="#">接口转换</a></li>
-                </ul>
-            </div>
-        </li>
-        <li><a data-toggle="collapse" href="#">TCP网络<span class="glyphicon glyphicon-menu-right"></span></a></li>
-        <li><a data-toggle="collapse" href="#">Http网络<span class="glyphicon glyphicon-menu-right"></span></a></li>
-        <li><a data-toggle="collapse" href="#">WebSocket<span class="glyphicon glyphicon-menu-right"></span></a></li>
     </ul>
 </div>
 

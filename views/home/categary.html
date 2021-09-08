@@ -7,6 +7,7 @@
         {{ template "home/mask" .}}
         <div class="container-fluid container-root">
             {{ template "home/navbar" . }}
+            <div id="loading"><img class="loadingImg" alt="loading" src="/static/img/ajax-loader.gif"></div>
             <!-- 内容区 -->
             <div class="row content">
                 <!-- 页面左侧区域 -->
@@ -15,7 +16,10 @@
                 </div>
                 <!-- 文章内容区域 -->
                 <div class="col-md-8 col-sm-8 col-xs-12 contant-col">
-                    {{ template "home/article" .}}
+                    <div class="article-detail">
+                        {{ template "home/article" .}}
+                    </div>
+                    <div class="alert alert-danger error-tips" role="alert"></div>
                 </div>
 
                 <!-- 页面右侧区域 -->
@@ -31,45 +35,7 @@
     <script type="text/javascript" src="/static/home/category.js"></script>
     <script type="text/javascript">
         $(function() {
-            const E = window.wangEditor
-            const editor = new E('.comment-editor')
-                //    设置编辑区域高度为 500 px
-            editor.config.height = 100
-                //配置菜单
-            editor.config.menus = [
-                'head',
-                'bold',
-                // 'fontSize',
-                // 'fontName',
-                'italic',
-                //'underline',
-                //'strikeThrough',
-                // 'indent',
-                //'lineHeight',
-                //'foreColor',
-                //'backColor',
-                'link',
-                'list',
-                //'todo',
-                // 'justify',
-                'quote',
-                'emoticon',
-                //'image',
-                //'video',
-                //'table',
-                'code',
-                'splitLine',
-                'undo',
-                'redo',
-            ]
-            hljs.initHighlightingOnLoad(); // 初始化
-            hljs.initLineNumbersOnLoad();
-            editor.highlight = hljs
-            editor.config.languageTab = '    '
-            editor.config.pasteIgnoreImg = false
-            editor.config.uploadImgShowBase64 = true
-            editor.create()
-            window.editor = editor
+            loadEditor()
         })
     </script>
 </body>

@@ -24,32 +24,91 @@ $('.sidebar>li>a').on('click', function(event) {
         $(this).children('span').addClass('glyphicon glyphicon-menu-right')
     }
 
-    if ($(this).parent().hasClass('requested')) {
-        return
-    }
-    demo.loading()
+    // if ($(this).parent().hasClass('requested')) {
+    //     return
+    // }
+    // demo.loading()
 
-    let data = {}
-    data.cat = $('#category-name').text()
-    data.subcat = $(this).attr('subname')
-    let jsdata = JSON.stringify(data)
-    console.log('jsdata is ', jsdata)
-    let lireq = $(this).parent()
+    // let data = {}
+    // data.cat = $('#category-name').text()
+    // data.subcat = $(this).attr('subname')
+    // let jsdata = JSON.stringify(data)
+    // console.log('jsdata is ', jsdata)
+    // let lireq = $(this).parent()
+    // $.ajax({
+    //     type: "POST",
+    //     url: "/home/artinfos",
+    //     contentType: "application/json",
+    //     data: jsdata, //参数列表
+    //     dataType: "html",
+    //     success: function(result) {
+    //         //请求正确之后的操作
+    //         console.log('post success , result is ', result)
+    //         if (result.indexOf('res-success') == -1) {
+    //             return
+    //         }
+    //         lireq.children('div').children('ul').html(result)
+    //         lireq.addClass('requested')
+    //         lireq.children('div').collapse('show')
+    //         demo.hiding()
+    //     },
+    //     error: function(XMLHttpRequest, textStatus, errorThrown) {
+    //         //请求失败之后的操作
+    //         console.log('post failed')
+    //             // 状态码
+    //         console.log(XMLHttpRequest.status);
+    //         // 状态
+    //         console.log(XMLHttpRequest.readyState);
+    //         // 错误信息   
+    //         console.log(textStatus);
+    //     }
+    // })
+})
+
+//点击文章索引边栏的二级目录
+$('.sidebar').on('click', '.subcatli>div>.sub-sidebar>.subtitleli>a', function() {
+    // 移除一级标题active类
+    $(".sidebar > li").removeClass("active").siblings().removeClass("active")
+        //移除二级标题active类
+    $('.subtitleli').removeClass('active')
+        //设置二级标题active选中效果
+    $(this).parent().addClass("active")
+    let id = $(this).attr('art-id')
+    data = { 'id': id }
+    datajs = JSON.stringify(data)
+    demo.loading()
+        //发送请求页面
     $.ajax({
         type: "POST",
-        url: "/home/artinfos",
+        url: "/home/artdetail",
         contentType: "application/json",
-        data: jsdata, //参数列表
+        data: datajs, //参数列表
         dataType: "html",
         success: function(result) {
             //请求正确之后的操作
-            console.log('post success , result is ', result)
-            if (result.indexOf('res-success') == -1) {
+            // console.log('post success , result is ', result)
+            let matchreg = /<div class="res" hidden>(.+?)<\/div>/gi
+            let matchres = matchreg.exec(result)
+            if (!matchres) {
+                $('.error-tips').text('res not fond').fadeIn(700, function() {
+                    $('.error-tips').fadeOut(1000)
+                })
                 return
             }
-            lireq.children('div').children('ul').html(result)
-            lireq.addClass('requested')
-            lireq.children('div').collapse('show')
+
+            if (matchres[1] != 'res-success') {
+                $('.error-tips').text(matchres[1]).fadeIn(700, function() {
+                    $('.error-tips').fadeOut(1000)
+                })
+                return
+            }
+
+            // $('.error-tips').text(matchres[1]).fadeIn(700, function() {
+            //     $('.error-tips').fadeOut(1000)
+            // })
+
+            $('.article-detail').html(result)
+            loadEditor()
             demo.hiding()
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -61,18 +120,9 @@ $('.sidebar>li>a').on('click', function(event) {
             console.log(XMLHttpRequest.readyState);
             // 错误信息   
             console.log(textStatus);
+            demo.hiding()
         }
-    })
-})
-
-//点击文章索引边栏的二级目录
-$('.sidebar').on('click', '.subcatli>div>.sub-sidebar>.subtitleli>a', function() {
-    // 移除一级标题active类
-    $(".sidebar > li").removeClass("active").siblings().removeClass("active")
-        //移除二级标题active类
-    $('.subtitleli').removeClass('active')
-        //设置二级标题active选中效果
-    $(this).parent().addClass("active")
+    });
 })
 
 
@@ -116,11 +166,11 @@ $('.xs-article-index-wrapper>ul>li>div a').on('click', function() {
     $('.xs-article-index-wrapper>ul>li>div a').parent().removeClass('active')
         //设置点击的二级标题active
     $(this).parent().addClass('active')
-
 })
 
 //评论按钮点击事件
-$('.comment-commit-btn').on('click', function() {
+$('.article-detail').on('click', '.comment-wrapper>.comment-commit-btn', function() {
+
     if (window.editor.txt.html().trim() == "") {
         return
     }
@@ -163,7 +213,7 @@ $('.comment-commit-btn').on('click', function() {
                 return
             }
 
-            $('.error-tips').text(matchres[1]).fadeIn(700, function() {
+            $('.error-tips').text('感谢您的评论!').fadeIn(700, function() {
                 $('.error-tips').fadeOut(1000)
             })
 
@@ -189,20 +239,20 @@ $('.comment-commit-btn').on('click', function() {
 })
 
 //点击评论数
-$('#comment-num').on('click', function() {
+$('.article-detail').on('click', '.browselist>.list-inline>#comment-num', function() {
     console.log("comment-num clicked")
     $('html , body').animate({ scrollTop: $('#comment-label-id').offset().top - 200 }, 300);
     window.editor.txt.html("")
 })
 
 //点击回复数开启回复功能
-$('.comment-list-ul').on('click', '.reply-num a', function(e) {
+$('.article-detail').on('click', '.reply-num a', function(e) {
     $(this).parent().parent().parent().siblings('.reply-text').stop().slideToggle()
     $(this).parent().parent().parent().siblings('.reply-text').find('textarea').focus()
 })
 
 //点击回复按钮
-$('.comment-list-ul').on('click', '.reply-btn', function(e) {
+$('.article-detail').on('click', '.reply-btn', function(e) {
     console.log("回复按钮点击")
     let textarea_ = $(this).siblings('form').children('div').children('textarea')
     let span_reply = $(this).parent().siblings('.comment-love').find('span.reply-span')
@@ -229,7 +279,7 @@ $('.comment-list-ul').on('click', '.reply-btn', function(e) {
         "artid": $('.article-id').text()
     }
 
-    $(this).parents('.reply-text').stop().slideToggle(500, function() {
+    $(this).parents('.reply-text').stop().slideToggle(300, function() {
         $.ajax({
             type: "POST",
             url: "/home/comreply",
@@ -256,7 +306,7 @@ $('.comment-list-ul').on('click', '.reply-btn', function(e) {
                     return
                 }
 
-                $('.error-tips').text(matchres[1]).fadeIn(700, function() {
+                $('.error-tips').text("回复成功").fadeIn(700, function() {
                     $('.error-tips').fadeOut(1000)
                 })
 
@@ -284,7 +334,7 @@ $('.comment-list-ul').on('click', '.reply-btn', function(e) {
 // })
 
 //文章点击喜欢数
-$('#love-num').on('click', 'a', function() {
+$('.article-detail').on('click', '#love-num a', function() {
     //console.log($(this))
     $(this).siblings('div').stop().fadeIn(1000, function() {
             $(this).fadeOut()
@@ -333,7 +383,7 @@ $('#love-num').on('click', 'a', function() {
 
 
 //评论点击喜欢数
-$('.comment-list-ul').on('click', '.love-num-li a', function() {
+$('.article-detail').on('click', '.comment-love-ul>.love-num-li a', function() {
     //console.log($(this))
     $(this).siblings('div').stop().fadeIn(1000, function() {
             $(this).fadeOut(1000)
@@ -378,7 +428,7 @@ $('.comment-list-ul').on('click', '.love-num-li a', function() {
 })
 
 // 回复区点赞喜欢数
-$('.reply-ul-li').on('click', '.love-num-li a', function() {
+$('.article-detail').on('click', '.reply-love-ul>.love-num-li a', function() {
     //console.log($(this))
     $(this).siblings('div').stop().fadeIn(1000, function() {
             $(this).fadeOut(1000)
@@ -396,6 +446,7 @@ $('.reply-ul-li').on('click', '.love-num-li a', function() {
 
     let replyid = $(this).parents('.reply-ul-li').attr('reply-id')
     let datasend = { 'id': replyid }
+    console.log('reply id is ', replyid)
     $.ajax({
         type: "POST",
         url: "/home/addrpllove",
