@@ -489,3 +489,134 @@ $('.article-hot>a').on('click', function(e) {
     }
     demo.loading()
 })
+
+//文章列表
+$('.index-art-list').on('click', '.read-more-span', function(e) {
+    let id = $(this).parents('.article-li').attr('article-id')
+    let req = "/articlepage?id=" + id
+    console.log('req is ', req)
+    window.location.href = req
+})
+
+//下一页
+$('.index-art-list ').on('click', '.next', function(e) {
+    e.preventDefault()
+    if ($(this).hasClass('disabled')) {
+        return false
+    }
+
+    let nextpage = $(this).attr('page')
+    console.log('nextpage is ', nextpage)
+    let data = {
+        'page': nextpage - 0
+    }
+    let datajs = JSON.stringify(data)
+    let nextli = $(this)
+    $('.index-art-list').fadeOut()
+    $.ajax({
+        type: "POST",
+        url: "/home/artdetails",
+        contentType: "application/json",
+        data: datajs, //参数列表
+        dataType: "html",
+        success: function(result) {
+            //请求正确之后的操作
+            console.log('post success , result is ', result)
+
+            let matchreg = /<div class="res" hidden>(.+?)<\/div>/gi
+            let matchres = matchreg.exec(result)
+            if (!matchres) {
+                $('.error-tips').text('res not fond').fadeIn(700, function() {
+                    $('.error-tips').fadeOut(1000)
+                })
+                return
+            }
+
+            if (matchres[1] != 'res-success') {
+                $('.error-tips').text(matchres[1]).fadeIn(700, function() {
+                    $('.error-tips').fadeOut(1000)
+                })
+                return
+            }
+
+            // $('.error-tips').text("翻页成功").fadeIn(700, function() {
+            //     $('.error-tips').fadeOut(1000)
+            // })
+
+            $('.index-art-list').html(result).fadeIn()
+            $("body,html").animate({ scrollTop: 0 }, 500)
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            //请求失败之后的操作
+            console.log('post failed')
+                // 状态码
+            console.log(XMLHttpRequest.status);
+            // 状态
+            console.log(XMLHttpRequest.readyState);
+            // 错误信息   
+            console.log(textStatus);
+        }
+    })
+})
+
+
+//上一页
+$('.index-art-list ').on('click', '.previous', function(e) {
+    e.preventDefault()
+    if ($(this).hasClass('disabled')) {
+        return false
+    }
+
+    let prevpage = $(this).attr('page')
+    console.log('prevpage is ', prevpage)
+    let data = {
+        'page': prevpage - 0
+    }
+    let datajs = JSON.stringify(data)
+    let prevli = $(this)
+    $('.index-art-list').fadeOut()
+    $.ajax({
+        type: "POST",
+        url: "/home/artdetails",
+        contentType: "application/json",
+        data: datajs, //参数列表
+        dataType: "html",
+        success: function(result) {
+            //请求正确之后的操作
+            console.log('post success , result is ', result)
+
+            let matchreg = /<div class="res" hidden>(.+?)<\/div>/gi
+            let matchres = matchreg.exec(result)
+            if (!matchres) {
+                $('.error-tips').text('res not fond').fadeIn(700, function() {
+                    $('.error-tips').fadeOut(1000)
+                })
+                return
+            }
+
+            if (matchres[1] != 'res-success') {
+                $('.error-tips').text(matchres[1]).fadeIn(700, function() {
+                    $('.error-tips').fadeOut(1000)
+                })
+                return
+            }
+
+            // $('.error-tips').text("翻页成功").fadeIn(700, function() {
+            //     $('.error-tips').fadeOut(1000)
+            // })
+
+            $('.index-art-list').html(result).fadeIn()
+            $("body,html").animate({ scrollTop: 0 }, 500)
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            //请求失败之后的操作
+            console.log('post failed')
+                // 状态码
+            console.log(XMLHttpRequest.status);
+            // 状态
+            console.log(XMLHttpRequest.readyState);
+            // 错误信息   
+            console.log(textStatus);
+        }
+    })
+})

@@ -149,6 +149,9 @@ func main() {
 	//获取category页面文章详情
 	homeGroup.POST("/artdetail", CalCulateVisit(), home.ArtDetail)
 
+	//获取首页文章列表详情页面
+	homeGroup.POST("/artdetails", CalCulateVisit(), home.GetArticleDeails)
+
 	//admin登录页面
 	router.GET("/admin/login", admin.Login)
 	//admin 登录提交

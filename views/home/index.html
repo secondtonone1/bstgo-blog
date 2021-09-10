@@ -11,29 +11,28 @@
             <div class="row content">
                 <!-- 文章内容区域 -->
                 <div class="col-md-10  col-sm-10  col-xs-12 contant-col">
-                    <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
+                    <div class="alert alert-danger error-tips" role="alert"></div>
+                    <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 index-art-list">
                         <ol class="list-unstyled">
-                            <li class="article-li">
+                            {{range .IndexArticleList}}
+                            <li class="article-li" article-id="{{.Id}}">
                                 <div class="index-article">
                                     <div>
                                         <div class="index-article-title">
                                             <h4>
-                                                <a href="">Go项目实战：打造高并发日志采集系统</a>
+                                                <a href="/articlepage?id={{.Id}}">{{.Title}}</a>
                                             </h4>
                                         </div>
                                     </div>
                                     <div>
                                         <div class="index-article-time">
-                                            <span class="glyphicon glyphicon-send"></span><span class="post-time"> Posted on 2021-01-05</span> <span class="post-line"> | </span> <span class="glyphicon glyphicon-folder-open"> </span> <span class="post-in"> In </span>
-                                            <span class="post-catagery"><a href="">Go</a></span>
+                                            <span class="glyphicon glyphicon-send"></span><span class="post-time"> Posted on {{.LastEdit}}</span> <span class="post-line"> | </span> <span class="glyphicon glyphicon-folder-open"> </span> <span class="post-in"> In </span>
+                                            <span class="post-catagery"><a href="">{{.Cat}}</a></span>
                                         </div>
                                     </div>
 
                                     <div class="index-article-content">
-                                        <h4>项目结构</h4>
-                                        <p>
-                                            本系列文章意在记录如何搭建一个高可用的日志采集系统，实际项目中会有多个日志文件分布在服务器各个文件夹，这些日志记录了不同的功能。随着业务的增多，日志文件也再增多，企业中常常需要实现一个独立的日志采集系统，实时采集各个日志信息，并记录和输出到控制台或网页上，方便监控和查询。 本文日志采集系统架构如下
-                                        </p>
+                                        {{.Content}}
                                     </div>
                                     <div>
                                         <div class="index-read-more">
@@ -42,98 +41,17 @@
                                     </div>
                                 </div>
                             </li>
-                            <li class="article-li ">
-                                <div class="index-article">
-                                    <div>
-                                        <div class="index-article-title">
-                                            <h4><a href="">化繁为简，写一个简单好用的server</a></h4>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="index-article-time">
-                                            <span class="glyphicon glyphicon-send"></span><span class="post-time"> Posted on 2021-01-05</span> <span class="post-line"> | </span> <span class="glyphicon glyphicon-folder-open"> </span> <span class="post-in"> In </span>
-                                            <span class="post-catagery"><a href="">Go</a></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="index-article-content">
-                                        <h4 id="为什么要造轮子">
-                                            <a href="#为什么要造轮子" class="headerlink" title="为什么要造轮子"></a>为什么要造轮子</h4>
-                                        <p>目前很著名的轮子有libevent，boost等高并发的网络库，可以说著名的网络库我都用过，用过才知道当要实现一些定制化的功能时并不方便，不但要了解底层源码，而且还要进行适当的改造，总有种黑盒开发的感觉，所以在15年我就开始自己封装一些epoll,select模型，当时基于多路复用用reactor模式封装了betternet，虽然稳定性不如成熟的网络库，但是可以根据需求灵活修改网络层和应用层，这是难能可贵的。市面上也有一些成型的即时通信server，使用过kbengine，origine等集成度较高的server，当要实现一些心跳，逻辑检测，连接管理等需求时，还是要修改底层的源码，感觉很糟糕。18年接触golang，net包里封装的网络模型和协程管理，很完善的调度策略让我眼前一亮，所以考虑能不能基于golang的官方net包做一些框架上的设计，搭建一个高可用的网络服务。19年基于net包实现了wentby这个服务器，并发和稳定性都不错，最近又翻看了原来的代码，觉得很多地方可以精简一下，而且不想为了兼容别人的开发习惯降低服务器的效率，也不想增加复杂度，所以干脆做一个精简的server给自己用，只要他稳定高效就可以了，线程安全这种问题交由开发者考虑。读了redis网络服务那块也就500行，简约而不简单。<br>
-                                            <a id="more"></a>
-                                        </p>
-
-                                    </div>
-                                    <div>
-                                        <div class="index-read-more">
-                                            <span class="read-more-span">Read more »</span>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </li>
-
-                            <li class="article-li ">
-                                <div class="index-article">
-                                    <div>
-                                        <div class="index-article-title">
-                                            <h4><a href="">化繁为简，写一个简单好用的server</a></h4>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="index-article-time">
-                                            <span class="glyphicon glyphicon-send"></span><span class="post-time"> Posted on 2021-01-05</span> <span class="post-line"> | </span> <span class="glyphicon glyphicon-folder-open"> </span> <span class="post-in"> In </span>
-                                            <span class="post-catagery"><a href="">JavaScript</a></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="index-article-content">
-                                        <p>
-                                            今天谈谈go中九种协程方式,在介绍继承方式前我们先熟悉几个常用的函数 因为for循环默认会将实例的私有属性和它所属原型上扩展的属性和方法都可以遍历到 但是可以通过propertyIsEnumerable检测只打印私有的今天谈谈go中九种协程方式,在介绍继承方式前我们先熟悉几个常用的函数 因为for循环默认会将实例的私有属性和它所属原型上扩展的属性和方法都可以遍历到 但是可以通过propertyIsEnumerable检测只打印私有的.
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <div class="index-read-more">
-                                            <span class="read-more-span">Read more »</span>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </li>
-
-                            <li class="article-li ">
-                                <div class="index-article">
-                                    <div>
-                                        <div class="index-article-title">
-                                            <h4><a href="">化繁为简，写一个简单好用的server</a></h4>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="index-article-time">
-                                            <span class="glyphicon glyphicon-send"></span><span class="post-time"> Posted on 2021-01-05</span> <span class="post-line"> | </span> <span class="glyphicon glyphicon-folder-open"> </span> <span class="post-in"> In </span>
-                                            <span class="post-catagery"><a href="">JavaScript</a></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="index-article-content">
-                                        <p>
-                                            今天谈谈go中九种协程方式,在介绍继承方式前我们先熟悉几个常用的函数 因为for循环默认会将实例的私有属性和它所属原型上扩展的属性和方法都可以遍历到 但是可以通过propertyIsEnumerable检测只打印私有的今天谈谈go中九种协程方式,在介绍继承方式前我们先熟悉几个常用的函数 因为for循环默认会将实例的私有属性和它所属原型上扩展的属性和方法都可以遍历到 但是可以通过propertyIsEnumerable检测只打印私有的.
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <div class="index-read-more">
-                                            <span class="read-more-span">Read more »</span>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </li>
+                            {{end}}
                         </ol>
                         <div>
                             <nav class="navpage" aria-label="...">
                                 <ul class="pager">
-                                    <li class="previous disabled"><a href="JavaScript:void(0);"><span aria-hidden="true">&larr;</span> Older</a></li>
-                                    <li class="next"><a href="#">Newer <span aria-hidden="true">&rarr;</span></a></li>
+                                    <li class="previous disabled" page="1"><a href="javascript:void(0)"><span aria-hidden="true">&larr;</span> Older</a></li>
+                                    {{ if ge .CurPage .TotalPage}}
+                                    <li class="next disabled" page="{{.NextPage}}"><a href="javascript:void(0)">Newer <span aria-hidden="true">&rarr;</span></a></li>
+                                    {{else}}
+                                    <li class="next" page="{{.NextPage}}"><a href="javascript:void(0)">Newer <span aria-hidden="true">&rarr;</span></a></li>
+                                    {{end}}
                                 </ul>
                             </nav>
                         </div>

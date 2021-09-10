@@ -160,3 +160,7 @@ type SubCatArtInfoReq struct {
 type ArtdetailReq struct {
 	Id string `json:"id"`
 }
+
+type ArtdetailsReq struct {
+	Page int `json:"page"`
+}

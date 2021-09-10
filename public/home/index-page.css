@@ -100,7 +100,10 @@
     color: #555;
 }
 
+.index-article-content h5,
 .index-article-content h4,
+.index-article-content h1,
+.index-article-content h3,
 .index-article-content h2 {
     font-size: 18px;
     font-weight: bolder;

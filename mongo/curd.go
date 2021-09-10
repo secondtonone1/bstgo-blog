@@ -246,6 +246,61 @@ func SaveArtContent(article *model.ArticleContent) error {
 	return err
 }
 
+//获取文章详情列表
+func GetArticleDetailsByPage(page int) ([]*model.Article_, error) {
+	articles := []*model.Article_{}
+	if page < 1 {
+		return articles, nil
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	sort := bson.D{{"lastedit", -1}}
+	findOptions := options.Find().SetSort(sort)
+
+	//从第1页获取，每次获取5条
+	skipTmp := int64((page - 1) * 5)
+	limitTmp := int64(5)
+	findOptions.Skip = &skipTmp
+	findOptions.Limit = &limitTmp
+
+	filter := bson.D{}
+	cursor, err := MongoDb.Collection("articles").Find(ctx, filter, findOptions)
+
+	if err != nil {
+		return articles, err
+	}
+
+	defer cursor.Close(context.TODO())
+
+	for cursor.Next(context.TODO()) {
+		info := &model.ArticleInfo{}
+		if err := cursor.Decode(info); err != nil {
+			log.Println("decode article struct failed, err is ", err)
+			continue
+		}
+
+		detail := &model.ArticleContent{}
+		filter := bson.M{"id": info.Id}
+		err = MongoDb.Collection("artcontents").FindOne(ctx, filter).Decode(detail)
+		if err != nil {
+			log.Println("get article ", info.Id, " detail failed, err is ", err)
+			continue
+		}
+
+		article_ := &model.Article_{}
+		article_.ArticleInfo.Id = info.Id
+		article_.ArticleContent.Id = info.Id
+		article_.Cat = info.Cat
+		article_.LastEdit = info.LastEdit
+		article_.Title = info.Title
+		article_.Content = detail.Content
+
+		articles = append(articles, article_)
+	}
+
+	return articles, nil
+}
+
 //获取文章列表
 func GetArticlesByPage(page int) ([]*model.ArticleInfo, error) {
 	articles := []*model.ArticleInfo{}

@@ -16,7 +16,9 @@
                 </div>
                 <!-- 文章内容区域 -->
                 <div class="col-md-8 col-sm-8 col-xs-12 contant-col">
-                    {{ template "home/article" . }}
+                    <div class="article-detail">
+                        {{ template "home/article" .}}
+                    </div>
                     <div class="alert alert-danger error-tips" role="alert"></div>
                 </div>
 

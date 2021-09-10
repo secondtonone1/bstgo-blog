@@ -5,6 +5,7 @@ import (
 	mongocli "bstgo-blog/mongo"
 	"html/template"
 	"log"
+	"math"
 	"net/http"
 	"regexp"
 	"strings"
@@ -13,6 +14,81 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/segmentio/ksuid"
 )
+
+func GetArticleDeails(c *gin.Context) {
+	req := &model.ArtdetailsReq{}
+	detailR := &model.ArticleDetailsR{}
+	detailR.Msg = model.MSG_SUCCESS
+	defer func() {
+		c.HTML(http.StatusOK, "home/articledetails.html", detailR)
+	}()
+	err := c.BindJSON(req)
+	if err != nil {
+		log.Println("json unpack failed, err is ", err)
+		detailR.Msg = model.MSG_JSON_UNPACK
+		return
+	}
+
+	//获取总页数
+	count, err := mongocli.ArticleTotalCount()
+	if err != nil {
+		detailR.Msg = "get article total count failed"
+		log.Println("get article total count failed, err is ", err)
+		return
+	}
+
+	//获取当前页
+	var page_f float64 = float64(count) / 5
+	detailR.TotalPage = int(math.Ceil(page_f))
+	if req.Page <= 1 {
+		detailR.CurPage = 1
+	} else if req.Page >= detailR.TotalPage {
+		detailR.CurPage = detailR.TotalPage
+	} else {
+		detailR.CurPage = req.Page
+	}
+
+	detailR.NextPage = detailR.CurPage + 1
+	detailR.PrevPage = detailR.CurPage - 1
+	if detailR.NextPage >= detailR.TotalPage {
+		detailR.NextPage = detailR.TotalPage
+	}
+
+	if detailR.PrevPage <= 0 {
+		detailR.PrevPage = 1
+	}
+
+	// 获取当前页文章列表
+	details, err := mongocli.GetArticleDetailsByPage(detailR.CurPage)
+	if err != nil {
+		detailR.Msg = "get article details by page failed"
+		log.Println("get article total count failed, err is ", err)
+		return
+	}
+
+	for _, detail := range details {
+		articleR := &model.HomeArticleR{}
+		lasttm := time.Unix(detail.LastEdit, 0)
+		articleR.LastEdit = lasttm.Format("2006-01-02")
+		articleR.Cat = detail.Cat
+		articleR.Title = detail.Title
+		articleR.Id = detail.ArticleInfo.Id
+		content := TrimEmptyTag(detail.Content)
+		//log.Println("content TrimEmptyTag is ", content)
+		index := strings.Index(content, "/p>")
+		if index == -1 {
+			log.Println("not found match /p>")
+			continue
+		}
+		fIndex := index + 3
+		if fIndex >= len(content) {
+			fIndex = len(content)
+		}
+		articleR.Content = template.HTML(content[:fIndex])
+		detailR.IndexArticleList = append(detailR.IndexArticleList, articleR)
+	}
+
+}
 
 func Home(c *gin.Context) {
 	//c.String(http.StatusOK, "Hello World")
@@ -26,7 +102,115 @@ func Home(c *gin.Context) {
 		homeIndex.VisitNum = val.(int64)
 	}
 
+	//nav 标题栏cat 信息
+	menus, err := mongocli.GetMenuListByParent("")
+	if err != nil {
+		c.HTML(http.StatusOK, "home/errorpage.html", "get menu list by parent failed")
+		return
+	}
+
+	for _, menu := range menus {
+		navCat := &model.NavCatR{}
+		navCat.CatId = menu.CatId
+		navCat.Index = menu.Index
+		navCat.Name = menu.Name
+		homeIndex.NavCatList = append(homeIndex.NavCatList, navCat)
+	}
+
+	hotarticles, err := mongocli.HotArticles()
+	if err != nil {
+		c.HTML(http.StatusOK, "home/errorpage.html", "get hot articles failed")
+		return
+	}
+
+	for _, hot := range hotarticles {
+		homeR := &model.HomeArticleR{}
+		homeR.Id = hot.Id
+		homeR.Title = hot.Title
+		homeR.LoveNum = hot.LoveNum
+		homeR.ScanNum = hot.ScanNum
+		homeIndex.HotList = append(homeIndex.HotList, homeR)
+	}
+
+	newcomments, err := mongocli.GetNewComments()
+	if err != nil {
+		c.HTML(http.StatusOK, "home/errorpage.html", "get hot new comments failed")
+		return
+	}
+
+	for _, newcomment := range newcomments {
+		commentR := &model.CommentR{}
+		commentR.Content = template.HTML(trimHtml(newcomment.Content))
+		commentR.UserName = newcomment.UserName
+		commentR.ArtId = newcomment.ArtId
+		//log.Println("commentR.ArtId is ", newcomment.ArtId)
+		info, err := mongocli.GetArticleInfo(commentR.ArtId)
+		if err != nil {
+			log.Println("get article ", commentR.ArtId, " info failed, err is ", err)
+			continue
+		}
+		commentR.ArtTitle = info.Title
+
+		homeIndex.CommentList = append(homeIndex.CommentList, commentR)
+	}
+
+	articles, err := mongocli.GetArticleDetailsByPage(1)
+	for _, article := range articles {
+		articleR := &model.HomeArticleR{}
+		lasttm := time.Unix(article.LastEdit, 0)
+		articleR.LastEdit = lasttm.Format("2006-01-02")
+		articleR.Cat = article.Cat
+		articleR.Title = article.Title
+		articleR.Id = article.ArticleInfo.Id
+		content := TrimEmptyTag(article.Content)
+		//log.Println("content TrimEmptyTag is ", content)
+		index := strings.Index(content, "/p>")
+		if index == -1 {
+			log.Println("not found match /p>")
+			continue
+		}
+		fIndex := index + 3
+		if fIndex >= len(content) {
+			fIndex = len(content)
+		}
+		articleR.Content = template.HTML(content[:fIndex])
+		homeIndex.IndexArticleList = append(homeIndex.IndexArticleList, articleR)
+	}
+
+	//获取总页数
+	count, err := mongocli.ArticleTotalCount()
+	if err != nil {
+		c.HTML(http.StatusOK, "home/errorpage.html", "get article total count failed")
+		log.Println("get article total count failed, err is ", err)
+		return
+	}
+
+	//获取当前页
+	var page_f float64 = float64(count) / 5
+	homeIndex.TotalPage = int(math.Ceil(page_f))
+	homeIndex.CurPage = 1
+
+	homeIndex.NextPage = 2
+
+	if homeIndex.NextPage >= homeIndex.TotalPage {
+		homeIndex.NextPage = homeIndex.TotalPage
+	}
+
 	c.HTML(http.StatusOK, "home/index.html", homeIndex)
+}
+
+// 去除空标签
+
+func TrimEmptyTag(src string) string {
+	re, _ := regexp.Compile(`<p>[\s]+?</p>`)
+	res := re.ReplaceAllString(src, "")
+	re2, _ := regexp.Compile(`<h[1-9]>[\s]+?</h[1-9]>`)
+	res = re2.ReplaceAllString(res, "")
+	re3, _ := regexp.Compile(`<p></p>`)
+	res = re3.ReplaceAllString(res, "")
+	re4, _ := regexp.Compile(`<h[1-9]></h[1-9]>`)
+	res = re4.ReplaceAllString(res, "")
+	return res
 }
 
 func Category(c *gin.Context) {
@@ -192,6 +376,43 @@ func Category(c *gin.Context) {
 		}
 
 		cateIndex.Comments = append(cateIndex.Comments, commentR)
+	}
+
+	hotarticles, err := mongocli.HotArticles()
+	if err != nil {
+		c.HTML(http.StatusOK, "home/errorpage.html", "get hot articles failed")
+		return
+	}
+
+	for _, hot := range hotarticles {
+		homeR := &model.HomeArticleR{}
+		homeR.Id = hot.Id
+		homeR.Title = hot.Title
+		homeR.LoveNum = hot.LoveNum
+		homeR.ScanNum = hot.ScanNum
+		cateIndex.HotList = append(cateIndex.HotList, homeR)
+	}
+
+	newcomments, err := mongocli.GetNewComments()
+	if err != nil {
+		c.HTML(http.StatusOK, "home/errorpage.html", "get hot new comments failed")
+		return
+	}
+
+	for _, newcomment := range newcomments {
+		commentR := &model.CommentR{}
+		commentR.Content = template.HTML(trimHtml(newcomment.Content))
+		commentR.UserName = newcomment.UserName
+		commentR.ArtId = newcomment.ArtId
+		//log.Println("commentR.ArtId is ", newcomment.ArtId)
+		info, err := mongocli.GetArticleInfo(commentR.ArtId)
+		if err != nil {
+			log.Println("get article ", commentR.ArtId, " info failed, err is ", err)
+			continue
+		}
+		commentR.ArtTitle = info.Title
+
+		cateIndex.CommentList = append(cateIndex.CommentList, commentR)
 	}
 
 	//渲染Category分类主页

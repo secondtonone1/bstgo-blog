@@ -1,0 +1,50 @@
+{{ define "home/articledetails.html"}}
+<div class="res" hidden>{{.Msg}}</div>
+<div class="curpage" hidden>{{.CurPage}}</div>
+<div class="totalpage" hidden>{{.TotalPage}}</div>
+<ol class="list-unstyled">
+    {{range .IndexArticleList}}
+    <li class="article-li" article-id="{{.Id}}">
+        <div class="index-article">
+            <div>
+                <div class="index-article-title">
+                    <h4>
+                        <a href="/articlepage?id={{.Id}}">{{.Title}}</a>
+                    </h4>
+                </div>
+            </div>
+            <div>
+                <div class="index-article-time">
+                    <span class="glyphicon glyphicon-send"></span><span class="post-time"> Posted on {{.LastEdit}}</span> <span class="post-line"> | </span> <span class="glyphicon glyphicon-folder-open"> </span> <span class="post-in"> In </span>
+                    <span class="post-catagery"><a href="">{{.Cat}}</a></span>
+                </div>
+            </div>
+
+            <div class="index-article-content">
+                {{.Content}}
+            </div>
+            <div>
+                <div class="index-read-more">
+                    <span class="read-more-span">Read more »</span>
+                </div>
+            </div>
+        </div>
+    </li>
+    {{end}}
+</ol>
+<div>
+    <nav class="navpage" aria-label="...">
+        <ul class="pager">
+            {{ if le .CurPage 1}}
+            <li class="previous disabled" page="{{.PrevPage}}"><a href="javascript:void(0)"><span aria-hidden="true">&larr;</span> Older</a></li>
+            {{else}}
+            <li class="previous" page="{{.PrevPage}}"><a href="javascript:void(0)"><span aria-hidden="true">&larr;</span> Older</a></li>
+            {{end}} {{ if ge .CurPage .TotalPage}}
+            <li class="next disabled" page="{{.NextPage}}"><a href="javascript:void(0)">Newer <span aria-hidden="true">&rarr;</span></a></li>
+            {{else}}
+            <li class="next" page="{{.NextPage}}"><a href="javascript:void(0)">Newer <span aria-hidden="true">&rarr;</span></a></li>
+            {{end}}
+        </ul>
+    </nav>
+</div>
+{{end}}

@@ -181,11 +181,19 @@ type ReplyR struct {
 	Parent   string        `bson:"parent"`
 }
 
+type IndexArticlesR struct {
+	IndexArticleList []*HomeArticleR
+}
+
 type HomeIndexR struct {
 	VisitNum int64
 	NavCatListR
 	HotListR
 	NewCommentR
+	IndexArticlesR
+	CurPage   int
+	TotalPage int
+	NextPage  int
 }
 
 type HomeCategoryR struct {
@@ -232,4 +240,13 @@ type SubCatArtInfoR struct {
 type ArticleDetailR struct {
 	HomeArticleR
 	Msg string
+}
+
+type ArticleDetailsR struct {
+	Msg       string
+	CurPage   int
+	TotalPage int
+	NextPage  int
+	PrevPage  int
+	IndexArticlesR
 }
