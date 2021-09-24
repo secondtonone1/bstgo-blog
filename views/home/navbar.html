@@ -5,12 +5,13 @@
     <nav class="navbar navbar-inverse navbar-fixed-top " role="navigation">
         <div class="container-fluid">
             <div class="navbar-header">
+                {{if ne .ActiveId ""}}
                 <button type="button" class="navbar-toggle article-index-btn">
                     <span class="sr-only">切换导航</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
-                </button>
+                </button> {{end}}
                 <a class="navbar-brand" href="/home">恋恋风辰的官方博客</a>
                 <button type="button" class="navbar-toggle category-index" data-toggle="collapse" data-target="#example-navbar-collapse">
               <span class="glyphicon glyphicon-chevron-down"></span>

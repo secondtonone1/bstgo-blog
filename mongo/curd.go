@@ -746,6 +746,7 @@ func GetNewComments() ([]*model.Comment, error) {
 				"content":  bson.M{"$first": "$content"},
 				"username": bson.M{"$first": "$username"},
 				"artid_":   bson.M{"$first": "$artid"},
+				"comtime":  bson.M{"$first": "$comtime"},
 			},
 		},
 		//设置总共返回的分组数
@@ -794,6 +795,14 @@ func GetNewComments() ([]*model.Comment, error) {
 		}
 		//log.Println("username is ", username.String())
 		comment.UserName = username.StringValue()
+
+		comtime, err := doc.LookupErr("comtime")
+		if err != nil {
+			log.Println("LookupErr failed, error is ", err)
+			return comments, err
+		}
+
+		comment.Time = int(comtime.Int32())
 		comments = append(comments, comment)
 	}
 	return comments, nil

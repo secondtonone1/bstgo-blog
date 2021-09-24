@@ -2,9 +2,11 @@ package main
 
 import (
 	"bstgo-blog/model"
+	"bstgo-blog/redis"
 	"bstgo-blog/router/home"
 	"log"
 	"net/http"
+	"strconv"
 
 	"bstgo-blog/router/admin"
 
@@ -85,30 +87,85 @@ func CheckLogin(c *gin.Context) {
 
 func CalCulateVisit() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		num, err := mongocli.AddVisitNum()
+
+		val, err := redis.GetVisitNum()
 		if err != nil {
-			log.Println("add visit num failed, err is ", err)
+			log.Println("get visit num failed, err is ", err)
+			log.Println("get visit num val is ", val)
+			num, err := mongocli.AddVisitNum()
+			if err != nil {
+				log.Println("add visit num failed, err is ", err)
+				return
+			}
+
+			val, err = redis.SetVisitNum(num)
+			if err != nil {
+				log.Println("redis set visit num failed, err is ", err)
+				return
+			}
+
+			log.Println("set visit num success, res is ", val)
+
+			c.Set("visitnum", num)
+
+			return
+		}
+
+		num, err := redis.AddVisitNum()
+		if err == nil {
+			log.Println("redis add visit num success, num is ", num)
+			c.Set("visitnum", num)
+			go mongocli.AddVisitNum()
 			return
 		}
 
 		c.Set("visitnum", num)
+		log.Println("set visit num success, res is ", val)
+
 	}
 }
 
 func GetVisitMid() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		numstr, err := redis.GetVisitNum()
+		if err == nil {
+			log.Println("redis get visit num success, num is ", numstr)
+			num, err := strconv.ParseInt(numstr, 10, 64)
+			if err != nil {
+				log.Println("convert string to int64 failed, err is ", err)
+				return
+			}
+			c.Set("visitnum", num)
+			return
+		}
+
 		num, err := mongocli.GetVisitNum()
 		if err != nil {
 			log.Println("add visit num failed, err is ", err)
 			return
 		}
 
+		res, err := redis.SetVisitNum(num)
+		if err != nil {
+			log.Println("redis set visit num failed, err is ", err)
+			return
+		}
+
+		log.Println("redis set visit num success, res is ", res)
+
 		c.Set("visitnum", num)
+	}
+}
+
+func ClearRedis() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		redis.ClearAll()
 	}
 }
 
 func main() {
 	mongocli.MongoInit()
+	redis.InitRedis()
 	router := gin.Default()
 	router.Use(Cors()) //默认跨域
 	//加载模板文件
@@ -168,15 +225,15 @@ func main() {
 		//管理排序页面，拖动标题达到排序效果
 		adminGroup.POST("/sort", admin.Sort)
 		//排序页面保存
-		adminGroup.POST("/sortsave", admin.SortSave)
+		adminGroup.POST("/sortsave", ClearRedis(), admin.SortSave)
 		//点击回到首页，管理页面首页
 		adminGroup.POST("/index", admin.IndexList)
 		// 创建分类
-		adminGroup.POST("/createctg", admin.CreateCtg)
+		adminGroup.POST("/createctg", ClearRedis(), admin.CreateCtg)
 		// 创建子分类
-		adminGroup.POST("/createsubctg", admin.CreateSubCtg)
+		adminGroup.POST("/createsubctg", ClearRedis(), admin.CreateSubCtg)
 		// 子标签排序
-		adminGroup.POST("/sortmenu", admin.SortMenu)
+		adminGroup.POST("/sortmenu", ClearRedis(), admin.SortMenu)
 		// 文章编辑界面
 		adminGroup.GET("/articledit", admin.ArticleEdit)
 		//获取子分类下拉菜单
@@ -184,15 +241,15 @@ func main() {
 		//文章搜索返回列表
 		adminGroup.POST("/articlesearch", admin.ArticleSearch)
 		//文章删除
-		adminGroup.POST("/delarticle", admin.DelArticle)
+		adminGroup.POST("/delarticle", ClearRedis(), admin.DelArticle)
 		//文章编辑
 		adminGroup.GET("/articlemodify", admin.ModifyArticle)
 		//文章更新
-		adminGroup.POST("/updatearticle", admin.UpdateArticle)
+		adminGroup.POST("/updatearticle", ClearRedis(), admin.UpdateArticle)
 	}
 
 	// 文章编辑发布
-	router.POST("admin/pubarticle", CheckLogin, admin.ArticlePub)
+	router.POST("admin/pubarticle", CheckLogin, ClearRedis(), admin.ArticlePub)
 	//	mongocli.SetVisitNum()
 	router.Run(":8080")
 	mongocli.MongoRelease()

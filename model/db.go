@@ -36,36 +36,36 @@ type Article_ struct {
 
 //文章信息
 type ArticleInfo struct {
-	Id    string `bson:"id"`
-	Cat   string `bson: "cat"`
-	Title string `bson: "title"`
+	Id    string `bson:"id" json:"infoid"`
+	Cat   string `bson: "cat" json: "cat"`
+	Title string `bson: "title" json: "title"`
 
-	Subcat   string `bson: "subcat"`
-	Subtitle string `bson: "subtitle"`
-	ScanNum  int    `bson:"scannum"`
-	LoveNum  int    `bson:"lovenum`
-	CreateAt int64  `bson:"createdAt"`
-	LastEdit int64  `bson:"lastedit"`
-	Author   string `bson:"author"`
-	Index    int    `bson:"index"`
+	Subcat   string `bson: "subcat" json: "subcat"`
+	Subtitle string `bson: "subtitle" json: "subtitle"`
+	ScanNum  int    `bson:"scannum" json:"scannum"`
+	LoveNum  int    `bson:"lovenum json:"lovenum`
+	CreateAt int64  `bson:"createdAt" json:"createdAt"`
+	LastEdit int64  `bson:"lastedit" json:"lastedit"`
+	Author   string `bson:"author" json:"author"`
+	Index    int    `bson:"index" json:"index"`
 }
 
 //文章内容
 type ArticleContent struct {
-	Id      string `bson:"id"`
-	Content string `bson: "content"`
+	Id      string `bson:"id" json:"conid"`
+	Content string `bson: "content" json: "content"`
 }
 
 //评论信息
 type Comment struct {
-	Id       string `bson:"id"`
-	UserName string `bson:"username"`
-	Time     int    `bson:"comtime"`
-	Content  string `bson:"content"`
-	LoveNum  int    `bson:"lovenum"`
-	Parent   string `bson:"parent"`
-	HeadIcon string `bson:"headicon"`
-	ArtId    string `bson:"artid"`
+	Id       string `bson:"id" json:"id"`
+	UserName string `bson:"username" json:"username"`
+	Time     int    `bson:"comtime" json:"comtime"`
+	Content  string `bson:"content" json:"content"`
+	LoveNum  int    `bson:"lovenum" json:"lovenum"`
+	Parent   string `bson:"parent" json:"parent"`
+	HeadIcon string `bson:"headicon" json:"headicon"`
+	ArtId    string `bson:"artid" json:"artid"`
 }
 
 //基础信息
@@ -78,4 +78,51 @@ type BaseInfo struct {
 //访问信息
 type VisitInfo struct {
 	VisitNum int64 `json:"visitnum"`
+}
+
+//二级菜单排序信息
+type MenuSlice []*CatMenu
+
+func (ms MenuSlice) Len() int {
+	return len(ms)
+}
+
+func (ms MenuSlice) Swap(i, j int) {
+	ms[i], ms[j] = ms[j], ms[i]
+}
+
+func (ms MenuSlice) Less(i, j int) bool {
+	return ms[i].Index < ms[j].Index
+}
+
+//评论排序信息
+type ComSlice []*Comment
+
+func (cs ComSlice) Len() int {
+	return len(cs)
+}
+
+func (cs ComSlice) Swap(i, j int) {
+	cs[i], cs[j] = cs[j], cs[i]
+}
+
+//从大到小
+func (cs ComSlice) Less(i, j int) bool {
+	return cs[i].Time > cs[j].Time
+}
+
+//文章首页排序
+type HomeArtSlice []*Article_
+
+func (hs HomeArtSlice) Len() int {
+	return len(hs)
+}
+
+func (cs HomeArtSlice) Swap(i, j int) {
+	cs[i], cs[j] = cs[j], cs[i]
+}
+
+//从大到小
+func (cs HomeArtSlice) Less(i, j int) bool {
+	return cs[i].LastEdit > cs[j].LastEdit
 }

@@ -21,10 +21,20 @@ type CookieCfg struct {
 	Alive int    `toml: "alive"`
 }
 
+type RedisCfg struct {
+	Host        string `toml: "host"`
+	PoolSize    int    `toml: "poolsize"`
+	IdleCons    int    `toml: "idlecons"`
+	IdleTimeout int    `toml: "idletimeout"`
+	Passwd      string `toml: "passwd"`
+	DB          int    `toml: "db"`
+}
+
 type TotalCfg struct {
 	Mongo     MongoCfg  `toml: "mongo"`
 	Cookie    CookieCfg `toml: "cookie"`
 	Location_ Location  `toml:"location"`
+	Redis     RedisCfg  `toml:"redis"`
 }
 
 type Location struct {

@@ -230,6 +230,7 @@ type CommentReplyR struct {
 type ArtInfoR struct {
 	ArtId       string
 	ArtSubTitle string
+	Index       int
 }
 
 type SubCatArtInfoR struct {
@@ -249,4 +250,18 @@ type ArticleDetailsR struct {
 	NextPage  int
 	PrevPage  int
 	IndexArticlesR
+}
+
+type ArticleRSlice []*ArtInfoR
+
+func (ars ArticleRSlice) Len() int {
+	return len(ars)
+}
+
+func (ars ArticleRSlice) Less(i, j int) bool {
+	return ars[i].Index < ars[j].Index
+}
+
+func (ars ArticleRSlice) Swap(i, j int) {
+	ars[i], ars[j] = ars[j], ars[i]
 }

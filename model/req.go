@@ -129,7 +129,8 @@ type CommentReq struct {
 }
 
 type ComLoveReq struct {
-	Id string `json:"id"`
+	Id     string `json:"id"`
+	Parent string `json:"parent"`
 }
 
 type ComLoveRsp struct {
@@ -145,7 +146,8 @@ type ComReplyReq struct {
 }
 
 type RplLoveReq struct {
-	Id string `json:"id"`
+	Id     string `json:"id"`
+	Parent string `json:"parent"`
 }
 
 type RplLoveRsp struct {

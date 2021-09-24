@@ -3,11 +3,13 @@ package home
 import (
 	"bstgo-blog/model"
 	mongocli "bstgo-blog/mongo"
+	"bstgo-blog/redis"
 	"html/template"
 	"log"
 	"math"
 	"net/http"
 	"regexp"
+	"sort"
 	"strings"
 	"time"
 
@@ -102,13 +104,25 @@ func Home(c *gin.Context) {
 		homeIndex.VisitNum = val.(int64)
 	}
 
-	//nav 标题栏cat 信息
-	menus, err := mongocli.GetMenuListByParent("")
-	if err != nil {
-		c.HTML(http.StatusOK, "home/errorpage.html", "get menu list by parent failed")
-		return
+	//从redis获取一级目录
+	menus, err := redis.GetLv1Menus()
+	log.Printf("redis get menus are %v", menus)
+	if err != nil || len(menus) == 0 {
+		log.Println("redis get lv1 menus failed")
+		//nav 标题栏cat 信息
+		menus, err = mongocli.GetMenuListByParent("")
+		if err != nil {
+			c.HTML(http.StatusOK, "home/errorpage.html", "get menu list by parent failed")
+			return
+		}
+
+		if err := redis.SetLv1Menus(menus); err != nil {
+			log.Println("redis set lv1 menus failed")
+		}
+
 	}
 
+	sort.Sort(model.MenuSlice(menus))
 	for _, menu := range menus {
 		navCat := &model.NavCatR{}
 		navCat.CatId = menu.CatId
@@ -117,10 +131,16 @@ func Home(c *gin.Context) {
 		homeIndex.NavCatList = append(homeIndex.NavCatList, navCat)
 	}
 
-	hotarticles, err := mongocli.HotArticles()
-	if err != nil {
-		c.HTML(http.StatusOK, "home/errorpage.html", "get hot articles failed")
-		return
+	//从redis获取热门文章
+	hotarticles, err := redis.GetHotArticles()
+	if err != nil || len(hotarticles) == 0 {
+		hotarticles, err = mongocli.HotArticles()
+		if err != nil {
+			c.HTML(http.StatusOK, "home/errorpage.html", "get hot articles failed")
+			return
+		}
+
+		redis.SetHotArts(hotarticles)
 	}
 
 	for _, hot := range hotarticles {
@@ -132,10 +152,15 @@ func Home(c *gin.Context) {
 		homeIndex.HotList = append(homeIndex.HotList, homeR)
 	}
 
-	newcomments, err := mongocli.GetNewComments()
-	if err != nil {
-		c.HTML(http.StatusOK, "home/errorpage.html", "get hot new comments failed")
-		return
+	//从redis获取最新评论
+	newcomments, err := redis.GetNewComments()
+	if err != nil || len(newcomments) == 0 {
+		newcomments, err = mongocli.GetNewComments()
+		if err != nil {
+			c.HTML(http.StatusOK, "home/errorpage.html", "get hot new comments failed")
+			return
+		}
+		redis.SetNewComments(newcomments)
 	}
 
 	for _, newcomment := range newcomments {
@@ -154,7 +179,23 @@ func Home(c *gin.Context) {
 		homeIndex.CommentList = append(homeIndex.CommentList, commentR)
 	}
 
-	articles, err := mongocli.GetArticleDetailsByPage(1)
+	articles, err := redis.GetHomeArticleDetails()
+	if err != nil || len(articles) == 0 {
+		log.Println("get home article details from redis failed")
+		articles, err = mongocli.GetArticleDetailsByPage(1)
+		if err != nil {
+			log.Println("get home article details from mongo failed")
+			c.HTML(http.StatusOK, "home/errorpage.html", "get hot new comments failed")
+			return
+		}
+
+		err = redis.SetHomeArticleDetails(articles)
+		if err != nil {
+			log.Println("redis set home article details failed")
+		}
+	}
+
+	sort.Sort(model.HomeArtSlice(articles))
 	for _, article := range articles {
 		articleR := &model.HomeArticleR{}
 		lasttm := time.Unix(article.LastEdit, 0)
@@ -177,12 +218,24 @@ func Home(c *gin.Context) {
 		homeIndex.IndexArticleList = append(homeIndex.IndexArticleList, articleR)
 	}
 
-	//获取总页数
-	count, err := mongocli.ArticleTotalCount()
+	//从redis获取总页数
+	count, err := redis.GetTotalArtNum()
 	if err != nil {
-		c.HTML(http.StatusOK, "home/errorpage.html", "get article total count failed")
-		log.Println("get article total count failed, err is ", err)
-		return
+		log.Println("redis get article total count failed, err is ", err)
+		//获取总页数
+		count, err = mongocli.ArticleTotalCount()
+		if err != nil {
+			c.HTML(http.StatusOK, "home/errorpage.html", "get article total count failed")
+			log.Println("mongo get article total count failed, err is ", err)
+			return
+		}
+
+		err = redis.SetTotalArtNum(count)
+		if err != nil {
+			log.Println("redis set article total count failed, err is ", err)
+		}
+
+		log.Println("redis set total article num success, num is ", count)
 	}
 
 	//获取当前页
@@ -238,12 +291,25 @@ func Category(c *gin.Context) {
 		cateIndex.VisitNum = val.(int64)
 	}
 
-	//nav 标题栏cat 信息
-	menus, err := mongocli.GetMenuListByParent("")
-	if err != nil {
-		c.HTML(http.StatusOK, "home/errorpage.html", "get menu list by parent failed")
-		return
+	//从redis获取一级目录
+	menus, err := redis.GetLv1Menus()
+	log.Printf("redis get menus are %v", menus)
+	if err != nil || len(menus) == 0 {
+		log.Println("redis get lv1 menus failed")
+		//nav 标题栏cat 信息
+		menus, err = mongocli.GetMenuListByParent("")
+		if err != nil {
+			c.HTML(http.StatusOK, "home/errorpage.html", "get menu list by parent failed")
+			return
+		}
+
+		if err := redis.SetLv1Menus(menus); err != nil {
+			log.Println("redis set lv1 menus failed")
+		}
+
 	}
+
+	sort.Sort(model.MenuSlice(menus))
 
 	for _, menu := range menus {
 		navCat := &model.NavCatR{}
@@ -253,21 +319,39 @@ func Category(c *gin.Context) {
 		cateIndex.NavCatList = append(cateIndex.NavCatList, navCat)
 	}
 
-	//获取侧边栏菜单信息
-	menulv1, err := mongocli.GetMenuById(catid)
+	//从侧边栏获取菜单信息redis
+	menulv1, err := redis.GetMenuById(catid)
 	if err != nil {
-		log.Println("get menu by id ", catid, " failed, err is ", err)
-		c.HTML(http.StatusOK, "home/errorpage.html", "get menu by id failed, after 2 seconds return to home")
-		return
+		log.Println("redis get menu by id failed, err is ", err)
+		//获取侧边栏菜单信息
+		menulv1, err = mongocli.GetMenuById(catid)
+		if err != nil {
+			log.Println("get menu by id ", catid, " failed, err is ", err)
+			c.HTML(http.StatusOK, "home/errorpage.html", "get menu by id failed, after 2 seconds return to home")
+			return
+		}
+
+		err = redis.SetMenuToSet(menulv1)
+		if err != nil {
+			log.Println("redis set menu to set failed, err is ", err)
+		}
 	}
 
 	cateIndex.CategoryName = menulv1.Name
+	menulv2s, err := redis.GetLv2MenusByCatId(catid)
+	if err != nil || len(menulv2s) == 0 {
+		log.Println("redis get lv2 menus failed, err is ", err)
+		menulv2s, err = mongocli.GetMenuListByParent(catid)
+		if err != nil {
+			log.Println("get menu by parent ", menulv1.Name, " failed, err is ", err)
+			c.HTML(http.StatusOK, "home/errorpage.html", "get menu by parent failed, after 2 seconds return to home")
+			return
+		}
 
-	menulv2s, err := mongocli.GetMenuListByParent(catid)
-	if err != nil {
-		log.Println("get menu by parent ", menulv1.Name, " failed, err is ", err)
-		c.HTML(http.StatusOK, "home/errorpage.html", "get menu by parent failed, after 2 seconds return to home")
-		return
+		err := redis.SetLv2MenusByCatId(catid, menulv2s)
+		if err != nil {
+			log.Println("redis set lv2 menus by catid failed, err is ", err)
+		}
 	}
 
 	if len(menulv2s) == 0 {
@@ -287,14 +371,26 @@ func Category(c *gin.Context) {
 		menulv2map[menulv2.Name] = leftCatR
 	}
 
-	catartinfos, err := mongocli.CatArtInfos(menulv1.Name)
-	if err != nil {
-		log.Println("get art info failed by cat , err is ", err)
-		//渲染Category分类主页
-		c.HTML(http.StatusOK, "home/errorpage.html", "get art info failed by cat, after 2 seconds return to home")
-		return
+	//获取以及分类如Go目录下所有文章信息
+	catartinfos, err := redis.GetArtInfoByCat(menulv1.Name)
+	if err != nil || len(catartinfos) == 0 {
+		log.Println("redis get art info failed by cat , err is ", err)
+		catartinfos, err = mongocli.CatArtInfos(menulv1.Name)
+		if err != nil {
+			log.Println("get art info failed by cat , err is ", err)
+			//渲染Category分类主页
+			c.HTML(http.StatusOK, "home/errorpage.html", "get art info failed by cat, after 2 seconds return to home")
+			return
+		}
+
+		err = redis.SetArtInfoByCat(menulv1.Name, catartinfos)
+		if err != nil {
+			log.Println("redis set art info failed, err is ", err)
+		}
+
 	}
 
+	//将以及分类如Go下的所有文章信息根据子分类进行归类
 	for _, catartinfo := range catartinfos {
 		leftCatR, ok := menulv2map[catartinfo.Subcat]
 		if !ok {
@@ -304,16 +400,31 @@ func Category(c *gin.Context) {
 		infoR := &model.ArtInfoR{}
 		infoR.ArtId = catartinfo.Id
 		infoR.ArtSubTitle = catartinfo.Subtitle
+		infoR.Index = catartinfo.Index
 		leftCatR.SubArticle = append(leftCatR.SubArticle, infoR)
 	}
 
-	//中间文章详情
-	article, err := mongocli.GetFirstArtByCat(menulv1.Name, menulv2s[0].Name)
+	//排序子分类下文章
+	for _, leftCatR := range menulv2map {
+		sort.Sort(model.ArticleRSlice(leftCatR.SubArticle))
+	}
 
+	article, err := redis.GetFirstArtByCat(menulv1.Name, menulv2s[0].Name)
 	if err != nil {
-		log.Println("get first article by cat failed, err is ", err)
-		c.HTML(http.StatusOK, "home/errorpage.html", "get article failed, after 2 seconds return to home")
-		return
+		log.Println("redis get article by cat  failed, err is ", err)
+		//中间文章详情
+		article, err = mongocli.GetFirstArtByCat(menulv1.Name, menulv2s[0].Name)
+
+		if err != nil {
+			log.Println("get first article by cat failed, err is ", err)
+			c.HTML(http.StatusOK, "home/errorpage.html", "get article failed, after 2 seconds return to home")
+			return
+		}
+
+		err = redis.SetFristArtByCat(menulv1.Name, menulv2s[0].Name, article)
+		if err != nil {
+			log.Println("redis set first art by cat failed, err is ", err)
+		}
 	}
 
 	cateIndex.Author = article.Author
@@ -332,12 +443,24 @@ func Category(c *gin.Context) {
 	cateIndex.Subtitle = article.Subtitle
 	cateIndex.Title = article.Title
 
-	//获取评论信息
-	comments, err := mongocli.GetCommentByParent(article.ArticleInfo.Id)
-	if err != nil {
-		c.HTML(http.StatusOK, "home/errorpage.html", "get comments failed")
-		return
+	comments, err := redis.GetCommentsByParent(article.ArticleInfo.Id)
+	if err != nil || len(comments) == 0 {
+		log.Println("redis get comments by artid failed, err is ", err)
+		//获取评论信息
+		comments, err = mongocli.GetCommentByParent(article.ArticleInfo.Id)
+		if err != nil {
+			c.HTML(http.StatusOK, "home/errorpage.html", "get comments failed")
+			return
+		}
+
+		err := redis.SetCommentsByParent(article.ArticleInfo.Id, comments)
+		if err != nil {
+			log.Println("redis set comments by artid failed, err is ", err)
+		}
 	}
+
+	sort.Sort(model.ComSlice(comments))
+
 	cateIndex.CommentNum = len(comments)
 	for _, comment := range comments {
 		tm := time.Unix(int64(comment.Time), 0)
@@ -361,6 +484,7 @@ func Category(c *gin.Context) {
 
 		commentR.ReplyNum = len(replys)
 
+		sort.Sort(model.ComSlice(replys))
 		for _, reply := range replys {
 			replyR := &model.ReplyR{}
 			replyR.Content = template.HTML(reply.Content)
@@ -378,10 +502,16 @@ func Category(c *gin.Context) {
 		cateIndex.Comments = append(cateIndex.Comments, commentR)
 	}
 
-	hotarticles, err := mongocli.HotArticles()
-	if err != nil {
-		c.HTML(http.StatusOK, "home/errorpage.html", "get hot articles failed")
-		return
+	//从redis获取热门文章
+	hotarticles, err := redis.GetHotArticles()
+	if err != nil || len(hotarticles) == 0 {
+		hotarticles, err = mongocli.HotArticles()
+		if err != nil {
+			c.HTML(http.StatusOK, "home/errorpage.html", "get hot articles failed")
+			return
+		}
+
+		redis.SetHotArts(hotarticles)
 	}
 
 	for _, hot := range hotarticles {
@@ -393,11 +523,18 @@ func Category(c *gin.Context) {
 		cateIndex.HotList = append(cateIndex.HotList, homeR)
 	}
 
-	newcomments, err := mongocli.GetNewComments()
-	if err != nil {
-		c.HTML(http.StatusOK, "home/errorpage.html", "get hot new comments failed")
-		return
+	//从redis获取最新评论
+	newcomments, err := redis.GetNewComments()
+	if err != nil || len(newcomments) == 0 {
+		newcomments, err = mongocli.GetNewComments()
+		if err != nil {
+			c.HTML(http.StatusOK, "home/errorpage.html", "get hot new comments failed")
+			return
+		}
+		redis.SetNewComments(newcomments)
 	}
+
+	sort.Sort(model.ComSlice(newcomments))
 
 	for _, newcomment := range newcomments {
 		commentR := &model.CommentR{}
@@ -461,18 +598,39 @@ func ArticlePage(c *gin.Context) {
 		log.Println("add article scan num failed , error is ", err)
 	}
 
-	article, err := mongocli.GetArticleId(id)
-
+	article, err := redis.GetArticleById(id)
 	if err != nil {
-		c.HTML(http.StatusOK, "home/errorpage.html", "get article failed, after 2 seconds return to home")
-		return
+		log.Println("redis get article by id failed, err is ", err)
+		article, err = mongocli.GetArticleId(id)
+
+		if err != nil {
+			c.HTML(http.StatusOK, "home/errorpage.html", "get article failed, after 2 seconds return to home")
+			return
+		}
+
+		err = redis.SetArticleById(article)
+		if err != nil {
+			log.Println("redis set article by id failed, err is ", err)
+		}
+
 	}
 
-	//左侧相关推荐
-	recommends, err := mongocli.RelRecommend(article.Cat)
-	if err != nil {
-		c.HTML(http.StatusOK, "home/errorpage.html", "get recommends failed")
-		return
+	//redis获取相关推荐
+	recommends, err := redis.GetRelcByCat(article.Cat)
+	if err != nil || len(recommends) == 0 {
+		log.Println("redis get recommends failed, err is ", err)
+
+		//左侧相关推荐
+		recommends, err = mongocli.RelRecommend(article.Cat)
+		if err != nil {
+			c.HTML(http.StatusOK, "home/errorpage.html", "get recommends failed")
+			return
+		}
+
+		err = redis.SetRelcByCat(article.Cat, recommends)
+		if err != nil {
+			log.Println("redis set relcommends failed, err is ", err)
+		}
 	}
 
 	articleR := &model.ArticlePageR{}
@@ -498,12 +656,26 @@ func ArticlePage(c *gin.Context) {
 	articleR.HotList = []*model.HomeArticleR{}
 	articleR.NavCatList = []*model.NavCatR{}
 
-	//获取评论信息
-	comments, err := mongocli.GetCommentByParent(article.ArticleInfo.Id)
-	if err != nil {
-		c.HTML(http.StatusOK, "home/errorpage.html", "get comments failed")
-		return
+	comments, err := redis.GetCommentsByParent(article.ArticleInfo.Id)
+	if err != nil || len(comments) == 0 {
+		log.Println("redis get comments by artid failed, err is ", err)
+		//获取评论信息
+		comments, err = mongocli.GetCommentByParent(article.ArticleInfo.Id)
+		if err != nil {
+			c.HTML(http.StatusOK, "home/errorpage.html", "get comments failed")
+			return
+		}
+		log.Println("article info id is ", article.ArticleInfo.Id)
+		log.Println("comments get from db are ", comments)
+		err := redis.SetCommentsByParent(article.ArticleInfo.Id, comments)
+		if err != nil {
+			log.Println("redis set comments by artid failed, err is ", err)
+		}
 	}
+
+	sort.Sort(model.ComSlice(comments))
+
+	log.Println("comments are ", comments)
 	articleR.CommentNum = len(comments)
 	for _, comment := range comments {
 		tm := time.Unix(int64(comment.Time), 0)
@@ -519,14 +691,23 @@ func ArticlePage(c *gin.Context) {
 		commentR.UserName = comment.UserName
 		commentR.HeadIcon = comment.HeadIcon
 
-		replys, err := mongocli.GetCommentByParent(comment.Id)
-		if err != nil {
-			log.Println("get reply by comment id ", comment.Id, "failed, error is ", err)
-			continue
+		replys, err := redis.GetCommentsByParent(comment.Id)
+		if err != nil || len(replys) == 0 {
+			log.Println("redis get comments by parent failed, err is ", err)
+			replys, err = mongocli.GetCommentByParent(comment.Id)
+			if err != nil {
+				log.Println("get reply by comment id ", comment.Id, "failed, error is ", err)
+				continue
+			}
+
+			err = redis.SetCommentsByParent(comment.Id, replys)
+			if err != nil {
+				log.Println("redis set comments by parent failed, err is ", err)
+			}
 		}
 
 		commentR.ReplyNum = len(replys)
-
+		sort.Sort(model.ComSlice(replys))
 		for _, reply := range replys {
 			replyR := &model.ReplyR{}
 			replyR.Content = template.HTML(reply.Content)
@@ -553,10 +734,16 @@ func ArticlePage(c *gin.Context) {
 		articleR.RecommendList = append(articleR.RecommendList, homeR)
 	}
 
-	hotarticles, err := mongocli.HotArticles()
-	if err != nil {
-		c.HTML(http.StatusOK, "home/errorpage.html", "get hot articles failed")
-		return
+	//从redis获取热门文章
+	hotarticles, err := redis.GetHotArticles()
+	if err != nil || len(hotarticles) == 0 {
+		hotarticles, err = mongocli.HotArticles()
+		if err != nil {
+			c.HTML(http.StatusOK, "home/errorpage.html", "get hot articles failed")
+			return
+		}
+
+		redis.SetHotArts(hotarticles)
 	}
 
 	for _, hot := range hotarticles {
@@ -568,10 +755,15 @@ func ArticlePage(c *gin.Context) {
 		articleR.HotList = append(articleR.HotList, homeR)
 	}
 
-	newcomments, err := mongocli.GetNewComments()
-	if err != nil {
-		c.HTML(http.StatusOK, "home/errorpage.html", "get hot new comments failed")
-		return
+	//从redis获取最新评论
+	newcomments, err := redis.GetNewComments()
+	if err != nil || len(newcomments) == 0 {
+		newcomments, err = mongocli.GetNewComments()
+		if err != nil {
+			c.HTML(http.StatusOK, "home/errorpage.html", "get hot new comments failed")
+			return
+		}
+		redis.SetNewComments(newcomments)
 	}
 
 	for _, newcomment := range newcomments {
@@ -590,11 +782,25 @@ func ArticlePage(c *gin.Context) {
 		articleR.CommentList = append(articleR.CommentList, commentR)
 	}
 
-	menus, err := mongocli.GetMenuListByParent("")
-	if err != nil {
-		c.HTML(http.StatusOK, "home/errorpage.html", "get menu list by parent failed")
-		return
+	//从redis获取一级目录
+	menus, err := redis.GetLv1Menus()
+	log.Printf("redis get menus are %v", menus)
+	if err != nil || len(menus) == 0 {
+		log.Println("redis get lv1 menus failed")
+		//nav 标题栏cat 信息
+		menus, err = mongocli.GetMenuListByParent("")
+		if err != nil {
+			c.HTML(http.StatusOK, "home/errorpage.html", "get menu list by parent failed")
+			return
+		}
+
+		if err := redis.SetLv1Menus(menus); err != nil {
+			log.Println("redis set lv1 menus failed")
+		}
+
 	}
+
+	sort.Sort(model.MenuSlice(menus))
 
 	for _, menu := range menus {
 		navCat := &model.NavCatR{}
@@ -605,6 +811,45 @@ func ArticlePage(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "home/articlepage.html", articleR)
+}
+
+//更新redis文章点赞数
+func UpdateArticleRedis(artId string) {
+	article, err := redis.GetArticleById(artId)
+	if err != nil {
+		log.Println("redis get article by id failed, err is ", err)
+		return
+	}
+
+	article.LoveNum++
+	err = redis.SetArticleById(article)
+	if err != nil {
+		log.Println("redis set article by id failed, err is ", err)
+	}
+}
+
+//添加评论信息redis
+func UpdateArtCommentRedis(artId string, comment *model.Comment) {
+	err := redis.SetCommentByParent(artId, comment.Id, comment)
+	if err != nil {
+		log.Println("redis update comment failed, err is ", err)
+	}
+}
+
+//更新评论信息点赞数
+func AddComLoveRedis(pid string, id string) {
+	comment, err := redis.GetCommentByParent(pid, id)
+	if err != nil {
+		log.Println("redis get comment by parent id failed, err is ", err)
+		return
+	}
+
+	comment.LoveNum++
+
+	err = redis.SetCommentByParent(pid, id, comment)
+	if err != nil {
+		log.Println("redis set comment by parent id failed, err is ", err)
+	}
 }
 
 //文章增加点赞数
@@ -624,6 +869,9 @@ func AddLoveNum(c *gin.Context) {
 		log.Println(model.MSG_JSON_UNPACK)
 		return
 	}
+
+	//更新文章点赞信息
+	go UpdateArticleRedis(req.Id)
 
 	err = mongocli.UpdateArticleLoveNum(req)
 	if err != nil {
@@ -678,6 +926,9 @@ func Comment(c *gin.Context) {
 		comentR.Res = "insert comment db failed"
 		return
 	}
+
+	//更新文章评论信息
+	go UpdateArtCommentRedis(req.Parent, comentdb)
 }
 
 //点击评论喜欢数
@@ -703,6 +954,9 @@ func ComLove(c *gin.Context) {
 		loveRsp.Msg = model.MSG_COM_LOVE
 		return
 	}
+
+	//增加评论喜欢数
+	go AddComLoveRedis(loveReq.Parent, loveReq.Id)
 }
 
 //点赞回复喜欢数
@@ -728,6 +982,9 @@ func ReplyLove(c *gin.Context) {
 		loveRsp.Msg = model.MSG_COM_LOVE
 		return
 	}
+
+	//增加回复喜欢数
+	go AddComLoveRedis(loveReq.Parent, loveReq.Id)
 }
 
 //获取子分类下文章信息列表
@@ -749,17 +1006,27 @@ func SubCatArtInfos(c *gin.Context) {
 		return
 	}
 
-	infos, err := mongocli.SubCatArtInfos(infoReq.Cat, infoReq.SubCat)
+	infos, err := redis.GetArtsByCatSubCat(infoReq.Cat, infoReq.SubCat)
 	if err != nil {
-		infoR.Msg = model.MSG_COM_LOVE
-		log.Println("get articles by cat & subcat failed , err is ", err)
-		return
+		log.Println("redis get articles by cat & subcat failed, err is ", err)
+		infos, err = mongocli.SubCatArtInfos(infoReq.Cat, infoReq.SubCat)
+		if err != nil {
+			infoR.Msg = model.MSG_COM_LOVE
+			log.Println("get articles by cat & subcat failed , err is ", err)
+			return
+		}
+
+		err = redis.SetArtByCatSubCat(infoReq.Cat, infoReq.SubCat, infos)
+		if err != nil {
+			log.Println("redis set  article by cat & subcat failed, err is ", err)
+		}
 	}
 
 	for _, info := range infos {
 		artinfo := &model.ArtInfoR{}
 		artinfo.ArtId = info.Id
 		artinfo.ArtSubTitle = info.Subtitle
+		artinfo.Index = info.Index
 		infoR.SubCatArtInfos = append(infoR.SubCatArtInfos, artinfo)
 	}
 }
@@ -789,14 +1056,26 @@ func ArtDetail(c *gin.Context) {
 		return
 	}
 
+	log.Println("article.ArticleInfo.Id is ", article.ArticleInfo.Id)
 	//获取评论信息
-	comments, err := mongocli.GetCommentByParent(article.ArticleInfo.Id)
-	if err != nil {
-		detailR.Msg = model.MSG_COMMENT_BYPARENT
-		log.Println("get article by id failed , err is ", err)
-		return
+	comments, err := redis.GetCommentsByParent(article.ArticleInfo.Id)
+	if err != nil || len(comments) == 0 {
+		log.Println("redis get comments by artid failed, err is ", err)
+		//获取评论信息
+		comments, err = mongocli.GetCommentByParent(article.ArticleInfo.Id)
+		if err != nil {
+			detailR.Msg = model.MSG_COMMENT_BYPARENT
+			log.Println("get article by id failed , err is ", err)
+			return
+		}
+
+		err := redis.SetCommentsByParent(article.ArticleInfo.Id, comments)
+		if err != nil {
+			log.Println("redis set comments by artid failed, err is ", err)
+		}
 	}
 
+	sort.Sort(model.ComSlice(comments))
 	num, bres := c.Get("visitnum")
 	if bres == false {
 		log.Println("get visitnum failed !")
@@ -844,14 +1123,23 @@ func ArtDetail(c *gin.Context) {
 		commentR.UserName = comment.UserName
 		commentR.HeadIcon = comment.HeadIcon
 
-		replys, err := mongocli.GetCommentByParent(comment.Id)
-		if err != nil {
-			log.Println("get reply by comment id ", comment.Id, "failed, error is ", err)
-			continue
+		replys, err := redis.GetCommentsByParent(comment.Id)
+		if err != nil || len(replys) == 0 {
+			log.Println("redis get comments by parent failed, err is ", err)
+			replys, err = mongocli.GetCommentByParent(comment.Id)
+			if err != nil {
+				log.Println("get reply by comment id ", comment.Id, "failed, error is ", err)
+				continue
+			}
+
+			err = redis.SetCommentsByParent(comment.Id, replys)
+			if err != nil {
+				log.Println("redis set comments by parent failed, err is ", err)
+			}
 		}
 
 		commentR.ReplyNum = len(replys)
-
+		sort.Sort(model.ComSlice(replys))
 		for _, reply := range replys {
 			replyR := &model.ReplyR{}
 			replyR.Content = template.HTML(reply.Content)

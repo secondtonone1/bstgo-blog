@@ -13,3 +13,12 @@
 
 [location]
     timezone = "Asia/Shanghai"
+
+[redis]
+    host = "81.68.86.146:6388"
+    idlecons = 16
+    poolsize = 1024
+    idletimeout = 300
+    passwd = "123456"
+    db = 0
+

@@ -19,9 +19,12 @@ $('.sidebar>li>a').on('click', function(event) {
     if ($(this).children('span').attr('class').trim().indexOf('glyphicon-menu-right') != -1) {
         $(this).children('span').removeClass('glyphicon glyphicon-menu-right')
         $(this).children('span').addClass('glyphicon glyphicon-menu-down')
+        $(this).siblings('div').collapse('show')
+
     } else {
         $(this).children('span').removeClass('glyphicon glyphicon-menu-down')
         $(this).children('span').addClass('glyphicon glyphicon-menu-right')
+        $(this).siblings('div').collapse('hide')
     }
 
     // if ($(this).parent().hasClass('requested')) {
@@ -138,6 +141,16 @@ $('.mask').on('click', function() {
     $('.ancestor').removeClass('show')
 })
 
+//小屏幕下点击分类箭头
+$('.category-index').on('click', function() {
+    $('.catmask').css('display', 'block')
+})
+
+$('.catmask').on('click', function() {
+    $('.catmask').css('display', 'none')
+    $('#example-navbar-collapse').collapse("hide")
+})
+
 //小屏幕侧边栏点击一级标题
 $('.xs-article-index-wrapper>ul>li>a').on('click', function() {
     //折叠其他一级标题
@@ -166,6 +179,59 @@ $('.xs-article-index-wrapper>ul>li>div a').on('click', function() {
     $('.xs-article-index-wrapper>ul>li>div a').parent().removeClass('active')
         //设置点击的二级标题active
     $(this).parent().addClass('active')
+
+    let id = $(this).attr('art-id')
+    data = { 'id': id }
+    datajs = JSON.stringify(data)
+    demo.loading()
+        //发送请求页面
+    $.ajax({
+        type: "POST",
+        url: "/home/artdetail",
+        contentType: "application/json",
+        data: datajs, //参数列表
+        dataType: "html",
+        success: function(result) {
+            //请求正确之后的操作
+            // console.log('post success , result is ', result)
+            let matchreg = /<div class="res" hidden>(.+?)<\/div>/gi
+            let matchres = matchreg.exec(result)
+            if (!matchres) {
+                $('.error-tips').text('res not fond').fadeIn(700, function() {
+                    $('.error-tips').fadeOut(1000)
+                })
+                return
+            }
+
+            if (matchres[1] != 'res-success') {
+                $('.error-tips').text(matchres[1]).fadeIn(700, function() {
+                    $('.error-tips').fadeOut(1000)
+                })
+                return
+            }
+
+            // $('.error-tips').text(matchres[1]).fadeIn(700, function() {
+            //     $('.error-tips').fadeOut(1000)
+            // })
+
+            $('.article-detail').html(result)
+            loadEditor()
+            demo.hiding()
+            $('body,html').removeClass('fix-html');
+            $('.ancestor').removeClass('show')
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            //请求失败之后的操作
+            console.log('post failed')
+                // 状态码
+            console.log(XMLHttpRequest.status);
+            // 状态
+            console.log(XMLHttpRequest.readyState);
+            // 错误信息   
+            console.log(textStatus);
+            demo.hiding()
+        }
+    });
 })
 
 //评论按钮点击事件
@@ -401,9 +467,11 @@ $('.article-detail').on('click', '.comment-love-ul>.love-num-li a', function() {
     love_span.text(' 喜欢(' + (love_num - 0 + 1) + ')')
 
     let comid = $(this).parents('.comment-ul-li').attr('comment-id')
-    console.log('评论所属文章id为 ', comid)
-    let datasend = { 'id': comid }
+    console.log('评论id为 ', comid)
+    let artid = $('.article-id').text()
+    console.log('文章id为 ', artid)
 
+    let datasend = { 'id': comid, 'parent': artid }
     $.ajax({
         type: "POST",
         url: "/home/addcomlove",
@@ -445,8 +513,10 @@ $('.article-detail').on('click', '.reply-love-ul>.love-num-li a', function() {
     love_span.text(' 喜欢(' + (love_num - 0 + 1) + ')')
 
     let replyid = $(this).parents('.reply-ul-li').attr('reply-id')
-    let datasend = { 'id': replyid }
+    let commid = $(this).parents('.comment-ul-li').attr('comment-id')
+    let datasend = { 'id': replyid, 'parent': commid }
     console.log('reply id is ', replyid)
+    console.log('parent id is ', commid)
     $.ajax({
         type: "POST",
         url: "/home/addrpllove",
@@ -591,6 +661,7 @@ $('.index-art-list ').on('click', '.previous', function(e) {
                 $('.error-tips').text('res not fond').fadeIn(700, function() {
                     $('.error-tips').fadeOut(1000)
                 })
+                $('.index-art-list').fadeIn()
                 return
             }
 
@@ -598,6 +669,7 @@ $('.index-art-list ').on('click', '.previous', function(e) {
                 $('.error-tips').text(matchres[1]).fadeIn(700, function() {
                     $('.error-tips').fadeOut(1000)
                 })
+                $('.index-art-list').fadeIn()
                 return
             }
 
@@ -617,6 +689,7 @@ $('.index-art-list ').on('click', '.previous', function(e) {
             console.log(XMLHttpRequest.readyState);
             // 错误信息   
             console.log(textStatus);
+            $('.index-art-list').fadeIn()
         }
     })
 })
