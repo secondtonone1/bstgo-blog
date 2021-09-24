@@ -50,7 +50,7 @@ docker run -itd --name blogmongo  --restart=always --privileged -p 27017:27017 -
 
 创建用户
 ```
-创建用户admin，具有读写权限
+#创建用户admin，具有读写权限
 docker exec -it blogmongo mongo admin
 # 创建一个名为 admin，密码为 123456 的用户。
 >  db.createUser({ user:'admin',pwd:'123456',roles:[ { role:'userAdminAnyDatabase', db: 'admin'},"readWriteAnyDatabase"]});
@@ -60,21 +60,21 @@ docker exec -it blogmongo mongo admin
    
 远程连接mongo
 ``` 
-1  url
+#1  url
 mongodb://admin:123456@81.68.86.146:27017/?authSource=admin
-2  用户名 admin
+#2  用户名 admin
 密码 123456
 ```
 
 集合表设置index
 
 ```
-登录用户admin
+#登录用户admin
 docker exec -it blogmongo mongo admin
 db.auth('admin','123456')
-切换数据库
+#切换数据库
 use blog
-创建索引
+#创建索引
 db.artcontents.createIndex({"id":1})
 db.articles.createIndex({"cat":1, "subcat":1 })
 db.articles.createIndex({"title":1,"subtitle":1 })
