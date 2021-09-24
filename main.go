@@ -172,7 +172,6 @@ func main() {
 	router.LoadHTMLGlob("views/**/*")
 	//设置资源共享目录
 	router.StaticFS("/static", http.Dir("./public"))
-
 	pageGroup := router.Group("/")
 	pageGroup.Use(CalCulateVisit())
 	{
