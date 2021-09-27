@@ -95,8 +95,55 @@ db.sessions.createIndex({"sid":-1})
 ```
 
 ###  redis容器
+
 创建目录
 ```
 mkdir -p /data/redis/conf
 mkdir -p /data/redis/data
 ```
+
+拉取最新镜像
+```
+docker pull redis:latest
+```
+
+redis的配置文件在项目的docker目录中配置好了，修改了如下配置
+
+```
+#注释掉这部分，这是限制redis只能本地访问
+#bind 127.0.0.1 
+
+#默认yes，开启保护模式，限制为本地访问
+protected-mode no 
+
+#默认no，改为yes意为以守护进程方式启动，可后台运行，除非kill进程，改为yes会使配置文件方式启动redis失败
+daemonize no
+
+#数据库个数（可选），我修改了这个只是查看是否生效
+databases 16
+
+#输入本地redis数据库存放文件夹（可选）
+dir  ./ 
+
+#redis持久化（可选）
+appendonly yes 
+```
+
+docker 启动redis
+```
+docker run -p 6379:6379 --name blogredis -v /data/redis/conf/redis.conf:/etc/redis/redis.conf -v /data/redis/data:/data -d redis redis-server /etc/redis/redis.conf --appendonly yes
+```
+
+配置密码
+```
+docker exec -it blogredis bash
+进入目录 cd /usr/local/bin
+运行命令：redis-cli
+查看现有的redis密码：config get requirepass
+设置redis密码config set requirepass 123456（123456为你要设置的密码）
+
+若出现(error) NOAUTH Authentication required.错误，则使用 auth 密码 来认证密码
+```
+## 启动项目
+### 测试环境
+进入项目目录 go run ./main.go 直接启动，自动连接数据库和redis
