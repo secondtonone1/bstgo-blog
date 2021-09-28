@@ -155,8 +155,9 @@ url = /admin
 
 ## 主页
 url = /home
+![主页](./demopic/1.png)
 ## 分类页
-url = /category&id=
+url = /category?catid=
 ## 详情页
 url = /article&id=
 
