@@ -249,7 +249,8 @@ func main() {
 
 	// 文章编辑发布
 	router.POST("admin/pubarticle", CheckLogin, ClearRedis(), admin.ArticlePub)
-	//	mongocli.SetVisitNum()
+	mongocli.SetVisitNum()
 	router.Run(":8080")
 	mongocli.MongoRelease()
+
 }

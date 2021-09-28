@@ -48,7 +48,7 @@ func MongoInit() (e error) {
 
 	//连接数据库
 	MongoDb = MongoClient.Database(config.TotalCfgData.Mongo.Database)
-	//initAdmin()
+	initAdmin()
 	return
 
 }

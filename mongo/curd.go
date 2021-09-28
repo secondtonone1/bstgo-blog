@@ -65,6 +65,18 @@ func InitAdmin(email string, pwd string) (primitive.ObjectID, error) {
 }
 
 func initAdmin() {
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	//指定连接集合
+	col := MongoDb.Collection("administrator")
+	//根据email 查找
+	administrator := model.Admin{}
+	err := col.FindOne(ctx, bson.M{"email": "secondtonone1@163.com"}).Decode(&administrator)
+	if err == nil {
+		return
+	}
+
 	//初始化admin账户
 	inseres, err := InitAdmin("secondtonone1@163.com", "123456")
 	if err != nil {
@@ -660,12 +672,26 @@ func UpdateArticle(req *model.UpdateArticleReq) error {
 	value["subcat"] = req.SubCat
 	value["lastedit"] = req.LastEdit
 	value["author"] = req.Author
-	value["content"] = req.Content
+	//value["content"] = req.Content
 
 	upvalue := bson.M{"$set": value}
 	_, err := MongoDb.Collection("articles").UpdateOne(ctx, filter, upvalue)
+	if err != nil {
+		return err
+	}
 
-	return err
+	filter2 := bson.M{}
+	filter2["id"] = req.Id
+	value2 := bson.M{}
+	value2["id"] = req.Id
+	value2["content"] = req.Content
+	upvalue2 := bson.M{"$set": value2}
+	_, err = MongoDb.Collection("artcontents").UpdateOne(ctx, filter2, upvalue2)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 //获取草稿总数
@@ -830,6 +856,14 @@ func GetVisitNum() (int64, error) {
 func SetVisitNum() error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
+
+	filter := bson.M{"type": "visit"}
+	baseinfo := &model.BaseInfo{}
+	err := MongoDb.Collection("baseinfos").FindOne(ctx, filter).Decode(baseinfo)
+	if err == nil {
+		return nil
+	}
+
 	visitInfo := &model.VisitInfo{}
 	visitInfo.VisitNum = 100000
 	visit_, err := json.Marshal(visitInfo)

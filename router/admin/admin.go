@@ -217,6 +217,9 @@ func ArticlePub(c *gin.Context) {
 
 	articledb.Subcat = articlePub.Subcat
 	articledb.Subtitle = articlePub.Subtitle
+	if articlePub.Subtitle == "" {
+		articledb.Subtitle = articlePub.Title
+	}
 	articledb.Title = articlePub.Title
 	articledb.LoveNum = 500 + rand.Intn(100)
 	articledb.ScanNum = 1000 + rand.Intn(100)

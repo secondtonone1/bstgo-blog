@@ -164,6 +164,14 @@ a:focus {
 }
 
 
+/*小屏幕下侧边栏文章索引选中效果*/
+
+.xs-article-index>.subcatli.active>a {
+    color: #fff;
+    background-color: #337ab7;
+}
+
+
 /************************************/
 
 

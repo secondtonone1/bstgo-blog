@@ -1,4 +1,6 @@
 $(function(e) {
     console.log('category loaded')
-    $('.subcatli:first').addClass('active')
+    console.log('first subcatli is ', $('.subcatli:first'))
+    $('.xs-article-index>.subcatli:first').addClass('active')
+    $('.sidebar>.subcatli:first').addClass('active')
 })

@@ -147,3 +147,18 @@ docker exec -it blogredis bash
 ## 启动项目
 ### 测试环境
 进入项目目录 go run ./main.go 直接启动，自动连接数据库和redis
+
+## 管理后台
+url = /admin
+用户名"secondtonone1@163.com"
+密码 "123456"
+
+## 主页
+url = /home
+## 分类页
+url = /category&id=
+## 详情页
+url = /article&id=
+
+## 测试版效果
+
