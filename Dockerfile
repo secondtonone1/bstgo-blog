@@ -19,6 +19,7 @@ RUN cp /src/main .
 # 将项目所需配置和static资源copy至该目录
 RUN cp -r /src/config .
 RUN cp -r /src/public .
+RUN cp -r /src/views .
 
 # 暴露端口对外服务
 EXPOSE 9090
