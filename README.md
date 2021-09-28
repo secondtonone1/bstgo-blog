@@ -155,11 +155,12 @@ url = /admin
 
 ## 主页
 url = /home
-![主页](./demopic/1.png)
+![主页](./demopic/2.png)
 ## 分类页
 url = /category?catid=
+![分类页](./demopic/3.png)
 ## 详情页
 url = /article&id=
-
+![详情页](./demopic/1.png)
 ## 测试版效果
 
