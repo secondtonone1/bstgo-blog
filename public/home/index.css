@@ -559,6 +559,10 @@ a:focus {
     padding-bottom: 20px;
 }
 
+.comment-editor {
+    top: 50px!important;
+}
+
 
 /* 评论按钮 */
 
@@ -679,8 +683,14 @@ a:focus {
         padding-right: 0;
     }
     .w-e-panel-container {
-        width: 18.75rem!important;
-        margin-left: -18.75rem!important;
+        position: fixed !important;
+        width: 90% !important;
+        /* width: 18.75rem!important; */
+        /* margin-left: -18.75rem!important; */
+        left: 50% !important;
+        top: 50px !important;
+        transform: translateX(-50%);
+        margin-left: 0 !important;
     }
     .comment-editor {
         top: 50px!important;
@@ -698,6 +708,10 @@ a:focus {
     }
     .navbar-nav.login>li>a {
         font-size: 14px;
+    }
+    /* 小屏幕下行号不显示 */
+    .hljs-ln-numbers {
+        display: none;
     }
 }
 
