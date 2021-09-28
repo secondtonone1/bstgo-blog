@@ -147,6 +147,13 @@ docker exec -it blogredis bash
 ## 启动项目
 ### 测试环境
 进入项目目录 go run ./main.go 直接启动，自动连接数据库和redis
+### docker启动
+在项目目录直接 
+```
+docker build -t blog .
+``` 
+然后启动容器即可
+docker run --name bst-blog -p 8080:8080 -d blog
 
 ## 管理后台
 url = /admin
@@ -164,3 +171,12 @@ url = /article?id=
 ![详情页](./demopic/1.png)
 ## 测试版效果
 
+浏览器输入
+http://81.68.86.146:8080/home
+即可查看效果
+目前测试版生成的docker已经发布在hub上
+如果不想搭建项目，可以直接执行命令拉去镜像，运行docker即可
+```
+docker pull  secondtonone1/blog:latest
+docker run --name bst-blog -p 8080:8080 -d secondtonone1/blog:latest
+```
