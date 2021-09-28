@@ -22,7 +22,7 @@ RUN cp -r /src/public .
 RUN cp -r /src/views .
 
 # 暴露端口对外服务
-EXPOSE 9090
+EXPOSE 8080
 
 # 启动容器运行命令
 CMD ["/bin/main"]
