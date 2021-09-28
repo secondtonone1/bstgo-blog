@@ -1,39 +1,42 @@
-.hljs {
-    background-color: #f7f7f7;
-}
-
-.hljs-ln-code {
-    padding-left: 10px!important;
-}
-
-.hljs-ln-numbers {
-    border-right: none;
-    background-color: #eff2f3;
-    color: #869194;
-    padding-left: 10px!important;
-    padding-right: 10px!important;
-}
-
-pre {
-    padding: 0;
-}
-
-pre code.hljs {
-    padding: 15px 0 15px 0
-}
-
-
-/* webkit, opera, IE9 */
-
-::selection {
-    background: black;
-    color: white;
-}
-
-
-/* mozilla firefox */
-
-::-moz-selection {
-    background: black;
-    color: white;
-}
+    .hljs {
+        background-color: #f7f7f7;
+    }
+    
+    .hljs-ln-code {
+        padding-left: 10px!important;
+        padding-right: 10px!important;
+    }
+    
+    .hljs-ln {
+        overflow-x: scroll !important;
+        overflow-y: hidden !important;
+        white-space: nowrap !important;
+    }
+    
+    .hljs-ln-numbers {
+        border-right: none;
+        background-color: #eff2f3;
+        color: #869194;
+        padding-left: 10px!important;
+        padding-right: 10px!important;
+    }
+    
+    pre {
+        padding: 0;
+    }
+    
+    pre code.hljs {
+        padding: 15px 0 15px 0
+    }
+    /* webkit, opera, IE9 */
+    
+     ::selection {
+        background: black;
+        color: white;
+    }
+    /* mozilla firefox */
+    
+     ::-moz-selection {
+        background: black;
+        color: white;
+    }

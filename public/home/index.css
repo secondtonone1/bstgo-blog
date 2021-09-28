@@ -709,10 +709,6 @@ a:focus {
     .navbar-nav.login>li>a {
         font-size: 14px;
     }
-    /* 小屏幕下行号不显示 */
-    .hljs-ln-numbers {
-        display: none;
-    }
 }
 
 
