@@ -160,7 +160,7 @@ url = /home
 url = /category?catid=
 ![分类页](./demopic/3.png)
 ## 详情页
-url = /article&id=
+url = /article?id=
 ![详情页](./demopic/1.png)
 ## 测试版效果
 
