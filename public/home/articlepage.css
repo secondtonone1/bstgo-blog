@@ -87,3 +87,36 @@
     font-size: 10px !important;
     color: #666;
 }
+
+
+/* 当我们进入 超小屏幕的时候 我们 nav 文字会变成14px  */
+
+@media screen and (max-width: 767px) {
+    .comment-ul-li h3,
+    .comment-ul-li h4 {
+        font-size: 18px;
+    }
+    .comment-ul-li h2,
+    .comment-ul-li h1 {
+        font-size: 18px;
+    }
+    .article-data .article-title {
+        font-size: 18px;
+        font-weight: 700;
+    }
+    .article-data h3,
+    .article-data h4 {
+        font-size: 18px;
+        font-weight: 700;
+        padding: 10px 0 10px 0;
+    }
+    .article-data h2,
+    .article-data h1 {
+        font-size: 18px;
+        font-weight: 700;
+        padding: 10px 0 10px 0;
+    }
+    .article-data p {
+        font-size: 14px
+    }
+}
