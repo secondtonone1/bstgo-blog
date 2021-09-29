@@ -608,7 +608,8 @@ a:focus {
     color: #666666;
 }
 
-.hot-love {
+.hot-love,
+.hot-scan {
     display: inline-block;
     padding-right: 10px;
     font-size: 8px;
