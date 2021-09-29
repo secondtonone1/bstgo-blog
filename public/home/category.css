@@ -104,4 +104,31 @@
     .navbar-header .navbar-brand {
         padding-left: 15px !important;
     }
+    .comment-ul-li h3,
+    .comment-ul-li h4 {
+        font-size: 18px;
+    }
+    .comment-ul-li h2,
+    .comment-ul-li h1 {
+        font-size: 18px;
+    }
+    .article-data .article-title {
+        font-size: 18px;
+        font-weight: 700;
+    }
+    .article-data h3,
+    .article-data h4 {
+        font-size: 18px;
+        font-weight: 700;
+        padding: 10px 0 10px 0;
+    }
+    .article-data h2,
+    .article-data h1 {
+        font-size: 18px;
+        font-weight: 700;
+        padding: 10px 0 10px 0;
+    }
+    .article-data p {
+        font-size: 14px
+    }
 }
