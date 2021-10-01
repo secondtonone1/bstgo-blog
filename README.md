@@ -90,7 +90,7 @@ db.loginfaileds.createIndex({"email":1})
 db.menus.createIndex({"catid":1})
 db.menus.createIndex({"index":1})
 db.menus.createIndex({"parent":1})
-db.sessions.createIndex({"createdAt":-1})
+db.sessions.createIndex({"createdAt":-1}, { expireAfterSeconds: 86400 })
 db.sessions.createIndex({"sid":-1})
 ```
 
