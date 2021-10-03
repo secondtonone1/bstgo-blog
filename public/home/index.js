@@ -30,7 +30,6 @@ $('.sidebar>li>a').on('click', function(event) {
     // if ($(this).parent().hasClass('requested')) {
     //     return
     // }
-    // demo.loading()
 
     // let data = {}
     // data.cat = $('#category-name').text()
@@ -70,7 +69,8 @@ $('.sidebar>li>a').on('click', function(event) {
 
 //点击文章索引边栏的二级目录
 $('.sidebar').on('click', '.subcatli>div>.sub-sidebar>.subtitleli>a', function() {
-    // 移除一级标题active类
+    loadinst.loading()
+        // 移除一级标题active类
     $(".sidebar > li").removeClass("active").siblings().removeClass("active")
         //移除二级标题active类
     $('.subtitleli').removeClass('active')
@@ -79,7 +79,6 @@ $('.sidebar').on('click', '.subcatli>div>.sub-sidebar>.subtitleli>a', function()
     let id = $(this).attr('art-id')
     data = { 'id': id }
     datajs = JSON.stringify(data)
-    demo.loading()
         //发送请求页面
     $.ajax({
         type: "POST",
@@ -112,7 +111,7 @@ $('.sidebar').on('click', '.subcatli>div>.sub-sidebar>.subtitleli>a', function()
 
             $('.article-detail').html(result)
             loadEditor()
-            demo.hiding()
+            loadinst.unloading()
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
             //请求失败之后的操作
@@ -123,7 +122,7 @@ $('.sidebar').on('click', '.subcatli>div>.sub-sidebar>.subtitleli>a', function()
             console.log(XMLHttpRequest.readyState);
             // 错误信息   
             console.log(textStatus);
-            demo.hiding()
+            loadinst.unloading()
         }
     });
 })
@@ -183,7 +182,7 @@ $('.xs-article-index-wrapper>ul>li>div a').on('click', function() {
     let id = $(this).attr('art-id')
     data = { 'id': id }
     datajs = JSON.stringify(data)
-    demo.loading()
+    loadinst.loading()
         //发送请求页面
     $.ajax({
         type: "POST",
@@ -216,7 +215,7 @@ $('.xs-article-index-wrapper>ul>li>div a').on('click', function() {
 
             $('.article-detail').html(result)
             loadEditor()
-            demo.hiding()
+            loadinst.unloading()
             $('body,html').removeClass('fix-html');
             $('.ancestor').removeClass('show')
         },
@@ -229,7 +228,9 @@ $('.xs-article-index-wrapper>ul>li>div a').on('click', function() {
             console.log(XMLHttpRequest.readyState);
             // 错误信息   
             console.log(textStatus);
-            demo.hiding()
+            loadinst.unloading()
+            $('body,html').removeClass('fix-html');
+            $('.ancestor').removeClass('show')
         }
     });
 })
@@ -547,7 +548,6 @@ $('.new-comments .com-title').on('click', function(e) {
     if (article_id && article_id != "") {
         window.location.href = "/articlepage?id=" + article_id
     }
-    demo.loading()
 })
 
 //点击热门文章
@@ -557,7 +557,6 @@ $('.article-hot>a').on('click', function(e) {
     if (article_id && article_id != "") {
         window.location.href = "/articlepage?id=" + article_id
     }
-    demo.loading()
 })
 
 //文章列表
@@ -574,7 +573,7 @@ $('.index-art-list ').on('click', '.next', function(e) {
     if ($(this).hasClass('disabled')) {
         return false
     }
-
+    loadinst.loading()
     let nextpage = $(this).attr('page')
     console.log('nextpage is ', nextpage)
     let data = {
@@ -590,7 +589,8 @@ $('.index-art-list ').on('click', '.next', function(e) {
         data: datajs, //参数列表
         dataType: "html",
         success: function(result) {
-            //请求正确之后的操作
+            loadinst.unloading()
+                //请求正确之后的操作
             console.log('post success , result is ', result)
 
             let matchreg = /<div class="res" hidden>(.+?)<\/div>/gi
@@ -617,7 +617,8 @@ $('.index-art-list ').on('click', '.next', function(e) {
             $("body,html").animate({ scrollTop: 0 }, 500)
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
-            //请求失败之后的操作
+            loadinst.unloading()
+                //请求失败之后的操作
             console.log('post failed')
                 // 状态码
             console.log(XMLHttpRequest.status);
@@ -637,6 +638,8 @@ $('.index-art-list ').on('click', '.previous', function(e) {
         return false
     }
 
+    loadinst.loading()
+
     let prevpage = $(this).attr('page')
     console.log('prevpage is ', prevpage)
     let data = {
@@ -652,7 +655,8 @@ $('.index-art-list ').on('click', '.previous', function(e) {
         data: datajs, //参数列表
         dataType: "html",
         success: function(result) {
-            //请求正确之后的操作
+            loadinst.unloading()
+                //请求正确之后的操作
             console.log('post success , result is ', result)
 
             let matchreg = /<div class="res" hidden>(.+?)<\/div>/gi
@@ -681,7 +685,8 @@ $('.index-art-list ').on('click', '.previous', function(e) {
             $("body,html").animate({ scrollTop: 0 }, 500)
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
-            //请求失败之后的操作
+            loadinst.unloading()
+                //请求失败之后的操作
             console.log('post failed')
                 // 状态码
             console.log(XMLHttpRequest.status);

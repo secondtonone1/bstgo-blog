@@ -1,6 +1,7 @@
 {{ define "home/index.html"}} {{ template "home/header" . }}
 
 <body>
+    {{ template "home/loading" . }}
     <link rel="stylesheet" href="/static/home/index-page.css">
     <div class="ancestor">
         {{ template "home/mask" .}}

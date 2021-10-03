@@ -3,11 +3,11 @@
 <link rel="stylesheet" href="/static/home/category.css">
 
 <body>
+    {{ template "home/loading" . }}
     <div class="ancestor">
         {{ template "home/mask" .}}
         <div class="container-fluid container-root">
             {{ template "home/navbar" . }}
-            <div id="loading"><img class="loadingImg" alt="loading" src="/static/img/ajax-loader.gif"></div>
             <!-- 内容区 -->
             <div class="row content">
                 <!-- 页面左侧区域 -->

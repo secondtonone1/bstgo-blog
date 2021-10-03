@@ -7,7 +7,11 @@ hr.grey-hr {
 }
 
 a:focus {
-    text-decoration: none
+    text-decoration: none;
+}
+
+a {
+    word-wrap: break-word;
 }
 
 

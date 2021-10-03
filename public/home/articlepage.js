@@ -5,5 +5,4 @@ $('.article-recommend>a').on('click', function(e) {
     if (article_id && article_id != "") {
         window.location.href = "/articlepage?id=" + article_id
     }
-    demo.loading()
 })

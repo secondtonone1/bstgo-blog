@@ -8,8 +8,8 @@
     database = "blog"
 
 [cookie]
-    #host = "localhost"
-    host = "81.68.86.146"
+    #host = "81.68.86.146"
+    host = "localhost"
     alive = 86400
 
 [location]

@@ -126,6 +126,7 @@ $('.sub-sidebar').on('click', '.mini-li>span', function(event) {
     let catedata = $(this).text()
     console.log('post data is ', JSON.stringify({ 'category': catedata }))
     event.preventDefault(); //使a自带的方法失效，即无法调整到href中的URL()
+    loadinst.loading()
     $('#article-content').parent().fadeOut(100, function() {
         $.ajax({
             type: "POST",
@@ -134,7 +135,8 @@ $('.sub-sidebar').on('click', '.mini-li>span', function(event) {
             data: JSON.stringify({ 'category': catedata }), //参数列表
             dataType: "html",
             success: function(result) {
-                //请求正确之后的操作
+                loadinst.unloading()
+                    //请求正确之后的操作
                 console.log('post success , result is ', result)
 
                 let index_find = result.indexOf('Sign in')
@@ -148,7 +150,8 @@ $('.sub-sidebar').on('click', '.mini-li>span', function(event) {
                 $('#article-content').parent().fadeIn(700)
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
-                //请求失败之后的操作
+                loadinst.unloading()
+                    //请求失败之后的操作
                 console.log('post failed')
                     // 状态码
                 console.log(XMLHttpRequest.status);
@@ -167,6 +170,7 @@ $('.year-div button').on('click', function() {
     //console.log("year button clicked")
     //设置下拉列表选中状态
     let text_data = $(this).children('.year-text').text()
+    console.log('text_data is ', text_data)
         //清空之前的选中状态
     $(this).siblings('ul').children('li').removeClass('active')
         //设置下拉列表选中状态
@@ -176,6 +180,8 @@ $('.year-div button').on('click', function() {
             $(this).addClass('active')
         }
     })
+
+
 })
 
 //点击年份列表更新按钮信息
@@ -415,6 +421,7 @@ $('#myModalDialog .sure').on('click', function() {
     let ctg_val = $(this).parent().siblings('.model-input').children('input').val()
     console.log(ctg_val);
     $('#myModalDialog').modal('hide')
+    loadinst.loading()
     $.ajax({
         type: "POST",
         url: "/admin/createctg",
@@ -422,7 +429,8 @@ $('#myModalDialog .sure').on('click', function() {
         data: JSON.stringify({ "category": ctg_val, "index": window.catnum }), //参数列表
         dataType: "html",
         success: function(result) {
-            //请求正确之后的操作
+            loadinst.unloading()
+                //请求正确之后的操作
             console.log('post success , result is ', result)
 
             let index_find = result.indexOf('Sign in')
@@ -440,7 +448,8 @@ $('#myModalDialog .sure').on('click', function() {
             $('.sub-sidebar').append(result)
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
-            //请求失败之后的操作
+            loadinst.unloading()
+                //请求失败之后的操作
             console.log('post failed')
                 // 状态码
             console.log(XMLHttpRequest.status);
@@ -463,6 +472,7 @@ $('#subCtgDialog  .sure').on('click', function() {
     console.log(ctg_val);
     console.log(window.cur_subctg.parent().parent().attr('id'))
     $('#subCtgDialog').modal('hide')
+    loadinst.loading()
     $.ajax({
         type: "POST",
         url: "/admin/createsubctg",
@@ -470,7 +480,8 @@ $('#subCtgDialog  .sure').on('click', function() {
         data: JSON.stringify({ "subcategory": ctg_val, "parentid": window.cur_subctg.parent().parent().attr('id'), "index": window.subcatnum }), //参数列表
         dataType: "html",
         success: function(result) {
-            //请求正确之后的操作
+            loadinst.unloading()
+                //请求正确之后的操作
             console.log('post success , result is ', result)
             console.log(window.cur_subctg)
 
@@ -764,8 +775,8 @@ $('#article-content').on('click', '.page-li', function(e) {
     condition.page = page - 0
     let condJson = JSON.stringify(condition)
     console.log("condJson is ", condJson)
-
-    //请求page页数据给后端发送ajax请求
+    loadinst.loading()
+        //请求page页数据给后端发送ajax请求
     $('#article-content').parent().fadeOut(100, function() {
         $.ajax({
             type: "POST",
@@ -774,8 +785,9 @@ $('#article-content').on('click', '.page-li', function(e) {
             data: condJson, //参数列表
             dataType: "html",
             success: function(result) {
-                //请求正确之后的操作
-                //console.log('post success , result is ', result)
+                loadinst.unloading()
+                    //请求正确之后的操作
+                    //console.log('post success , result is ', result)
 
                 let index_find = result.indexOf('Sign in')
                     //找到Sign in 说明是登录页面
@@ -792,7 +804,8 @@ $('#article-content').on('click', '.page-li', function(e) {
                 $('#article-content').parent().fadeIn(500)
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
-                //请求失败之后的操作
+                loadinst.unloading()
+                    //请求失败之后的操作
                 console.log('post failed')
                     // 状态码
                 console.log(XMLHttpRequest.status);
@@ -829,9 +842,9 @@ $('#article-content').on('click', '.page-next', function(e) {
     condition.page = next_page - 0
     let condJson = JSON.stringify(condition)
     console.log("condJson is ", condJson)
-
-    //发送请求next_page页数据
-    //请求page页数据给后端发送ajax请求
+    loadinst.loading()
+        //发送请求next_page页数据
+        //请求page页数据给后端发送ajax请求
     $('#article-content').parent().fadeOut(100, function() {
         $.ajax({
             type: "POST",
@@ -842,7 +855,7 @@ $('#article-content').on('click', '.page-next', function(e) {
             success: function(result) {
                 //请求正确之后的操作
                 //console.log('post success , result is ', result)
-
+                loadinst.unloading()
                 let index_find = result.indexOf('Sign in')
                     //找到Sign in 说明是登录页面
                 if (index_find != -1) {
@@ -858,7 +871,8 @@ $('#article-content').on('click', '.page-next', function(e) {
                 $('#article-content').parent().fadeIn(500)
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
-                //请求失败之后的操作
+                loadinst.unloading()
+                    //请求失败之后的操作
                 console.log('post failed')
                     // 状态码
                 console.log(XMLHttpRequest.status);
@@ -894,9 +908,9 @@ $('#article-content').on('click', '.page-prev', function(e) {
     let condJson = JSON.stringify(condition)
     console.log("condJson is ", condJson)
 
-
-    //发送请求prev_page页数据
-    //请求page页数据给后端发送ajax请求
+    loadinst.loading()
+        //发送请求prev_page页数据
+        //请求page页数据给后端发送ajax请求
     $('#article-content').parent().fadeOut(100, function() {
         $.ajax({
             type: "POST",
@@ -905,8 +919,9 @@ $('#article-content').on('click', '.page-prev', function(e) {
             data: condJson, //参数列表
             dataType: "html",
             success: function(result) {
-                //请求正确之后的操作
-                //console.log('post success , result is ', result)
+                loadinst.unloading()
+                    //请求正确之后的操作
+                    //console.log('post success , result is ', result)
 
                 let index_find = result.indexOf('Sign in')
                     //找到Sign in 说明是登录页面
@@ -923,7 +938,8 @@ $('#article-content').on('click', '.page-prev', function(e) {
                 $('#article-content').parent().fadeIn(500)
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
-                //请求失败之后的操作
+                loadinst.unloading()
+                    //请求失败之后的操作
                 console.log('post failed')
                     // 状态码
                 console.log(XMLHttpRequest.status);

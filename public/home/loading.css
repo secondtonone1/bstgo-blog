@@ -1,40 +1,154 @@
-#loading {
-    width: 314px;
-    height: 130px;
-    position: fixed;
-    background: transparent url('/static/img/loading_box.png') no-repeat top left;
-    text-align: center;
-    z-index: 1001;
-    top: 40%;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-#loading .loadingImg {
-    margin-top: 41px;
-    margin-left: 10px;
-}
-
-#whiteOverlay {
-    position: absolute;
+.loadbkg {
     width: 100%;
     height: 100%;
-    background-color: white;
-    top: 0px;
-    left: 0px;
-    opacity: .5;
-    z-index: 1000;
-    filter: alpha(opacity=50)
-}
-
-#darkOverlay {
     position: fixed;
-    _position: absolute;
-    top: 0px;
-    left: 0px;
-    z-index: 1003;
-    background: transparent url('/public/img/bg_overlay.png') repeat top left;
+    background-color: rgba(0, 0, 0, 0.1);
     display: none;
-    height: 100%;
-    width: 100%;
 }
+
+.loadbkg.loading {
+    display: inline-block;
+    z-index: 20000;
+}
+
+.loadcontainer {
+    width: 150px;
+    height: 15px;
+    /* margin: 0 auto; */
+    /* margin-top: 100px; */
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.loadcontainer span {
+    display: inline-block;
+    width: 15px;
+    height: 100%;
+    margin-right: 5px;
+    border-radius: 50%;
+    background: #222222;
+    -webkit-animation: load 1.04s ease infinite;
+}
+
+.loadcontainer span:last-child {
+    margin-right: 0px;
+}
+
+@-webkit-keyframes load {
+    0% {
+        opacity: 1;
+        -webkit-transform: scale(1.3);
+    }
+    100% {
+        opacity: 0.2;
+        -webkit-transform: scale(.3);
+    }
+}
+
+.loadcontainer span:nth-child(1) {
+    -webkit-animation-delay: 0.13s;
+}
+
+.loadcontainer span:nth-child(2) {
+    -webkit-animation-delay: 0.26s;
+}
+
+.loadcontainer span:nth-child(3) {
+    -webkit-animation-delay: 0.39s;
+}
+
+.loadcontainer span:nth-child(4) {
+    -webkit-animation-delay: 0.52s;
+}
+
+.loadcontainer span:nth-child(5) {
+    -webkit-animation-delay: 0.65s;
+}
+
+
+/* .loadcontainer {
+    width: 80px;
+    height: 80px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%)
+}
+
+.loadbox {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.loadbox span {
+    display: block;
+    width: 15px;
+    height: 15px;
+    background-color: #222;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 15px;
+    animation: diyloading 0.8s linear infinite;
+    box-shadow: 0px 0px 24px 2px #ffffff;
+}
+
+.loadbox .group {
+    display: flex;
+    justify-content: space-between;
+}
+
+.loadcontainer .loadbox:nth-of-type(2) {
+    transform: rotate(45deg);
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.loadbox .c1 {
+    animation-delay: -0.5s;
+}
+
+.loadbox .c2 {
+    animation-delay: -0.6s;
+}
+
+.loadbox .c3 {
+    animation-delay: -0.7s;
+}
+
+.loadbox .c4 {
+    animation-delay: -0.8s;
+}
+
+.loadbox .c5 {
+    animation-delay: -0.9s;
+}
+
+.loadbox .c6 {
+    animation-delay: -1s;
+}
+
+.loadbox .c7 {
+    animation-delay: -1.1s;
+}
+
+.loadbox .c8 {
+    animation-delay: -1.2s;
+}
+
+@keyframes diyloading {
+    0% {
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(0);
+    }
+} */

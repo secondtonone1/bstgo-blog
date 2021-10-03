@@ -10,6 +10,7 @@ $(function(e) {
 })
 
 $('.update-btn').on('click', function(e) {
+    loadinst.loading()
     let id = $('.article-id').text()
     console.log('article id is ', id)
     let data = {}
@@ -32,7 +33,8 @@ $('.update-btn').on('click', function(e) {
         data: data_json, //参数列表
         dataType: "json",
         success: function(result) {
-            //请求正确之后的操作
+            loadinst.unloading()
+                //请求正确之后的操作
             console.log('post success , result is ', result)
             if (result.code != 0) {
                 $('.msg-tip').text(result.msg).fadeIn(1000, function(e) {
@@ -45,6 +47,7 @@ $('.update-btn').on('click', function(e) {
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
             //请求失败之后的操作
+            loadinst.unloading()
             console.log('post failed')
                 // 状态码
             console.log(XMLHttpRequest.status);
