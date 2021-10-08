@@ -180,8 +180,6 @@ $('.year-div button').on('click', function() {
             $(this).addClass('active')
         }
     })
-
-
 })
 
 //点击年份列表更新按钮信息
