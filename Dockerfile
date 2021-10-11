@@ -6,6 +6,8 @@ ENV GO111MODULE=on \
     GOARCH=amd64 \
 	GOPROXY="https://goproxy.cn,direct"
 
+ENV TZ=Asia/Shanghai
+
 # 创建代码目录
 WORKDIR  /src
 # copy代码放入代码目录

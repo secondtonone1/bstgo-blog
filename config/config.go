@@ -3,6 +3,8 @@ package config
 import (
 	"log"
 
+	"flag"
+
 	"github.com/BurntSushi/toml"
 )
 
@@ -44,9 +46,10 @@ type Location struct {
 var TotalCfgData TotalCfg
 
 func init() {
-	if _, err := toml.DecodeFile("./config/config.toml", &TotalCfgData); err != nil {
+	cfgpath := flag.String("config", "./config/config.toml", "-config ./config/config.toml")
+	flag.Parse()
+	if _, err := toml.DecodeFile(*cfgpath, &TotalCfgData); err != nil {
 		log.Println("decode file failed , error is ", err)
 		panic("decode file failed")
 	}
-
 }

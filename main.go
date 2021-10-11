@@ -176,12 +176,13 @@ func main() {
 	pageGroup.Use(CalCulateVisit())
 	{
 		//用户浏览首页
-		pageGroup.GET("/home", CalCulateVisit(), home.Home)
+		pageGroup.GET("/", home.Home)
+		pageGroup.GET("/home", home.Home)
 		//用户浏览你分类
-		pageGroup.GET("/category", CalCulateVisit(), home.Category)
+		pageGroup.GET("/category", home.Category)
 
 		//用户浏览单个文章
-		pageGroup.GET("/articlepage", CalCulateVisit(), home.ArticlePage)
+		pageGroup.GET("/articlepage", home.ArticlePage)
 	}
 
 	homeGroup := router.Group("/home")

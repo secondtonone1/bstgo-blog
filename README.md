@@ -146,7 +146,11 @@ docker exec -it blogredis bash
 ```
 ## 启动项目
 ### 测试环境
-进入项目目录 go run ./main.go 直接启动，自动连接数据库和redis
+进入项目目录 
+```
+go run ./main.go -config ./config/configdev.toml
+```
+直接启动，自动连接数据库和redis
 ### docker启动
 在项目目录直接 
 ```
@@ -172,7 +176,7 @@ url = /article?id=
 ## 测试版效果
 
 浏览器输入
-http://81.68.86.146:8080/home
+http://81.68.86.146:8080
 即可查看效果
 目前测试版生成的docker已经发布在hub上
 如果不想搭建项目，可以直接执行命令拉去镜像，运行docker即可

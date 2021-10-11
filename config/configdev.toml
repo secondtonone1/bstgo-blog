@@ -8,9 +8,9 @@
     database = "blog"
 
 [cookie]
-    host = "81.68.86.146"
+    #host = "81.68.86.146"
     #本地启动请设置host为本地
-    #host = "localhost"
+    host = "localhost"
     alive = 86400
 
 [location]
