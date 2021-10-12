@@ -172,7 +172,7 @@ go run ./main.go -config ./config/configdev.toml
 docker build -t blog .
 ``` 
 然后启动容器即可
-docker run --name bst-blog -p 8080:8080 -d blog
+docker run --name bst-blog -p 8080:8080 -v /data/blog/log:/bin/log  -d blog 
 
 ## 管理后台
 url = /admin
