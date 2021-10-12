@@ -144,6 +144,21 @@ docker exec -it blogredis bash
 
 若出现(error) NOAUTH Authentication required.错误，则使用 auth 密码 来认证密码
 ```
+###  nginx容器
+nginx容器配置文件在项目的dockerconfig/nginx下
+拉取nginx镜像
+```
+docker pull nginx
+```
+在服务器创建挂载目录
+```
+mkdir -p /data/nginx/{conf,conf.d,html,log}
+```
+将nginx的配置文件放入/data/nginx/conf文件夹
+然后启动nginx容器
+```
+docker run --name blognginx -p 80:80 -v /datatest/nginx/conf/nginx.conf:/etc/nginx/nginx.conf -v /data/nginx/log:/var/log/nginx -d nginx
+```
 ## 启动项目
 ### 测试环境
 进入项目目录 

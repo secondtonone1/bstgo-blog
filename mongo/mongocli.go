@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"bstgo-blog/config"
+	"bstgo-blog/logger"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -44,8 +45,9 @@ func MongoInit() (e error) {
 	if e != nil {
 		log.Println("err is ", e)
 	}
-	log.Println("mongo init success!!!")
 
+	log.Println("mongo init success!!!")
+	logger.Sugar.Info("mongo init success!!!")
 	//连接数据库
 	MongoDb = MongoClient.Database(config.TotalCfgData.Mongo.Database)
 	initAdmin()
