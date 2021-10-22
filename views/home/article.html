@@ -24,7 +24,7 @@
             <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-eye-open browse"></span><span> 浏览({{.ScanNum}})</span></a>
         </li>
         <li id="comment-num">
-            <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-comment comment"></span><span class="comment-span"> 评论({{.CommentNum}})</span></a>
+            <!-- <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-comment comment"></span><span class="comment-span"> 评论({{.CommentNum}})</span></a> -->
         </li>
         <li id="love-num">
             <a href="JavaScript:void(0);"><span class="glyphicon glyphicon-heart-empty"></span><span class="love-span">喜欢({{.LoveNum}})</span></a>
@@ -33,87 +33,4 @@
     </ul>
 </div>
 
-
-<!-- 评论展示区 -->
-<div class="label label-default comment-label" id="comment-label-id">热门评论</div>
-<div class="comment-wrapper clearfix">
-    <div class="comment-editor">
-
-    </div>
-    <button type="button" class="btn btn-primary comment-commit-btn">评论</button>
-</div>
-
-<div class="comment-list">
-    <ul class="comment-list-ul list-unstyled">
-        {{range .Comments}}
-        <li class="comment-ul-li" comment-id="{{.Id}}">
-            <div class=" clearfix comment-info ">
-                <div class="comment-head-icon ">
-                    {{if eq .HeadIcon ""}}
-                    <img class="img-circle " src="/static/img/head.jpg " alt=" "> {{else}}
-                    <img class="img-circle " src="{{.HeadIcon}}" alt=" "> {{end}}
-                </div>
-                <div class="comment-user ">
-                    <div class="comment-name text-primary ">{{.UserName}}</div>
-                    <div class="comment-date text-muted "> <span class="glyphicon glyphicon-time "></span> {{.Time}}</div>
-                </div>
-            </div>
-
-            <div class="comment-content ">
-                {{.Content}}
-            </div>
-
-            <div class="comment-love clearfix ">
-                <ul class="comment-love-ul list-inline ">
-                    <li class="love-num-li ">
-                        <a href="JavaScript:void(0); "><span class="glyphicon glyphicon-heart-empty "></span><span class="love-span "> 喜欢({{.LoveNum}})</span></a>
-                        <div class="alert alert-info ">已点赞!</div>
-                    </li>
-                    <li class="reply-num ">
-                        <a href="JavaScript:void(0); "><span class="glyphicon glyphicon-comment "></span><span class="reply-span "> 回复({{.ReplyNum}})</span></a>
-                    </li>
-                </ul>
-            </div>
-            <div class="clearfix reply-text ">
-                <form role="form ">
-                    <div class="form-group ">
-                        <textarea class="form-control " rows="1 "></textarea>
-                    </div>
-                </form>
-                <button class="btn btn-primary reply-btn ">回复</button>
-            </div>
-            <ul class="comment-replay list-unstyled ">
-
-                {{ range .Replys}}
-                <li class="reply-ul-li" reply-id="{{.Id}}">
-                    <div class="clearfix reply-info ">
-                        <div class="reply-head-icon ">
-                            {{if eq .HeadIcon ""}}
-                            <img class="img-circle " src="/static/img/head.jpg " alt=" "> {{else}}
-                            <img class="img-circle " src="{{.HeadIcon}}" alt=" "> {{end}}
-                        </div>
-                        <div class="reply-user ">
-                            <div class="reply-name text-primary ">{{.UserName}}</div>
-                            <div class="reply-date text-muted "> <span class="glyphicon glyphicon-time "></span> {{.Time}}</div>
-                        </div>
-                    </div>
-
-                    <div class="reply-content ">
-                        {{.Content}}
-                    </div>
-
-                    <div class="reply-love clearfix ">
-                        <ul class="reply-love-ul list-inline ">
-                            <li class="love-num-li ">
-                                <a href="JavaScript:void(0); "><span class="glyphicon glyphicon-heart-empty "></span><span class="love-span "> 喜欢({{.LoveNum}})</span></a>
-                                <div class="alert alert-info ">已点赞!</div>
-                            </li>
-                        </ul>
-                    </div>
-                </li>{{end}}
-            </ul>
-        </li>
-        {{end}}
-    </ul>
-</div>
 {{ end }}

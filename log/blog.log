@@ -4,3 +4,5 @@
 2021-10-12T09:40:56.495+0800	INFO	mongo/mongocli.go:50	mongo init success!!!
 2021-10-12T09:50:30.674+0800	INFO	logger/logger.go:47	logger init success
 2021-10-12T09:50:33.680+0800	INFO	mongo/mongocli.go:50	mongo init success!!!
+2021-10-22T10:01:30.472+0800	INFO	logger/logger.go:47	logger init success
+2021-10-22T10:01:30.708+0800	INFO	mongo/mongocli.go:50	mongo init success!!!
