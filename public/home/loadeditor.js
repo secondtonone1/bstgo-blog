@@ -18,8 +18,8 @@ function loadEditor() {
     //     'undo',
     //     'redo',
     // ]
-    // hljs.initHighlightingOnLoad(); // 初始化
-    // hljs.initLineNumbersOnLoad();
+    hljs.initHighlightingOnLoad(); // 初始化
+    hljs.initLineNumbersOnLoad();
     // editor.highlight = hljs
     // editor.config.languageTab = '    '
     // editor.config.pasteIgnoreImg = false
