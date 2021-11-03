@@ -2,10 +2,16 @@
 <!-- 底部footer -->
 <footer class="blog-footer">
     <p><span class="glyphicon glyphicon-user webbrowser"></span><span>本站累计访问量{{.VisitNum}}次</span></p>
-    <p>Blog template built for <a href="https://getbootstrap.com/">Bootstrap</a> by <a href="https://www.limerence2017.com">@恋恋风辰个人技术</a>.</p>
-    <p>
-        <a href="#">Back to top</a>
-    </p>
+    <div style="width:300px;margin:0 auto; padding:5px 0;">
+        <div>该网站已在全国互联网安全管理服务平台备案,如转载文章请注明出处</div>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010502047625" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="/static/img/beian.png" style="float:left;" />
+            <p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">京公网安备 11010502047625号</p>
+        </a>
+        <a href="https://beian.miit.gov.cn/" target="_blank" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;">
+            <p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">京ICP备2021033081号</p>
+        </a>
+    </div>
+
 </footer>
 
 {{ end }}
